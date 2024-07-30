@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 
 import Dropdown from "../../Common/Dropdown";
 import DatePicker from "react-datepicker";
@@ -13,32 +13,47 @@ function BHYTModal({ setModalShow }) {
     const [fromDate, setFromDate] = useState(new Date());
     const [toDate, setToDate] = useState(new Date());
 
-    const [selectedKcb, setSelectedKcb] = useState({ id: '79669', name: 'Bệnh viện tâm anh HCM' });
+    useEffect(() => {
+        const today = new Date();
+        setFromDate(today);
+    
+        const nextYear = new Date(today);
+        nextYear.setFullYear(today.getFullYear() + 1);
+        nextYear.setDate(nextYear.getDate() - 1);
+        setToDate(nextYear);
+      }, []);
+
+    const [selectedKcb, setSelectedKcb] = useState({ id: '79669', name: '79669 - Bệnh viện tâm anh HCM' });
     const [code, setCode] = useState('');
 
     const KCBs = [
         { id: '79669', name: '79669 - Bệnh viện tâm anh HCM' }
     ]
 
-    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
-        <button className="bg-blue-300 px-2 py-1 rounded-md" onClick={onClick} ref={ref}>
-            {value}
-        </button>
-    ));
+    const [formData, setFormData] = useState({
+        code: '',
+        fromDate: '',
+        toDate: ''
+      });
 
+    
 
     const Gerenrate = () => {
+        let firstCode = 'GD4'
 
 
-        let code = 'BT279802234155579669'
-        setCode(code);
-
-
+        const generateRandomString = () => {
+            let result = '';
+            const characters = '0123456789';
+            const charactersLength = characters.length;
+            for (let i = 0; i < 12; i++) {
+              result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+          };
+        setCode(firstCode  + generateRandomString() + selectedKcb.id);
         console.log('Generate....')
-
-
     }
-
 
 
     const onSubmit = (e) => {
@@ -50,14 +65,17 @@ function BHYTModal({ setModalShow }) {
         <>
             <div className="fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
                 <div className="relative w-1/3 h-1/2  mx-auto bg-white">
+                    
+                <form className="w-full" onSubmit={(e) => onSubmit(e)}>
                     <div className="h-full flex flex-col justify-between">
+                    
                         {/* HEADER */}
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
                             THÔNG TIN THẺ BHYT
                         </div>
                         {/* BODY */}
-                        <div className="flex h-full p-4 overflow-hidden ">
-                            <form className="w-full" onSubmit={(e) => onSubmit(e)}>
+                        <div className=" h-full p-4 overflow-hidden ">
+
                                 <div className="text-left p-2">
                                     <label htmlFor="KCB" className="w-24">ĐK KCB</label>
                                     <Dropdown name="KCB" id="KCB" data={KCBs} selectedOption={selectedKcb} setSelectedOption={setSelectedKcb} />
@@ -92,12 +110,10 @@ function BHYTModal({ setModalShow }) {
                                             name='toDate'
                                             id="toDate"
                                             selected={toDate}
-                                            onChange={(date) => setFromDate(date)}
+                                            onChange={(date) => setToDate(date)}
                                         />
                                     </div>
                                 </div>
-
-
                                 <div>
                                     <div 
                                     className="border rounded-md px-2 py-1 select-none bg-[#36BA98] cursor-pointer text-white text-center"
@@ -105,18 +121,13 @@ function BHYTModal({ setModalShow }) {
                                     
                                     >Gerenrate</div>
                                 </div>
-
-
-
-                            </form>
-
-
                         </div>
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
                             <button
                                 className={`${styles.btn} ${styles.btnNew}`}
-                            // onClick={onClickReload}
+                                type="submit"
+                            
                             >
                                 Xem
                             </button>
@@ -128,8 +139,11 @@ function BHYTModal({ setModalShow }) {
                             >
                                 Đóng
                             </button>
-                        </div>
+                        
+                
                     </div>
+                    </div>
+                </form>
 
 
 
