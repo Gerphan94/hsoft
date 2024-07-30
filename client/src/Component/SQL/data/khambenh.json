@@ -1,0 +1,16 @@
+[
+
+    {
+        "rootID": "1",
+        "name": "Basic",
+        "data": [
+            {
+                "id": "giaycamdoan",
+                "name": "Giấy cam đoan PTTT",
+                "des": "Khám bệnh >> BN >> Tiện ích >> Giấy cam đoan chấp nhận PTTT ...",
+                "sql": "SELECT * FROM HSOFTTAMANH0524.BA_THUCHIEN "
+            }
+        ]
+    }
+]
+

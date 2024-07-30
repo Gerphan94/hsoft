@@ -1,0 +1,56 @@
+[
+
+    {
+        "parentID": "1",
+        "name": "Khám bệnh",
+        "data": [
+            {
+                "id": "dutru",
+                "name": "Giấy cam đoan PTTT",
+                "des": "Khám bệnh >> BN >> Tiện ích >> Giấy cam đoan chấp nhận PTTT ...",
+                "sql": "SELECT * FROM HSOFTTAMANH0524.BA_THUCHIEN "
+            }
+        ]
+    },
+
+    {
+        "parentID": "1",
+        "name": "Dược",
+        "data": [
+            {
+                "id": "dutru",
+                "name": "Danh mục biệt dược",
+                "des": "Mô tả",
+                "sql": "SELECT * FROM HSOFTTAMANH.D_DMBD"
+            },
+            {
+                "id": "dutru",
+                "name": "Dự trù",
+                "des": "Mô tả",
+                "sql": "SELECT A.id, to_char(A.NGAY, 'dd/MM/yyyy HH24:MI:SS') as NGAY, B.TEN, C.TEN AS DUOCKP, \nto_char(A NGAYTAO, 'dd/MM/yyyy HH24:MI:SS') as NGAYTAO"
+            } 
+        ]
+    },
+    {
+        "parentID": "1",
+        "name": "Danh mục",
+        "data": [
+            {
+                "id": "bdtkp",
+                "name": "Khoa Phòng",
+                "des": "Danh mục khoa phòng",
+                "sql": "SELECT * FROM HSOFTTAMANH.BTDKP_BV"
+            },
+            {
+                "id": "dmbd",
+                "name": "Dự trù",
+                "des": "Mô tả",
+                "sql": "SELECT * FROM HSOFTTAMANH.D_DMBD"
+            }
+            
+            
+        ]
+    }
+
+]
+

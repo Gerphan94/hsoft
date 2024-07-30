@@ -1,0 +1,152 @@
+.bodyPage {
+    height: calc(100vh - 20px);
+    overflow: hidden;
+}
+
+.MainPage {
+    /* height: 800px; */
+    width: calc(100vw - 192px);
+    font-size: 11pt;
+    overflow-y: hidden;
+}
+
+
+
+.SideBarHeight {
+    height: 100%;
+    overflow: hidden;
+}
+
+.buttonSubmit {
+    background-color: green;
+    color: #ffffff;
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 2px 10px;
+}
+
+
+.buttonNew {
+    border: none;
+    display: flex;
+    padding: 0.75rem 1.5rem;
+    background-color: #488aec;
+    color: #ffffff;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+    align-items: center;
+    border-radius: 0.5rem;
+    user-select: none;
+    gap: 0.75rem;
+    box-shadow: 0 4px 6px -1px #488aec31, 0 2px 4px -1px #488aec17;
+    transition: all 0.6s ease;
+}
+
+.buttonNew:hover {
+    box-shadow: 0 10px 15px -3px #488aec4f, 0 4px 6px -2px #488aec17;
+}
+
+.buttonNew:focus,
+.buttonNew:active {
+    opacity: 0.85;
+    box-shadow: none;
+}
+
+.buttonNew svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* BUTTON CLOSE */
+
+.btn {
+    position: relative;
+    border-radius: 5px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 90px;
+    height: 32px;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+    z-index: 0;
+    overflow: hidden;
+    user-select: none;
+}
+
+.btn::before {
+    content: "";
+    width: 0;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: width 700ms ease-in-out;
+    display: inline-block;
+}
+
+.btn:hover::before {
+    width: 100%;
+}
+
+/* btn close */
+.btnClose {
+    background-color: rgb(230, 34, 77);
+    box-shadow: rgb(121, 18, 55) 0px 4px 0px 0px;
+}
+
+.btnClose::before {
+    background-color: rgb(121, 18, 55);
+}
+
+/* btn close */
+.btnNew {
+    background-color: rgb(90, 178, 255);
+    box-shadow: rgb(160, 222, 255) 0px 4px 0px 0px;
+}
+
+.btnNew::before {
+    background-color: rgb(160, 222, 255);
+}
+
+/* btn OK */
+.btnOk {
+    background-color: rgb(10, 104, 71);
+    box-shadow: rgb(122, 186, 120) 0px 4px 0px 0px;
+}
+
+.btnOk::before {
+    background-color: rgb(122, 186, 120);
+}
+
+.btnNotAllowed {
+    background-color: rgb(115, 119, 123);
+    box-shadow: rgb(115, 119, 123) 0px 4px 0px 0px;
+    cursor: not-allowed;
+}
+
+.btnNotAllowed::before {
+    background-color: rgb(115, 119, 123);
+}
+
+
+
+
+
+/* --------------------------- */
+
+
+
+
+.kb_tb_height {
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+}
