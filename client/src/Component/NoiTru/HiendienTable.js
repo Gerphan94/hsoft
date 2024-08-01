@@ -19,8 +19,9 @@ function Hiendien ({ data, selectedPid, setSelectedPatient, setSelectedIdKhoaOfP
                 <div className="mt-2 px-4 flex-grow w-full h-full overflow-y-auto" >
                     <table className="w-full">
                         <thead>
-                            <tr className="bg-gray-200 ">
+                            <tr className="bg-gray-200">
                                 <th className="text-center"><div className=" py-1 text-center">STT</div></th>
+                                <th className="hidden"><div >Mã QL</div></th>
                                 <th className=""><div className="">PID</div></th>
                                 <th className=""><div>Họ tên</div></th>
                                 <th><div>Năm sinh</div></th>
@@ -43,6 +44,7 @@ function Hiendien ({ data, selectedPid, setSelectedPatient, setSelectedIdKhoaOfP
                                     onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString(), ele.maql.toString())}
                                 >
                                     <td className="text-center"><div className=" py-1 text-center">{index + 1}</div></td>
+                                    <td className="hidden">{ele.maql}</td>
                                     <td><div className="text-left hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn}</div></td>
                                     <td><div className="flex gap-2 items-center">
                                         {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}

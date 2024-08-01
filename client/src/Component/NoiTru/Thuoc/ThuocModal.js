@@ -3,7 +3,7 @@ import styles from "../../styles.module.css"
 import CouponComponent from "./CouponComponent";
 import ThuocDetail from "./ThuocModalDetail";
 import CouponList from "./CouponList";
-function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }) {
+function ThuocModal({ site, pid, hoten, setModalShow, selected }) {
 
     const title = 'THUỐC - ' + pid + ' - ' + hoten;
 
@@ -18,7 +18,7 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
 
 
     const fetchDutrull = async () => {
-        const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selectedIdKhoaOfPatinent
+        const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selected.idkhoa
         const response = await fetch(fetchUrl);
         const data = await response.json();
 
@@ -37,7 +37,7 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
 
     useEffect(() => {
         fetchDutrull();
-    }, [selectedIdKhoaOfPatinent]);
+    }, [selected.idkhoa]);
 
     const onClickReload = () => {
         setMedicineDetail([]);

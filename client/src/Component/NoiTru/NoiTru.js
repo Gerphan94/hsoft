@@ -126,9 +126,8 @@ function NoiTru({ site }) {
             {isShowModalThuoc &&
                 <ThuocModal
                     site={site}
-                    pid={selectedPatient.pid}
-                    hoten={selectedPatient.name}
-                    selectedIdKhoaOfPatinent={selectedIdKhoaOfPatinent}
+                   
+                    selected={selected}
                     setModalShow={setIsShowModalThuoc}
                 />}
 
@@ -142,9 +141,7 @@ function NoiTru({ site }) {
             {showBHYTModal &&
                 <BHYTModal
                     site={site}
-                    pid={selectedPatient.pid}
-                    hoten={selectedPatient.name}
-                    selectedIdKhoaOfPatinent={selectedIdKhoaOfPatinent}
+                    selected={selected}
                     setModalShow={setShowBHYTModal}
                 />}
 

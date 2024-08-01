@@ -6,22 +6,71 @@ import "react-datepicker/dist/react-datepicker.css";
 import styles from "../../styles.module.css"
 import { RiSearch2Line, RiAlignJustify } from "react-icons/ri";
 
-function BHYTModal({ setModalShow }) {
+function BHYTModal({ site, setModalShow, selected }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
 
-    const [fromDate, setFromDate] = useState(new Date());
-    const [toDate, setToDate] = useState(new Date());
 
-    useEffect(() => {
+    const [selectedDT, setSelectedDT] = useState({ id: 0, name: '' });
+
+
+    const [enable, setEnable] = useState(true);
+
+    const [formData, setFormData] = useState({
+        doituong: { id: 1, name: 'Thu phí' },
+        sothe: '',
+        fromDate: new Date(),
+        toDate: new Date()
+    });
+
+    const generateRandomString = () => {
+        let result = '';
+        const characters = '0123456789';
+        const charactersLength = characters.length;
+        for (let i = 0; i < 12; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    };
+    const Gerenrate = () => {
         const today = new Date();
-        setFromDate(today);
-    
         const nextYear = new Date(today);
         nextYear.setFullYear(today.getFullYear() + 1);
         nextYear.setDate(nextYear.getDate() - 1);
-        setToDate(nextYear);
-      }, []);
+        const tmp_sothe = 'GD4' + generateRandomString() + '79669'
+        setFormData({
+            sothe: tmp_sothe,
+            fromDate: today,
+            toDate: nextYear
+        });
+        console.log("Generate...." + tmp_sothe)
+    }
+
+    useEffect(() => {
+        const fetchDoituong = async () => {
+
+            try {
+                const fetchUrl = apiURL + "/noi-tru/get-benhandt-doituong/" + site + "/" + selected.maql;
+                const response = await fetch(fetchUrl);
+                const data = await response.json();
+                console.log(data.madoituong)
+                setSelectedDT({ id: data.madoituong, name: data.doituong });
+                Gerenrate();
+                // setFormData({
+                //     doituong: selectedDT,
+                //     sothe: 'GD4' + generateRandomString() + '79669',
+                //     fromDate: new Date(),
+                //     toDate: new Date()
+
+                // });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchDoituong();
+
+    }, [])
+
 
     const [selectedKcb, setSelectedKcb] = useState({ id: '79669', name: '79669 - Bệnh viện tâm anh HCM' });
     const [code, setCode] = useState('');
@@ -29,108 +78,125 @@ function BHYTModal({ setModalShow }) {
     const KCBs = [
         { id: '79669', name: '79669 - Bệnh viện tâm anh HCM' }
     ]
-
-    const [formData, setFormData] = useState({
-        code: '',
-        fromDate: '',
-        toDate: ''
-      });
-
     
 
-    const Gerenrate = () => {
-        let firstCode = 'GD4'
-
-
-        const generateRandomString = () => {
-            let result = '';
-            const characters = '0123456789';
-            const charactersLength = characters.length;
-            for (let i = 0; i < 12; i++) {
-              result += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
-            return result;
-          };
-        setCode(firstCode  + generateRandomString() + selectedKcb.id);
-        console.log('Generate....')
-    }
-
-
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
-        console.log(e.target.value);
+        const form = e.target;
+        const formData = new FormData(form);
+        const formJson = Object.fromEntries(formData.entries());
+        formJson['mabv'] = '79669';
+        formJson['pid'] = selected.pid;
+        formJson['maql'] = selected.maql;
+
+        console.log(formJson);
+
+        try {
+            const response = await fetch(apiURL + 'noi-tru/insert-bhyt/' + site, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formJson),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
+
     }
 
     return (
         <>
             <div className="fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
-                <div className="relative w-1/3 h-1/2  mx-auto bg-white">
-                    
-                <form className="w-full" onSubmit={(e) => onSubmit(e)}>
-                    <div className="h-full flex flex-col justify-between">
-                    
+                <div className="relative w-1/6 h-2/3  mx-auto bg-white">
+                    <form className="w-full h-full flex flex-col justify-between" onSubmit={(e) => onSubmit(e)}>
                         {/* HEADER */}
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
-                            THÔNG TIN THẺ BHYT
+                            THÔNG TIN ĐỐI TƯỢNG
                         </div>
                         {/* BODY */}
-                        <div className=" h-full p-4 overflow-hidden ">
-
-                                <div className="text-left p-2">
-                                    <label htmlFor="KCB" className="w-24">ĐK KCB</label>
-                                    <Dropdown name="KCB" id="KCB" data={KCBs} selectedOption={selectedKcb} setSelectedOption={setSelectedKcb} />
-
-                                </div>
-                                <div className="text-left p-2">
-                                    <label className="w-24">Mã thẻ</label>
-                                    <input 
-                                    name='code' 
-                                    id='code' 
-                                    type="text" 
-                                    className="border w-full px-2 py-1 outline-none"
-                                    value={code}
-                                    
+                        <div className=" h-full flex flex-col flex-grow p-4 overflow-hidden ">
+                            {/* <div className="text-left p-2">
+                                <label htmlFor="doituong" className="w-24">Đối tượng</label>
+                                <div className="py-1">
+                                    <Dropdown
+                                        name="doituong"
+                                        data={[{ id: 2, name: 'Thu phí' }, { id: 1, name: 'BHYT' }]}
+                                        selectedOption={selectedDT}
+                                        setSelectedOption={setSelectedDT}
+                                        searchable={false}
                                     />
                                 </div>
-                                <div className="flex gap-2">
-                                    <div className="text-left p-2">
-                                        <label className="w-24 block">Từ ngày:</label>
-                                        <DatePicker
-                                            className="border px-2 py-1 text-center outline-none w-full"
-                                            name='fromDate'
-                                            id='fromDate'
-                                            selected={fromDate}
-                                            onChange={(date) => setFromDate(date)}
-                                        />
-                                    </div>
-                                    <div className="text-left p-2">
-                                        <label className="w-24 block">Đến ngày:</label>
-                                        <DatePicker
-                                            className="border px-2 py-1 text-center outline-none w-full"
-                                            name='toDate'
-                                            id="toDate"
-                                            selected={toDate}
-                                            onChange={(date) => setToDate(date)}
-                                        />
-                                    </div>
+                            </div> */}
+                            <div className="text-left p-2">
+                                <label htmlFor="KCB" className="w-24">ĐK KCB</label>
+                                <div className="py-1">
+                                    <Dropdown
+                                        name="KCB"
+                                        id="KCB" data={KCBs}
+                                        selectedOption={selectedKcb}
+                                        setSelectedOption={setSelectedKcb}
+                                    />
                                 </div>
-                                <div>
-                                    <div 
+                            </div>
+                            <div className="text-left p-2">
+                                <label className="w-24">Mã thẻ</label>
+                                <input
+                                    required={true}
+                                    name='sothe'
+                                    id='sothe'
+                                    type="text"
+                                    className="border w-full px-2 py-1 outline-none"
+                                    value={formData.sothe}
+                                />
+                            </div>
+                            <div className="flex gap-2">
+                                <div className="text-left p-2">
+                                    <label className="w-24 block">Từ ngày:</label>
+                                    <DatePicker
+                                        className="border px-2 py-1 text-center outline-none w-full"
+                                        name='fromDate'
+                                        id='fromDate'
+                                        dateFormat="dd/MM/yyyy"
+                                        selected={formData.fromDate}
+                                    />
+                                </div>
+                                <div className="text-left p-2">
+                                    <label className="w-24 block">Đến ngày:</label>
+                                    <DatePicker
+                                        className="border px-2 py-1 text-center outline-none w-full"
+                                        name='toDate'
+                                        id="toDate"
+                                        dateFormat="dd/MM/yyyy"
+                                        selected={formData.toDate}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <div
                                     className="border rounded-md px-2 py-1 select-none bg-[#36BA98] cursor-pointer text-white text-center"
                                     onClick={Gerenrate}
-                                    
-                                    >Gerenrate</div>
-                                </div>
+                                >Gerenrate</div>
+                            </div>
+
                         </div>
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
-                            <button
-                                className={`${styles.btn} ${styles.btnNew}`}
-                                type="submit"
-                            
-                            >
-                                Xem
-                            </button>
+                            {selectedDT.id === 2 &&
+
+                                <button
+                                    className={`${styles.btn} ${styles.btnOk}`}
+                                    type="submit"
+                                >
+
+                                    Cấp BHYT
+                                </button>
+                            }
 
                             <button
                                 className={`${styles.btn} ${styles.btnClose}`}
@@ -139,14 +205,8 @@ function BHYTModal({ setModalShow }) {
                             >
                                 Đóng
                             </button>
-                        
-                
-                    </div>
-                    </div>
-                </form>
-
-
-
+                        </div>
+                    </form>
                 </div>
             </div>
             <div className="opacity-75 fixed inset-0 z-40 bg-black"></div>

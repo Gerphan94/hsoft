@@ -53,7 +53,7 @@ function ThuocDetail({ couponType, site, data, couponId }) {
                 {data.map((item) => (
                     // <div className="pt-2 text-sm border rounded-md p-2 mt-4">
                     <div className="relative border-b rounded-md p-3 mb-3 text-left">
-                        {/* <span className="absolute top-0 text-[10px] right-0 w-10 rounded-md bg-slate-300">{item.stt_index}</span> */}
+                        <span className="absolute top-0 text-[10px] right-0 w-10 rounded-md bg-slate-300">{item.stt_index}</span>
                         <div className="flex justify-between">
                             <div className="flex gap-2 items-center">
                                 <span className="size-6 rounded-full bg-[#379777] border text-center">

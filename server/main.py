@@ -18,10 +18,25 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 medicine_cols = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc']
 
 
-def schema():
+def schema_now():
     inow = datetime.now()
     format_string = inow.strftime('%m%y')
     return f'HSOFTTAMANH{format_string}'
+
+def schema_mutil(fromDate, toDate):
+
+    # Initialize an empty set to store unique MMYY strings
+    date_strings = set()
+    # Loop through each date in the range
+    current_date = fromDate
+    while current_date <= toDate:
+        # Format the current date as MMYY and add it to the set
+        date_strings.add('HSOFTTAMANH' + current_date.strftime('%m%y'))
+        # Move to the next day
+        current_date += timedelta(days=1)
+    # Convert the set to a sorted list
+    # sorted_date_strings = sorted(date_strings)
+    return date_strings
 
 
 def conn_info(env):
@@ -508,26 +523,86 @@ def noitru_hiendien(site, makp):
     
     return jsonify(result), 200
 
+@app.route('/noi-tru/get-benhandt-doituong/<site>/<maql>', methods=['GET'])
+def noitru_benhandt_doituong(site, maql):
+    cn = conn_info(site)
+    cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
+    result = {}
+    stm = f'''
+        SELECT A.MABN, D.HOTEN, B.MADOITUONG, B.DOITUONG, C.SOTHE , C.TUNGAY , C.DENNGAY, C.MABV
+        FROM BENHANDT A
+        INNER JOIN DOITUONG B ON A.MADOITUONG = B.MADOITUONG 
+        LEFT JOIN BHYT C ON A.MAQL = C.MAQL
+        INNER JOIN BTDBN D ON A.MABN = D.MABN
+        WHERE  A.MAQL = '{maql}'
+    '''
+    
+    benhandt = cursor.execute(stm).fetchone()
+    result['pid'] = benhandt[0]
+    result['pname'] = benhandt[1]
+    result['madoituong'] = benhandt[2]
+    result['doituong'] = benhandt[3]
+    result['sothe'] = benhandt[4]
+    result['tungay'] = benhandt[5]
+    result['denngay'] = benhandt[6]
+    result['mabv'] = benhandt[7]
+    
+    return jsonify(result), 200
+
+@app.route('/noi-tru/insert-bhyt/<site>', methods=['POST'])
+def noitru_insertbhyt(site):
+    cn = conn_info(site)
+    cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
+    
+    if site != 'HCM_UAT':
+        return jsonify({'error':'Site không có quyền'}), 500
+    data = request.get_json()
+    mabn = data['pid']
+    maql = data['maql']
+    sothe = data['sothe']
+    fromDate = datetime.strptime(data['fromDate'], '%d/%m/%Y')
+    toDate = datetime.strptime(data['toDate'], '%d/%m/%Y')
+    ngayud = datetime.now()
+    mabv = data['mabv']
+    
+    stm_check = f"SELECT COUNT(*) FROM BHYT WHERE MABN = '{mabn}' AND MAQL = '{maql}' AND SUDUNG = 1"
+    count = cursor.execute(stm_check).fetchone()[0]
+    if (count == 0):
+        stm = f'''
+            INSERT INTO BHYT
+            (MABN, MAQL, SOTHE, DENNGAY, MABV, MAPHU, TUNGAY, SUDUNG, TRAITUYEN, NGAYUD, KIEMTRA, MUCLUONG, CANBO, LOAIDT, MIENCHITRA, LOAIKV )
+            VALUES ('{mabn}','{maql}','{sothe}',{toDate}, {mabv}, 0, {fromDate}, 1, 0, {ngayud}, 1, 0, 0, 0, 0, 0)
+        '''
+        print(stm)
+        try:
+            cursor.execute(stm)
+            return jsonify(data), 200
+        except Exception as e:
+            
+            print(str(e))
+            return jsonify({'error':'Không thêm được BHYT'}), 500
+    else:
+        return jsonify({'error':'Bệnh nhân đã có thẻ'}), 500
+            
+        
+
 @app.route('/noi-tru/get-nhap-khoa-of-bn/<site>/<string:maql>', methods=['GET'])
 def noitru_nhapkhoaofbn(site, maql):
     cn = conn_info(site)
     cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
     result = []
-
     stm = f'''
         SELECT TO_CHAR(A.ID) AS IDKHOA, B.TENKP FROM NHAPKHOA A
         INNER JOIN BTDKP_BV B ON A.MAKP = B.MAKP 
         WHERE A.MAQL = '{maql}'
         ORDER BY A.NGAY DESC
     '''
-    
     nhapkhoa = cursor.execute(stm).fetchall()
     for nhapkhoa in nhapkhoa:
         result.append({
             'id': nhapkhoa[0],
             'name': nhapkhoa[1]
         })
-    print(list(result))
     return jsonify(result), 200
 
 @app.route('/noi-tru/get-chidinh-by-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
@@ -536,22 +611,27 @@ def noitru_getchidinhbyidkhoa(site, idkhoa):
     cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
     result = []
     
+    ngaynhapkhoa = cursor.execute(f'SELECT NGAY FROM NHAPKHOA WHERE ID = {idkhoa}').fetchone()[0]
+    iNow = datetime.now()  
+    schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
+    print(schema_ar)
+    
     col_names = ['ngay', 'doituong', 'tendichvu', 'soluong', 'dongia', 'idchidinh', 'ghichu', 'thuchien', 'ngayylenh', 'ngaythuchien', 'maphieu', 'benhpham', 'idloai', 'idnhom']
-
-    stm = f'''
-        SELECT TO_CHAR(A.NGAY, 'dd/MM/yyyy') AS NGAY, C.DOITUONG, B.TEN, A.SOLUONG, A.DONGIA, TO_CHAR(A.IDCHIDINH) AS IDCHIDINH, A.GHICHU, A.THUCHIEN, TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI') AS NGAYYLENH, TO_CHAR(A.NGAYTHUCHIEN, 'dd/MM/yyyy HH24:MI') AS NGAYTHUCHIEN, A.MAPHIEU, D.TEN AS BENHPHAM, E.ID AS IDLOAI, E.ID_NHOM AS IDNHOM
-        FROM {schema()}.V_CHIDINH A
-        INNER JOIN V_GIAVP B ON B.ID = A.MAVP
-        INNER JOIN DOITUONG C ON C.MADOITUONG = A.MADOITUONG
-        INNER JOIN DMBENHPHAM D ON D.ID = A.BENHPHAM 
-        INNER JOIN V_LOAIVP E ON B.ID_LOAI = E.ID
-        WHERE A.IDKHOA =  '{idkhoa}'
-        AND A.MADOITUONG <> 3
-        ORDER BY NGAY DESC, NGAYYLENH ASC
-    '''
-    chidinh = cursor.execute(stm).fetchall()
-    for chidinh in chidinh:
-        result.append(dict(zip(col_names, chidinh)))
+    for schema in reversed(schema_ar):
+        stm = f'''
+            SELECT TO_CHAR(A.NGAY, 'dd/MM/yyyy') AS NGAY, C.DOITUONG, B.TEN, A.SOLUONG, A.DONGIA, TO_CHAR(A.IDCHIDINH) AS IDCHIDINH, A.GHICHU, A.THUCHIEN, TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI') AS NGAYYLENH, TO_CHAR(A.NGAYTHUCHIEN, 'dd/MM/yyyy HH24:MI') AS NGAYTHUCHIEN, A.MAPHIEU, D.TEN AS BENHPHAM, E.ID AS IDLOAI, E.ID_NHOM AS IDNHOM
+            FROM {schema}.V_CHIDINH A
+            INNER JOIN V_GIAVP B ON B.ID = A.MAVP
+            INNER JOIN DOITUONG C ON C.MADOITUONG = A.MADOITUONG
+            INNER JOIN DMBENHPHAM D ON D.ID = A.BENHPHAM 
+            INNER JOIN V_LOAIVP E ON B.ID_LOAI = E.ID
+            WHERE A.IDKHOA =  '{idkhoa}'
+            AND A.MADOITUONG <> 3
+            ORDER BY NGAY DESC, NGAYYLENH ASC
+        '''
+        chidinh = cursor.execute(stm).fetchall()
+        for chidinh in chidinh:
+            result.append(dict(zip(col_names, chidinh)))
     return jsonify(result), 200
 
 @app.route('/noitru/dutrull_ofBN_inHiendien/<site>/<idkhoa>', methods=['GET'])
@@ -566,11 +646,11 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     stm =f'''
         WITH DSPHIEU AS (
             SELECT A.ID, A.IDDUYET, A.SONGAY
-            FROM {schema()}.D_DUTRULL A
+            FROM {schema_now()}.D_DUTRULL A
             WHERE A.IDKHOA = '{idkhoa}'
             UNION ALL 
             SELECT B.ID, B.IDDUYET, B.SONGAY
-            FROM {schema()}.D_XTUTRUCLL B
+            FROM {schema_now()}.D_XTUTRUCLL B
             WHERE B.IDKHOA = '{idkhoa}'
         )
         SELECT to_char(DS.ID) AS ID, DS.IDDUYET, DS.SONGAY, TO_CHAR(B.NGAY, 'dd/MM/yyyy') AS NGAYTAO, TO_CHAR(B.NGAY, 'HH24:MI') AS GIOTAO , C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP,
@@ -580,7 +660,7 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
             ELSE 3
         END AS LOAIPHIEU
         FROM DSPHIEU DS
-        INNER JOIN {schema()}.D_DUYET B ON DS.IDDUYET = B.ID
+        INNER JOIN {schema_now()}.D_DUYET B ON DS.IDDUYET = B.ID
         INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
         INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
         ORDER BY NGAYTAO DESC, GIOTAO DESC
@@ -609,10 +689,10 @@ def noitru_phieu_info(site,type, id):
     stm = f'''
         SELECT A.ID, C.TEN, D.MAICD, D.CHANDOAN,
         D.MACH, D.NHIETDO,D.HUYETAP, D.NHIPTHO, D.CANNANG, D.CHIEUCAO
-        FROM {schema()}.{d_table} A
-        INNER JOIN {schema()}.D_DUYET B ON A.IDDUYET = B.ID
+        FROM {schema_now()}.{d_table} A
+        INNER JOIN {schema_now()}.D_DUYET B ON A.IDDUYET = B.ID
         INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
-        LEFT JOIN {schema()}.D_DAUSINHTON D ON D.IDDUTRU = A.ID 
+        LEFT JOIN {schema_now()}.D_DAUSINHTON D ON D.IDDUTRU = A.ID 
         WHERE A.ID = '{id}'
     '''
     detail = cursor.execute(stm).fetchone()
@@ -642,7 +722,7 @@ def noitru_dutru_ct(site,type, id):
         SELECT A.STT AS STT_INDEX, A.TT, B.DOITUONG, A.MABD AS IDBD, C.MA AS MABD, (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG, C.DANG, C.DONVIDUNG, A.DUONGDUNG,
         A.SOLAN , A.LAN ,  A.SLYEUCAU AS SOLUONG,
         A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI, A.GIOBD, A.GIODUNG, A.LIEUDUNGTHUOC, A.TOCDO, A.CACHDUNG, A.DALIEU
-        FROM {schema()}.{d_table} A
+        FROM {schema_now()}.{d_table} A
         INNER JOIN D_DOITUONG B ON B.MADOITUONG = A.MADOITUONG
         INNER JOIN D_DMBD C ON C.ID = A.MABD 
         WHERE A.ID = '{id}'
@@ -665,7 +745,7 @@ def noitru_tutruc_ct(site, id):
         SELECT A.STT AS STT_INDEX, A.TT, B.DOITUONG, A.MABD, (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG, C.DANG, C.DONVIDUNG, A.DUONGDUNG,
         A.SOLAN , A.LAN ,  A.SLYEUCAU AS SOLUONG,
         A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI, A.GIOBD, A.GIODUNG, A.LIEUDUNGTHUOC, A.TOCDO, A.CACHDUNG, A.DALIEU
-        FROM {schema()}.D_XTUTRUCCT A
+        FROM {schema_now()}.D_XTUTRUCCT A
         INNER JOIN D_DOITUONG B ON B.MADOITUONG = A.MADOITUONG
         INNER JOIN D_DMBD C ON C.ID = A.MABD 
         WHERE A.ID = '{id}'
@@ -771,7 +851,7 @@ def duoc_dup_act(site, idkho):
     
     stm =f'''
         SELECT B.MAATC AS ID, B.MAATC AS NAME
-        FROM {schema()}.D_TONKHOTH A
+        FROM {schema_now()}.D_TONKHOTH A
         INNER JOIN D_DMBD B ON A.MABD = B.ID 
         WHERE A.MAKHO = {idkho}
         GROUP BY MAATC
@@ -807,7 +887,7 @@ def tonkho_ketoa_pk(site, type):
 
     stm =f'''
         SELECT C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT ,sum(a.TONDAU) AS TONTHUC, sum(A.SLYEUCAU) AS BOOKING ,  (sum(a.TONDAU) - sum(A.SLYEUCAU)) AS TONKHADUNG
-        FROM {schema()}.D_TONKHOTH A
+        FROM {schema_now()}.D_TONKHOTH A
         INNER JOIN D_DMKHO B ON A.MAKHO = B.ID
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         WHERE A.MAKHO IN ({kho_ids})
@@ -846,7 +926,7 @@ def duoc_tonkho_theokho_dskho(site):
     else:
         kho_ids = hcm_kho_ids 
     stm = f'''SELECT ID, TEN FROM D_DMKHO WHERE id IN ({kho_ids})'''
-    schemaa = schema()
+    schemaa = schema_now()
     khos = cursor.execute(stm).fetchall()
     for kho in khos:
         result.append({
@@ -864,7 +944,7 @@ def duoc_tonkho_theokho(site, idkho):
     col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc']
     stm = f'''
         SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
-        FROM {schema()}.D_TONKHOTH A 
+        FROM {schema_now()}.D_TONKHOTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
         WHERE A.MAKHO = {idkho}
@@ -968,7 +1048,7 @@ def duoc_tontutruc(site, idtutruc):
     result = []
     stm = f'''
         SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
-        FROM {schema()}.D_TUTRUCTH A 
+        FROM {schema_now()}.D_TUTRUCTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
         WHERE A.MAKP = {idtutruc}
@@ -1284,7 +1364,7 @@ def toamau_tonkho(site, idkho):
         detail_ar = []
         stm2 = f'''
             WITH tmp AS (
-                SELECT MAKHO, MABD, TONDAU, SLNHAP, SLXUAT, SLYEUCAU FROM {schema()}.D_TONKHOTH
+                SELECT MAKHO, MABD, TONDAU, SLNHAP, SLXUAT, SLYEUCAU FROM {schema_now()}.D_TONKHOTH
                 WHERE MAKHO = {idkho}
             )
             SELECT A.STT, A.MABD , B.MA, (B.TEN || ' ' || B.HAMLUONG) AS TEN , B.TENHC,  A.MA AS MA_MAU, A.TENBD AS TENBD_MAU , A.TENHC AS TENHC_MAU, A.DANG, B.DONVIDUNG ,B.BHYT, C.DALIEU, B.NHOMBO,A.SOLAN, A.SOLUONG , A.LAN, COALESCE(D.TONDAU, 0) AS TONDAU , COALESCE(D.SLNHAP, 0) AS SLNHAP, COALESCE(D.SLXUAT, 0) AS SLXUAT,  COALESCE(D.SLYEUCAU, 0) AS SLYEUCAU
