@@ -571,7 +571,7 @@ def noitru_insertbhyt(site):
         stm = f'''
             INSERT INTO BHYT
             (MABN, MAQL, SOTHE, DENNGAY, MABV, MAPHU, TUNGAY, SUDUNG, TRAITUYEN, NGAYUD, KIEMTRA, MUCLUONG, CANBO, LOAIDT, MIENCHITRA, LOAIKV )
-            VALUES ('{mabn}','{maql}','{sothe}',{toDate}, {mabv}, 0, {fromDate}, 1, 0, {ngayud}, 1, 0, 0, 0, 0, 0)
+            VALUES ('{mabn}','{maql}','{sothe}',TO_DATE('{toDate}', 'YYYY-MM-DD HH24:MI:SS') , {mabv}, 0, TO_DATE('{fromDate}', 'YYYY-MM-DD HH24:MI:SS'), 1, 0, TO_TIMESTAMP('{ngayud}', 'YYYY-MM-DD HH24:MI:SS.FF'), 1, 0, 0, 0, 0, 0)
         '''
         print(stm)
         try:
