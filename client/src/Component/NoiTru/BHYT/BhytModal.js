@@ -88,22 +88,28 @@ function BHYTModal({ site, setModalShow, selected }) {
         formJson['mabv'] = '79669';
         formJson['pid'] = selected.pid;
         formJson['maql'] = selected.maql;
-
+        formJson['madoituong'] = 1;
         console.log(formJson);
-
         try {
-            const response = await fetch(apiURL + 'noi-tru/insert-bhyt/' + site, {
+            const insertBHYT = await fetch(apiURL + 'noi-tru/insert-bhyt/' + site, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formJson),
             });
-            if (response.ok) {
-                const data = await response.json();
+            // const updateDoituong = await fetch(apiURL + 'noi-tru/update-doituong/' + site, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(formJson),
+            // });
+            if (insertBHYT.ok) {
+                const data = await insertBHYT.json();
                 console.log(data);
-
             }
+            
         } catch (error) {
             console.error('Error:', error.message);
         }

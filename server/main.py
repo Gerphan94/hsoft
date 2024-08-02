@@ -549,9 +549,30 @@ def noitru_benhandt_doituong(site, maql):
     
     return jsonify(result), 200
 
+@app.route('/noi-tru/update-doituong/<site>', methods=['POST'])
+def noitru_updatedoituong(site):
+    cn = conn_info(site)
+    cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
+    if site != 'HCM_UAT':
+        return jsonify({'error':'Site không có quyền'}), 403
+    data = request.get_json()
+    pid = data['pid']
+    maql = data['maql']
+    madoituong = data['madoituong']
+    try:
+        stm = f"UPDATE BENHANDT SET MADOITUONG = {madoituong} WHERE MABN = '{pid}' AND MAQL = '{maql}'"
+        cursor.execute(stm)
+
+        return jsonify({'message': 'Cập nhật đối tượng bhyt thành công'}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({'message': str(e)}), 500
+
 @app.route('/noi-tru/insert-bhyt/<site>', methods=['POST'])
 def noitru_insertbhyt(site):
     cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    connection.autocommit = True
     cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
     
     if site != 'HCM_UAT':
@@ -564,6 +585,7 @@ def noitru_insertbhyt(site):
     toDate = datetime.strptime(data['toDate'], '%d/%m/%Y')
     ngayud = datetime.now()
     mabv = data['mabv']
+    madoituong = 1
     
     stm_check = f"SELECT COUNT(*) FROM BHYT WHERE MABN = '{mabn}' AND MAQL = '{maql}' AND SUDUNG = 1"
     count = cursor.execute(stm_check).fetchone()[0]
@@ -573,10 +595,13 @@ def noitru_insertbhyt(site):
             (MABN, MAQL, SOTHE, DENNGAY, MABV, MAPHU, TUNGAY, SUDUNG, TRAITUYEN, NGAYUD, KIEMTRA, MUCLUONG, CANBO, LOAIDT, MIENCHITRA, LOAIKV )
             VALUES ('{mabn}','{maql}','{sothe}',TO_DATE('{toDate}', 'YYYY-MM-DD HH24:MI:SS') , {mabv}, 0, TO_DATE('{fromDate}', 'YYYY-MM-DD HH24:MI:SS'), 1, 0, TO_TIMESTAMP('{ngayud}', 'YYYY-MM-DD HH24:MI:SS.FF'), 1, 0, 0, 0, 0, 0)
         '''
-        print(stm)
+        stm_update = f"UPDATE BENHANDT SET MADOITUONG = {madoituong} WHERE MABN = '{mabn}' AND MAQL = '{maql}'"
+     
         try:
             cursor.execute(stm)
-            return jsonify(data), 200
+            cursor.execute(stm_update)
+            cursor.connection.commit()
+            return jsonify({'message': 'Thêm BHYT thành công'}), 200
         except Exception as e:
             
             print(str(e))
@@ -585,7 +610,6 @@ def noitru_insertbhyt(site):
         return jsonify({'error':'Bệnh nhân đã có thẻ'}), 500
             
         
-
 @app.route('/noi-tru/get-nhap-khoa-of-bn/<site>/<string:maql>', methods=['GET'])
 def noitru_nhapkhoaofbn(site, maql):
     cn = conn_info(site)
@@ -614,7 +638,6 @@ def noitru_getchidinhbyidkhoa(site, idkhoa):
     ngaynhapkhoa = cursor.execute(f'SELECT NGAY FROM NHAPKHOA WHERE ID = {idkhoa}').fetchone()[0]
     iNow = datetime.now()  
     schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
-    print(schema_ar)
     
     col_names = ['ngay', 'doituong', 'tendichvu', 'soluong', 'dongia', 'idchidinh', 'ghichu', 'thuchien', 'ngayylenh', 'ngaythuchien', 'maphieu', 'benhpham', 'idloai', 'idnhom']
     for schema in reversed(schema_ar):
@@ -640,37 +663,41 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-
+    
+    ngaynhapkhoa = cursor.execute(f'SELECT NGAY FROM NHAPKHOA WHERE ID = {idkhoa}').fetchone()[0]
+    iNow = datetime.now()  
+    schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
+    print(schema_ar)
     # get all phieu 
     col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'giotao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu'] 
-    stm =f'''
-        WITH DSPHIEU AS (
-            SELECT A.ID, A.IDDUYET, A.SONGAY
-            FROM {schema_now()}.D_DUTRULL A
-            WHERE A.IDKHOA = '{idkhoa}'
-            UNION ALL 
-            SELECT B.ID, B.IDDUYET, B.SONGAY
-            FROM {schema_now()}.D_XTUTRUCLL B
-            WHERE B.IDKHOA = '{idkhoa}'
-        )
-        SELECT to_char(DS.ID) AS ID, DS.IDDUYET, DS.SONGAY, TO_CHAR(B.NGAY, 'dd/MM/yyyy') AS NGAYTAO, TO_CHAR(B.NGAY, 'HH24:MI') AS GIOTAO , C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP,
-        CASE
-            WHEN B.LOAI = 1 AND C.XUATVIEN = 0 THEN 1
-            WHEN B.LOAI = 2 THEN 2
-            ELSE 3
-        END AS LOAIPHIEU
-        FROM DSPHIEU DS
-        INNER JOIN {schema_now()}.D_DUYET B ON DS.IDDUYET = B.ID
-        INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
-        INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
-        ORDER BY NGAYTAO DESC, GIOTAO DESC
-    '''
-    dutrull = cursor.execute(stm).fetchall()
-    
-    for dutru in dutrull:
-        result.append(dict(zip(col_names, dutru)))
+    for schema in reversed(schema_ar):
+        stm =f'''
+            WITH DSPHIEU AS (
+                SELECT A.ID, A.IDDUYET, A.SONGAY
+                FROM {schema}.D_DUTRULL A
+                WHERE A.IDKHOA = '{idkhoa}'
+                UNION ALL 
+                SELECT B.ID, B.IDDUYET, B.SONGAY
+                FROM {schema}.D_XTUTRUCLL B
+                WHERE B.IDKHOA = '{idkhoa}'
+            )
+            SELECT to_char(DS.ID) AS ID, DS.IDDUYET, DS.SONGAY, TO_CHAR(B.NGAY, 'dd/MM/yyyy') AS NGAYTAO, TO_CHAR(B.NGAY, 'HH24:MI') AS GIOTAO , C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP,
+            CASE
+                WHEN B.LOAI = 1 AND C.XUATVIEN = 0 THEN 1
+                WHEN B.LOAI = 2 THEN 2
+                ELSE 3
+            END AS LOAIPHIEU
+            FROM DSPHIEU DS
+            INNER JOIN {schema}.D_DUYET B ON DS.IDDUYET = B.ID
+            INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
+            INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
+            ORDER BY NGAYTAO DESC, GIOTAO DESC
+        '''
+        print(stm)
+        dutrull = cursor.execute(stm).fetchall()
+        for dutru in dutrull:
+            result.append(dict(zip(col_names, dutru)))
     return jsonify(result), 200
-
 
 
 
