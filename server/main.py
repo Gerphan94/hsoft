@@ -669,8 +669,8 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
     print(schema_ar)
     # get all phieu 
-    col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'giotao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu'] 
-    for schema in reversed(schema_ar):
+    col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'giotao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu', 'schema'] 
+    for schema in schema_ar:
         stm =f'''
             WITH DSPHIEU AS (
                 SELECT A.ID, A.IDDUYET, A.SONGAY
@@ -686,14 +686,14 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
                 WHEN B.LOAI = 1 AND C.XUATVIEN = 0 THEN 1
                 WHEN B.LOAI = 2 THEN 2
                 ELSE 3
-            END AS LOAIPHIEU
+            END AS LOAIPHIEU, 
+            'HSOFTTAMANH' || '' || TO_CHAR(B.NGAY, 'MMyy') AS SCHEMA
             FROM DSPHIEU DS
             INNER JOIN {schema}.D_DUYET B ON DS.IDDUYET = B.ID
             INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
             INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
             ORDER BY NGAYTAO DESC, GIOTAO DESC
         '''
-        print(stm)
         dutrull = cursor.execute(stm).fetchall()
         for dutru in dutrull:
             result.append(dict(zip(col_names, dutru)))
@@ -701,8 +701,9 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
 
 
 
-@app.route('/noitru/phieu_info/<site>/<int:type>/<id>', methods=['GET'])
-def noitru_phieu_info(site,type, id):
+@app.route('/noitru/phieu_info/<site>/<int:type>/<id>/<ngay>', methods=['GET'])
+def noitru_phieu_info(site,type, id, ngay):
+    print(ngay)
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
@@ -1240,8 +1241,25 @@ def danhmuc_icd10(site):
         })
     
     return jsonify(result), 200
-    
 
+
+@app.route('/danh-muc/coso-kcb-of-tinhthanh/<site>/<matinhthanh>', methods=['GET'])
+def danhmuc_coso_kcb_of_tinhthanh(site, matinhthanh):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = f"SELECT MABV, TENBV FROM DMNOICAPBHYT WHERE MATINH = {matinhthanh} ORDER BY MABV ASC"
+    cosos = cursor.execute(stm).fetchall()
+    for coso in cosos:
+        result.append({
+            'id': coso[0],
+            'name': coso[0] + ' - ' + coso[1]
+        })
+    
+    return jsonify(result), 200
+  
 
 # DANH MỤC NHÂN VIÊN
 @app.route('/danhmuc/nhomnhanvien/<site>', methods=['GET'])

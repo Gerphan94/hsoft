@@ -10,9 +10,7 @@ function ThuocModal({ site, pid, hoten, setModalShow, selected }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [dutrull, setDutrull] = useState([]);
-    const [selectedCouponID, setSelectedCouponID] = useState('');
-    const [selectedCouponType, setSelectedCouponType] = useState(0);
-    const [groupedData, setGroupedData] = useState({});
+    const [selectedCoupon, setSelectedCoupon] = useState({id: 0,  name:'', type:'', ngay:''});
     const [medicineDetail, setMedicineDetail] = useState([]);
     const [dutrullDetail, setDutrullDetail] = useState({});
 
@@ -41,17 +39,16 @@ function ThuocModal({ site, pid, hoten, setModalShow, selected }) {
 
     const onClickReload = () => {
         setMedicineDetail([]);
-        setSelectedCouponID('');
-        setSelectedCouponType(0);
+       
         fetchDutrull();
     }
-    useEffect(() => {
-        setGroupedData(dutrull);
-    }, [dutrull]);
+    // useEffect(() => {
+    //     setGroupedData(dutrull);
+    // }, [dutrull]);
 
 
     useEffect(() => {
-        const fetchUrl = apiURL + "/noitru/phieuct/" + site + "/" + selectedCouponType + "/" + selectedCouponID;
+        const fetchUrl = apiURL + "/noitru/phieuct/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id;
        
         const fetchMedicineDetail = async () => {
             const response = await fetch(fetchUrl);
@@ -60,7 +57,7 @@ function ThuocModal({ site, pid, hoten, setModalShow, selected }) {
             setMedicineDetail(data);
         }
         fetchMedicineDetail();
-    }, [selectedCouponID])
+    }, [selectedCoupon])
 
     return (
         <>
@@ -79,22 +76,22 @@ function ThuocModal({ site, pid, hoten, setModalShow, selected }) {
                                         <CouponList
                                             date={date}
                                             entries={dutrull[date]}
-                                            selectedCouponID={selectedCouponID}
-                                            setSelectedCouponID={setSelectedCouponID}
-                                            setSelectedCouponType={setSelectedCouponType}
                                             setDutrullDetail={setDutrullDetail}
+                                            selectedCoupon={selectedCoupon}
+                                            setSelectedCoupon={setSelectedCoupon}
                                         />
                                     ))}
                                 </div>
                             </div>
                             <div className="w-2/3 h-full">
                                 <div className="mt-2 flex-grow px-4 w-full h-full overflow-y-auto my-4" >
-                                    {selectedCouponID !== '' &&
+                                    {selectedCoupon.id !== '' &&
                                         <ThuocDetail 
                                         site={site}
-                                        couponType={selectedCouponType} 
+                                        couponType={selectedCoupon.type} 
                                         data={medicineDetail}
-                                        couponId={selectedCouponID}
+                                        couponId={selectedCoupon.id}
+                                        selectedCoupon={selectedCoupon}
                                         
                                         />
                                     }

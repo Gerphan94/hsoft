@@ -5,7 +5,7 @@ import { BsFillSendFill } from "react-icons/bs";
 import { RiNumbersFill } from "react-icons/ri";
 import { IoCheckbox } from "react-icons/io5";
 
-function CouponComponent({ item, selectedCouponID, setSelectedCouponID, setSelectedCouponType, setMedicineDetail }) {
+function CouponComponent({ item, selectedCoupon, setMedicineDetail, setSelectedCoupon }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
 
@@ -41,17 +41,20 @@ function CouponComponent({ item, selectedCouponID, setSelectedCouponID, setSelec
     }
 
 
-    const onClick = (id, type) => {
-        console.log(id, type)
-        setSelectedCouponType(type);
-        setSelectedCouponID(id)
+    const onClick = (id, type, name, ngay) => {
+        setSelectedCoupon({
+            id: id,
+            type: type,
+            name: name,
+            ngay: ngay
+        })
     }
     return (
         <>
             <div className="py-4">
                 <div
-                    className={`relative border rounded-md p-2 hover:bg-[#EEEDEB] cursor-pointer ${item.id === selectedCouponID ? color.border : ''} ${item.id === selectedCouponID ? 'bg-[#EEEDEB]' : ''}`}
-                    onClick={() => onClick(item.id, item.loaiphieu)}
+                    className={`relative border rounded-md p-2 hover:bg-[#EEEDEB] cursor-pointer ${item.id === selectedCoupon.id ? color.border : ''} ${item.id === selectedCoupon.id ? 'bg-[#EEEDEB]' : ''}`}
+                    onClick={() => onClick(item.id, item.loaiphieu, item.tenphieu, item.ngaytao)}
                 >
                     <span className={`absolute top-[-18px] left-1 text-xs border rounded-xl px-2 py-0.5 text-[#fff] ${color.bg}`}>
                         {item.loaiphieu === 1 ? "Phiếu lĩnh thường quy"
@@ -75,6 +78,7 @@ function CouponComponent({ item, selectedCouponID, setSelectedCouponID, setSelec
                             <div className="text-left">{item.tenphieu}</div>
                         </div>
                         <div className="italic text-sm">{item.ngaytao} {item.giotao}</div>
+                        <div>{item.schema}</div>
                     </div>
                 </div>
 

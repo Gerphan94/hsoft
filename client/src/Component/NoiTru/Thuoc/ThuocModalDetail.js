@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Dausinhton from "./Dausinhton";
-function ThuocDetail({ couponType, site, data, couponId }) {
+function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
 
     const title_ar = ['DỰ TRÙ THƯỜNG QUY', 'XUẤT TỦ TRỰC', 'TOA THUỐC RA VIỆN']
-    const TITLE = title_ar[couponType - 1];
+    const TITLE = title_ar[selectedCoupon.type - 1];
 
 
     const [detail, setDetail] = useState({});
 
     useEffect(() => {
-        const fetchURL = apiURL + "noitru/phieu_info/" + site + "/" + couponType + "/" + couponId;
+        const fetchURL = apiURL + "noitru/phieu_info/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id + "/" + selectedCoupon.ngay;
         const fetchDetail = async () => {
             try {
                 const response = await fetch(fetchURL);

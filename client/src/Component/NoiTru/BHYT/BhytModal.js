@@ -10,8 +10,14 @@ function BHYTModal({ site, setModalShow, selected }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
 
-
+    const tinhthanh = [
+        { id: 101, name: 'Hà Nội' },
+        { id: 701, name: 'Hồ Chí Minh' }
+    ]
     const [selectedDT, setSelectedDT] = useState({ id: 0, name: '' });
+    const [selectedTinhthanh, setSelectedTinhthanh] = useState({ id: 701, name: 'Hồ Chí Minh' });
+
+    const [cosoKCB, setCosoKCB] = useState([]);
 
 
     const [enable, setEnable] = useState(true);
@@ -22,6 +28,22 @@ function BHYTModal({ site, setModalShow, selected }) {
         fromDate: new Date(),
         toDate: new Date()
     });
+
+    // fetchCOSO_KCB
+    const fetchCOSO_KCB = async () => {
+
+        try {
+            const fetchUrl = apiURL + "/danh-muc/coso-kcb-of-tinhthanh/" + site + "/" + selectedTinhthanh.id;
+            const response = await fetch(fetchUrl);
+            const data = await response.json();
+            setCosoKCB(data);
+
+        }
+        catch (error) {
+            console.error('Error fetching data:', error);
+        }
+
+    }
 
     const generateRandomString = () => {
         let result = '';
@@ -68,6 +90,7 @@ function BHYTModal({ site, setModalShow, selected }) {
             }
         }
         fetchDoituong();
+        fetchCOSO_KCB();
 
     }, [])
 
@@ -78,7 +101,7 @@ function BHYTModal({ site, setModalShow, selected }) {
     const KCBs = [
         { id: '79669', name: '79669 - Bệnh viện tâm anh HCM' }
     ]
-    
+
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -109,7 +132,7 @@ function BHYTModal({ site, setModalShow, selected }) {
                 const data = await insertBHYT.json();
                 console.log(data);
             }
-            
+
         } catch (error) {
             console.error('Error:', error.message);
         }
@@ -118,8 +141,8 @@ function BHYTModal({ site, setModalShow, selected }) {
 
     return (
         <>
-            <div className="fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
-                <div className="relative w-1/6 h-2/3  mx-auto bg-white">
+            <div className=" fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
+                <div className="relative w-1/4 h-2/3  mx-auto bg-white">
                     <form className="w-full h-full flex flex-col justify-between" onSubmit={(e) => onSubmit(e)}>
                         {/* HEADER */}
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
@@ -139,12 +162,27 @@ function BHYTModal({ site, setModalShow, selected }) {
                                     />
                                 </div>
                             </div> */}
+
+                            <div className="text-left p-2">
+                                <label htmlFor="KCB" className="w-24">Tỉnh/thành</label>
+                                <div className="py-1">
+                                    <Dropdown
+                                        name="KCB"
+                                        id="KCB" 
+                                        data={tinhthanh}
+                                        selectedOption={selectedTinhthanh}
+                                        searchable={false}
+                                        setSelectedOption={setSelectedTinhthanh}
+                                    />
+                                </div>
+                            </div>
+
                             <div className="text-left p-2">
                                 <label htmlFor="KCB" className="w-24">ĐK KCB</label>
                                 <div className="py-1">
                                     <Dropdown
                                         name="KCB"
-                                        id="KCB" data={KCBs}
+                                        id="KCB" data={cosoKCB}
                                         selectedOption={selectedKcb}
                                         setSelectedOption={setSelectedKcb}
                                     />
