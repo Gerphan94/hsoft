@@ -26,8 +26,8 @@ function CouponList({ date, entries, setMedicineDetail, setDutrullDetail, select
                         onClick={() => setShow(!show)}
                         className="w-full px-2 py-1 bg-slate-200 mb-2 flex items-center justify-between"
                     >
-                        <div className="select-none"> Ngày: {date} - {homnayfo}</div>
-                        {/* <span className="px-2 font-bold">{data[data].length}</span> */}
+                        <div className="select-none"> Ngày: {date}</div>
+                        <span className="px-2 font-bold">{entries.length}</span>
                     </div>
                 </div>
                 {show && entries.map(item => (

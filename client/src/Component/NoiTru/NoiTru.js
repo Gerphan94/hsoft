@@ -8,6 +8,8 @@ import DichVuModal from "./DichVu/DichVuModal";
 import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
 
+import ToDieuTriModal from "./ToDieuTri/ToDieuTrIModal";
+
 function NoiTru({ site }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
@@ -27,8 +29,8 @@ function NoiTru({ site }) {
 
     const [isShowModalThuoc, setIsShowModalThuoc] = useState(false);
     const [showDichVuModal, setShowDichVuModal] = useState(false);
-
     const [showBHYTModal, setShowBHYTModal] = useState(false);
+    const [showTodieuTriModal, setShowTodieuTriModal] = useState(false);
 
     const funcBTN = [
         { id: 'thuoc', name: 'Thuốc' },
@@ -103,6 +105,12 @@ function NoiTru({ site }) {
                         onClick={() => setIsShowModalThuoc(true)}
                     >Thuốc
                     </button>
+                    <button
+                        className="w-20 border px-2 py-1 select-none"
+                        onClick={() => setShowTodieuTriModal(true)}
+                    >TĐT
+                    </button>
+
                     <div>
 
 
@@ -143,6 +151,12 @@ function NoiTru({ site }) {
                     site={site}
                     selected={selected}
                     setModalShow={setShowBHYTModal}
+                />}
+            {showTodieuTriModal &&
+                <ToDieuTriModal
+                    site={site}
+                    selected={selected}
+                    setModalShow={setShowTodieuTriModal}
                 />}
 
 

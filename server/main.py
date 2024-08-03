@@ -536,7 +536,6 @@ def noitru_benhandt_doituong(site, maql):
         INNER JOIN BTDBN D ON A.MABN = D.MABN
         WHERE  A.MAQL = '{maql}'
     '''
-    
     benhandt = cursor.execute(stm).fetchone()
     result['pid'] = benhandt[0]
     result['pname'] = benhandt[1]
@@ -669,8 +668,8 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
     print(schema_ar)
     # get all phieu 
-    col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'giotao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu', 'schema'] 
-    for schema in schema_ar:
+    col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu', 'schema'] 
+    for schema in (schema_ar):
         stm =f'''
             WITH DSPHIEU AS (
                 SELECT A.ID, A.IDDUYET, A.SONGAY
@@ -681,7 +680,7 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
                 FROM {schema}.D_XTUTRUCLL B
                 WHERE B.IDKHOA = '{idkhoa}'
             )
-            SELECT to_char(DS.ID) AS ID, DS.IDDUYET, DS.SONGAY, TO_CHAR(B.NGAY, 'dd/MM/yyyy') AS NGAYTAO, TO_CHAR(B.NGAY, 'HH24:MI') AS GIOTAO , C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP,
+            SELECT to_char(DS.ID) AS ID, DS.IDDUYET, DS.SONGAY, B.NGAY AS NGAYTAO , C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP,
             CASE
                 WHEN B.LOAI = 1 AND C.XUATVIEN = 0 THEN 1
                 WHEN B.LOAI = 2 THEN 2
@@ -692,11 +691,12 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
             INNER JOIN {schema}.D_DUYET B ON DS.IDDUYET = B.ID
             INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
             INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
-            ORDER BY NGAYTAO DESC, GIOTAO DESC
+            ORDER BY NGAYTAO DESC
         '''
         dutrull = cursor.execute(stm).fetchall()
         for dutru in dutrull:
             result.append(dict(zip(col_names, dutru)))
+   
     return jsonify(result), 200
 
 
@@ -796,6 +796,43 @@ def noitru_toaravien_ct(site, id):
     '''
 
     return jsonify(result), 200
+
+@app.route('/to-dieu-tri/get-empty-dien-bien/<site>/<idkhoa>', methods=['GET'])
+def to_dieu_tri_get_empty_dien_bien(site, idkhoa):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    ngaynhapkhoa = cursor.execute(f'SELECT NGAY FROM NHAPKHOA WHERE ID = {idkhoa}').fetchone()[0]
+    iNow = datetime.now()  
+    schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
+    print(schema_ar)
+    for schema in (schema_ar):
+        stm =f'''
+            WITH DB_THUOC AS (
+                SELECT IDSEQ 
+                FROM {schema}.TA_DIENBIENYL 
+                WHERE ISACTIVE = 1
+            ),
+            DB_CLS AS (
+                SELECT IDSEQ 
+                FROM {schema}.TA_DIENBIENCLS 
+                WHERE ISACTIVE = 1
+            )
+            SELECT A.*
+            FROM {schema}.TA_DIENBIEN A
+            LEFT JOIN DB_THUOC B ON A.IDSEQ = B.IDSEQ
+            LEFT JOIN DB_CLS C ON A.IDSEQ = C.IDSEQ
+            WHERE A.IDKHOA = '{idkhoa}'
+            AND A.ISSIGNED = 0
+            AND B.IDSEQ IS NULL 
+            AND C.IDSEQ IS NULL
+            ORDER BY A.NGAY DESC
+        '''
+        
+
+    return jsonify(result), 200
+
 
 
 ####################################################################

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles.module.css"
-import CouponComponent from "./CouponComponent";
 import ThuocDetail from "./ThuocModalDetail";
 import CouponList from "./CouponList";
-function ThuocModal({ site, pid, hoten, setModalShow, selected }) {
+import moment from "moment";
 
-    const title = 'THUỐC - ' + pid + ' - ' + hoten;
+
+function ThuocModal({ site, selected, setModalShow }) {
+
+    const title = 'THUỐC - ' + selected.pid + ' - ' + selected.pname;
 
     const apiURL = process.env.REACT_APP_API_URL;
 
@@ -19,9 +21,10 @@ function ThuocModal({ site, pid, hoten, setModalShow, selected }) {
         const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selected.idkhoa
         const response = await fetch(fetchUrl);
         const data = await response.json();
+        console.log('-------', data)
 
         const grouped = data.reduce((acc, item) => {
-            const date = item.ngaytao;
+            const date = moment(item.ngaytao).format('DD/MM/YYYY');
             if (!acc[date]) {
                 acc[date] = [];
             }

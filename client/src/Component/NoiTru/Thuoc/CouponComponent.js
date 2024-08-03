@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
+
+
 import { RiFile3Line, RiFileTransferLine } from "react-icons/ri";
 
 import { BsFillSendFill } from "react-icons/bs";
@@ -77,8 +80,8 @@ function CouponComponent({ item, selectedCoupon, setMedicineDetail, setSelectedC
                             }
                             <div className="text-left">{item.tenphieu}</div>
                         </div>
-                        <div className="italic text-sm">{item.ngaytao} {item.giotao}</div>
-                        <div>{item.schema}</div>
+                        <div className="italic text-sm">{moment(item.ngaytao).format("DD/MM/YYYY HH:mm")} {item.giotao}</div>
+                       
                     </div>
                 </div>
 
