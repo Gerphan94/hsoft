@@ -3,10 +3,10 @@ import { FaBottleDroplet, FaJar } from "react-icons/fa6";
 import { CiPill } from "react-icons/ci";
 import { TbCircleLetterK } from "react-icons/tb";
 import { WiMoonAltFull, WiMoonAltFirstQuarter, WiMoonAltNew } from "react-icons/wi";
+import { GiPoisonBottle } from "react-icons/gi";
 
 import ItemComponent from "./TableIconComponent";
 function Table({ data, setIsShowModal, setSelectedPharmarId }) {
-
 
     const HighlightText = ({ text, highlight }) => {
         if (!highlight) {
@@ -81,9 +81,13 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                                 <TbCircleLetterK className="text-purple-700" /> :
                                                 item.duocbvid === 3 && item.maatc !== '' ?
                                                     <TbCircleLetterK className="text-red-700" /> :
-                                                
                                                 ''}
                                         </span>
+
+                                        <span>
+                                            {item.adr === 1  && <GiPoisonBottle className="text-purple-700" />}
+                                        </span>
+
 
                                     </div>
                                 </td>

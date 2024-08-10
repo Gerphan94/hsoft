@@ -1006,9 +1006,9 @@ def duoc_tonkho_theokho(site, idkho):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc']
+    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr']
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR
         FROM {schema_now()}.D_TONKHOTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
@@ -1164,7 +1164,7 @@ def vienphi_dmloaivp(site, idnhom):
         })  
     return jsonify(result), 200
 
-@app.route('/vienphi/treeloaivp/<site>', methods=['GET'])
+@app.route('/vien-phi/tree-loaivp/<site>', methods=['GET'])
 def vienphi_treeloaivp(site):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
@@ -1204,7 +1204,7 @@ def vienphi_treeloaivp(site):
     
     return jsonify(result), 200     
 
-@app.route('/vien-phi/gia-vp/theo-nhom-bhyt//<site>/<bhytid>', methods=['GET'])
+@app.route('/vien-phi/gia-vp/theo-nhom-bhyt/<site>/<bhytid>', methods=['GET'])
 def vienphi_giavp_bhyt(site, bhytid):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])

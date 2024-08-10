@@ -32,7 +32,7 @@ function GiaVP({ site }) {
 
     useEffect(() => async () => {
         try {
-            const fecthURL = apiURL + "/vienphi/treeloaivp/" + site;
+            const fecthURL = apiURL + "/vien-phi/tree-loaivp/" + site;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setTreeLoaiVps(data);
@@ -51,7 +51,7 @@ function GiaVP({ site }) {
         setSelectedLoaiVP(0);
         setSelectedNhomBHYT(id);
         try {
-            const fecthURL = apiURL + "vienphi/giavp/theonhombhyt/" + site + "/" + id;
+            const fecthURL = apiURL + "vien-phi/gia-vp/theo-nhom-bhyt/" + site + "/" + id;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setGiavps(data);
@@ -66,7 +66,7 @@ function GiaVP({ site }) {
         }
         setSelectedLoaiVP(id);
         try {
-            const fecthURL = apiURL + "vienphi/giavp/theoloaivp/" + site + "/" + id;
+            const fecthURL = apiURL + "vien-phi/gia-vp/theo-loaivp/" + site + "/" + id;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setGiavps(data);

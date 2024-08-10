@@ -56,10 +56,6 @@ function DichVuModal({ site, setModalShow, selected }) {
         fetchChidinh();
     }
 
-
-
-
-
     return (
         <>
             <div className="fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">

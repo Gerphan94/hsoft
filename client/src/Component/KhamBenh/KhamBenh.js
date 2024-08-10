@@ -12,9 +12,6 @@ import ViewButton from "../Button/ViewButton";
 
 function KhamBenh({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
-
-   
-
     const [searchTerm, setSearchTerm] = useState('');
 
     const [viewDate, setViewDate] = useState(new Date());
@@ -96,7 +93,10 @@ function KhamBenh({ site }) {
                 <Notice message={noticeMessage} setModalshow={setNoticeShow} type={noticeType} />
             }
             <div className="flex items-center gap-10 w-full h-12 border-b p-2">
+                <div className="size-6">
                 <ButtonMenu />
+                </div>
+                
                 <div className="font-bold text-xl">DANH SÁCH KHÁM BỆNH</div>
                 <div>
                     <label>Ngày: </label>
