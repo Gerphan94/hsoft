@@ -662,14 +662,13 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    
     ngaynhapkhoa = cursor.execute(f'SELECT NGAY FROM NHAPKHOA WHERE ID = {idkhoa}').fetchone()[0]
     iNow = datetime.now()  
     schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
     print(schema_ar)
     # get all phieu 
     col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu', 'schema'] 
-    for schema in (schema_ar):
+    for schema in reversed(schema_ar):
         stm =f'''
             WITH DSPHIEU AS (
                 SELECT A.ID, A.IDDUYET, A.SONGAY

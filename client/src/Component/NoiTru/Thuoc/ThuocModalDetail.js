@@ -62,6 +62,9 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                                 <div><strong>{item.mabd} | </strong></div>
                                 <div className="font-bold text-left">{item.ten_hamluong}</div>
                             </div>
+                            <div>{item.duongdung}</div>
+
+                         
                             <div className={`text-sm rounded-xl px-2 py-0.5 text-white select-none ${item.doituong === 'BHYT' ? 'bg-[#4535C1]' : item.doituong === 'Thu phí' ? 'bg-[#E76F51]' : 'bg-[#379777]'} `}>
                                 {item.doituong}
                             </div>
@@ -73,14 +76,11 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                                     {item.trua !== 0 && <div>Trưa <span className="font-bold">{item.trua}</span> {item.donvidung}</div>}
                                     {item.chieu !== 0 && <div>Chiều <span className="font-bold">{item.chieu}</span> {item.donvidung}</div>}
                                     {item.toi !== 0 && <div>Tối <span className="font-bold">{item.toi}</span> {item.donvidung}</div>}
-
-                                   
-
                                 </div>
                                 :
                                 <div className="text-left italic py-0.5">Ngày <span className="font-bold">{item.solan}</span> lần, lần <span className="font-bold">{item.lan}</span> {item.donvidung}</div>
-
                             }
+
 
                             <div className="min-w-40"><>Liều dùng:</> {item.lieudungthuoc}</div>
                             <div className="min-w-40"><>Tốc độ:</> {item.tocdo}</div>

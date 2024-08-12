@@ -16,7 +16,6 @@ function ThuocModal({ site, selected, setModalShow }) {
     const [medicineDetail, setMedicineDetail] = useState([]);
     const [dutrullDetail, setDutrullDetail] = useState({});
 
-
     const fetchDutrull = async () => {
         const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selected.idkhoa
         const response = await fetch(fetchUrl);
@@ -24,6 +23,7 @@ function ThuocModal({ site, selected, setModalShow }) {
         console.log('-------', data)
 
         const grouped = data.reduce((acc, item) => {
+            console.log(acc)
             const date = moment(item.ngaytao).format('DD/MM/YYYY');
             if (!acc[date]) {
                 acc[date] = [];
