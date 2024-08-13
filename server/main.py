@@ -1297,8 +1297,10 @@ def danhmuc_coso_kcb_of_tinhthanh(site, matinhthanh):
     return jsonify(result), 200
   
 
+# DANH MỤC NHÓM NHÂN VIÊN
+
 # DANH MỤC NHÂN VIÊN
-@app.route('/danhmuc/nhomnhanvien/<site>', methods=['GET'])
+@app.route('/danh-muc/nhom-nhan-vien/<site>', methods=['GET'])
 def danhmuc_nhomnhanvien(site):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
@@ -1306,10 +1308,9 @@ def danhmuc_nhomnhanvien(site):
     result = []
     
     stm = '''
-        SELECT DISTINCT(B.ID) AS MA, (B.TEN) 
-        FROM DMBS A
-        INNER JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
-        ORDER BY B.ID ASC
+        SELECT ID, TEN
+        FROM NHOMNHANVIEN 
+        ORDER BY ID ASC
     '''
     
     nhomnvs = cursor.execute(stm).fetchall()

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaBars } from "react-icons/fa";
 
-import Dropdown from "../Dropdown";
+import Dropdown from "../Common/Dropdown";
 
 
 function NhanVien({ site }) {
@@ -9,14 +9,14 @@ function NhanVien({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [nhomnvs, setNhomnvs] = useState([]);
-
+    const [selectedNhomnv, setSelectedNhomnv] = useState({ id: 0, name: '' });
     const [searchTerm, setSearchTerm] = useState('');
     const [nhanviens, setNhanviens] = useState([]);
     const [viewDatas, setViewDatas] = useState([]);
 
     useEffect(() => async () => {
         try {
-            const fecthURL = apiURL + "/danhmuc/nhomnhanvien/" + site;
+            const fecthURL = apiURL + "/danh-muc/nhom-nhan-vien/" + site;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setNhomnvs(data);
@@ -72,7 +72,7 @@ function NhanVien({ site }) {
                             onChange={handleSearch}
                         />
                         <div>
-                            {/* <Dropdown data={nhomnvs} /> */}
+                        < Dropdown data={nhomnvs} selectedOption={selectedNhomnv} setSelectedOption={setSelectedNhomnv} />
                         </div>
 
 
