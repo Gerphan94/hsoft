@@ -15,7 +15,6 @@ function CouponList({ date, entries, setMedicineDetail, setDutrullDetail, select
         if (date === homnayfo) {
             setShow(true);
         }
-
     }, [date]);
 
     return (
