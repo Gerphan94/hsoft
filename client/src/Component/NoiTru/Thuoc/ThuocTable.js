@@ -41,7 +41,6 @@ function ThuocTable(loaiphieu, data) {
                                     <th><div>SL/Lần</div></th>
                                     <th><div className="text-center">Số lượng</div></th>
                                 </tr>
-
                             </thead>
                             <tbody>
                             </tbody>

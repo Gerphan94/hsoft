@@ -101,7 +101,11 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                         <div className="mr-2">
                                             <ItemComponent dvt={item.dvt} />
                                         </div>
-                                        <div> {item.tenbd}</div>
+                                        <div> {item.tenbd}
+                                                {item.sluongdvbsd > 0 ? <span className="italic text-zinc-500"> ({item.sluongdvbsd} {item.dvd})</span> : ''}
+
+
+                                        </div>
                                         {/* <span className="italic text-zinc-500">{item.tenhc}</span> */}
                                     </div>
                                 </td>

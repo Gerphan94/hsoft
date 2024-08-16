@@ -25,6 +25,8 @@ function TonTheoKho({ site }) {
         { id: 'dalieu', name: 'Đa liều', value: false },
         { id: 'bhyt', name: 'BHYT', value: false },
         { id: 'khangsinh', name: 'Kháng sinh', value: false },
+        { id: 'adr', name: 'ADR', value: false },
+        { id: 'sldvsd', name: 'Sl DVSD', value: false }
     ])
     const [tyleBH, setTyleBH] = useState({id: '100', name: '100'});
     const [selectedAtc, setSelectedAtc] = useState({id:'', name: ''});
@@ -66,6 +68,12 @@ function TonTheoKho({ site }) {
                 }
                 if (filter.id === 'khangsinh' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.duocbvid === 3;
+                }
+                if (filter.id === 'adr' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.adr === 1;
+                }
+                if (filter.id === 'sldvsd' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.sluongdvbsd > 0;
                 }
                 
                 // Add more conditions for other filters here
