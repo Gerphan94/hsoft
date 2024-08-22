@@ -3,7 +3,7 @@ import Dropdown from "../Dropdown";
 import ViewButton from "../Button/ViewButton";
 import PharmarDetailModal from "./PharmarDetailModal";
 import Table from "./Table";
-
+import TableDetail from "./TableDetail";
 
 function TonTuTruc({ site }) {
 
@@ -20,6 +20,10 @@ function TonTuTruc({ site }) {
     const [isShowModal, setIsShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [viewDatas, setViewDatas] = useState([]);
+
+    const [isDetail, setIsDetail] = useState(false);
+
+
 
     useEffect(() => async () => {
         try {
@@ -43,12 +47,12 @@ function TonTuTruc({ site }) {
                 console.error('Error fetching data:', error);
             }
         };
-        fetchTuTrucList(); 
+        fetchTuTrucList();
         return () => {
-          
+
         };
     }, [selectedKhoaphong.id, site]);
-    
+
     const getMedicines = async () => {
         try {
             const response = await fetch(`${apiURL}duoc/tutruc/tontutruc/${site}/${selectedTuTruc.id}`);
@@ -98,7 +102,7 @@ function TonTuTruc({ site }) {
         <div className="px-4">
 
             <div className="flex items-center gap-10">
-                <div className="grid lg:grid-cols-3 items-center gap-10">
+                <div className="flex gap-10 items-center gap-10">
                     <div className="max-w-[500px] flex items-center gap-2">
                         <label className="w-[100px] text-left font-bold">Khoa phòng:</label>
                         <div className="w-[400px]">
@@ -112,8 +116,8 @@ function TonTuTruc({ site }) {
 
                         </div>
                     </div>
-                    <div className="max-w-[500px] flex items-center gap-2">
-                        <label className="w-[100px] text-left font-bold">Tủ trực:</label>
+                    <div className="max-w-[500px] flex items-center gap-1">
+                        <label className="w-14 text-left font-bold">Tủ trực:</label>
                         <div className="w-[400px]">
                             <Dropdown
                                 data={tuTrucList}
@@ -122,12 +126,23 @@ function TonTuTruc({ site }) {
                                 chooseIndex={1}
                                 searchable={false}
                                 selectedOption={selectedTuTruc}
-
                             />
 
                         </div>
                     </div>
-                    <div className="w-[500px] flex items-center gap-2">
+                    <div className="flex gap-2 w-32">
+                        <input
+                            className=""
+                            id='ton-chitiet'
+                            name='ton-chitiet'
+                            type="checkbox"
+                            checked={isDetail}
+                            onChange={() => setIsDetail(!isDetail)}
+                        />
+                        <label className="select-none" htmlFor="ton-chitiet">Tồn Chi tiết</label>
+
+                    </div>
+                    <div className=" flex items-center gap-2">
                         <input
                             type="text"
                             className="border w-56 px-2 py-1 outline-none"
@@ -142,12 +157,24 @@ function TonTuTruc({ site }) {
             </div>
 
             {/* Table */}
+
             <div>
-                <Table
-                    data={viewDatas}
-                    setIsShowModal={setIsShowModal}
-                    setSelectedPharmarId={setSelectedPharmarId}
-                />
+                {isDetail ?
+                    <TableDetail
+                        data={viewDatas}
+                        setIsShowModal={setIsShowModal}
+                        setSelectedPharmarId={setSelectedPharmarId}
+                    />
+
+                    :
+                    <Table
+                        data={viewDatas}
+                        setIsShowModal={setIsShowModal}
+                        setSelectedPharmarId={setSelectedPharmarId}
+                    />
+
+                }
+
 
             </div>
 

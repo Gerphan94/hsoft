@@ -1116,7 +1116,6 @@ def duoc_tontutruc(site, idtutruc):
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
         WHERE A.MAKP = {idtutruc}
-    
     '''
     datas = cursor.execute(stm).fetchall()
     for data in datas:
@@ -1125,6 +1124,29 @@ def duoc_tontutruc(site, idtutruc):
             obj[col] = data[idx]
         result.append(obj)
     return jsonify(result), 200
+
+@app.route('/duoc/tutruc/tontutruc-chitiet/<site>/<idtutruc>', methods=['GET'])
+def duoc_tontutruc_chitiet(site, idtutruc):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    stm = f'''
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
+        FROM {schema_now()}.D_TUTRUCCT A 
+        INNER JOIN D_DMBD C ON A.MABD = C.ID
+        INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
+        WHERE A.MAKP = {idtutruc}
+        ORDER BY C.MA ASC
+    '''
+    datas = cursor.execute(stm).fetchall()
+    for data in datas:
+        obj = {}
+        for idx, col in  enumerate(medicine_cols):
+            obj[col] = data[idx]
+        result.append(obj)
+    return jsonify(result), 200
+
 
 # ############################################################
 # VIỆN PHÍ ###################################################
