@@ -1322,6 +1322,11 @@ def danhmuc_taikhoan(site, type):
     else:
         return jsonify({'error': 'Type not found'}), 200
     
+    stm = f'''
+        
+    
+    '''
+    
     
     
     result = []
