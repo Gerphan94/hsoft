@@ -5,6 +5,7 @@ import TouchSwitch from "../TouchSwitch";
 
 import ThuocModal from "./Thuoc/ThuocModal";
 import DichVuModal from "./DichVu/DichVuModal";
+import MauModal from "./Mau/MauModal";
 import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
 
@@ -29,6 +30,7 @@ function NoiTru({ site }) {
 
     const [isShowModalThuoc, setIsShowModalThuoc] = useState(false);
     const [showDichVuModal, setShowDichVuModal] = useState(false);
+    const [showMauModal, setShowMauModal] = useState(false);
     const [showBHYTModal, setShowBHYTModal] = useState(false);
     const [showTodieuTriModal, setShowTodieuTriModal] = useState(false);
 
@@ -102,6 +104,11 @@ function NoiTru({ site }) {
                     </button>
                     <button
                         className="w-20 border px-2 py-1 select-none"
+                        onClick={() => setShowMauModal(true)}
+                    >Máu
+                    </button>
+                    <button
+                        className="w-20 border px-2 py-1 select-none"
                         onClick={() => setIsShowModalThuoc(true)}
                     >Thuốc
                     </button>
@@ -134,7 +141,7 @@ function NoiTru({ site }) {
             {isShowModalThuoc &&
                 <ThuocModal
                     site={site}
-                   
+
                     selected={selected}
                     setModalShow={setIsShowModalThuoc}
                 />}
@@ -144,6 +151,13 @@ function NoiTru({ site }) {
                     site={site}
                     selected={selected}
                     setModalShow={setShowDichVuModal}
+                />}
+
+            {showMauModal &&
+                <MauModal
+                    site={site}
+                    selected={selected}
+                    setModalShow={setShowMauModal}
                 />}
 
             {showBHYTModal &&

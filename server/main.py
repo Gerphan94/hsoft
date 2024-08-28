@@ -24,23 +24,14 @@ def schema_now():
     return f'HSOFTTAMANH{format_string}'
 
 def schema_mutil(fromDate, toDate):
-
-    # Initialize an empty set to store unique MMYY strings
     date_strings = set()
-    # Loop through each date in the range
     current_date = fromDate
     while current_date <= toDate:
-        # Format the current date as MMYY and add it to the set
         date_strings.add('HSOFTTAMANH' + current_date.strftime('%m%y'))
-        # Move to the next day
         current_date += timedelta(days=1)
-    # Convert the set to a sorted list
-    # sorted_date_strings = sorted(date_strings)
     return date_strings
 
-
 def conn_info(env):
-   
     if (env == 'HN_LIVE'):
         return {
             'user':"hsofttamanh",
@@ -58,8 +49,7 @@ def conn_info(env):
             'user':"hsofttamanh",
             'password':'HSOFTTAMANH2023',
             'dsn':"hsoft-dev.vdc.tahcm.vn/uat1"
-        }
-        
+        } 
     else:
         return {
             'user':"hsofttamanh",
@@ -1320,6 +1310,21 @@ def danhmuc_coso_kcb_of_tinhthanh(site, matinhthanh):
   
 
 # DANH MỤC NHÓM NHÂN VIÊN
+@app.route('/danh-muc/tai-khoan/<site>/<type>', methods=['GET'])
+def danhmuc_taikhoan(site, type):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    
+    
+    if type == 'hsoft':
+        table_name = 'DLOGIN'
+    else:
+        return jsonify({'error': 'Type not found'}), 200
+    
+    
+    
+    result = []
 
 # DANH MỤC NHÂN VIÊN
 @app.route('/danh-muc/nhom-nhan-vien/<site>', methods=['GET'])
@@ -1341,8 +1346,6 @@ def danhmuc_nhomnhanvien(site):
             'id': nhomnv[0],
             'name': nhomnv[1]
         })
-    
-    
     return jsonify(result), 200
 
 @app.route('/danhmuc/nhanvien/<site>', methods=['GET'])
