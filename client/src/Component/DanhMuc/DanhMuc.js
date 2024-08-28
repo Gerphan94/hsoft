@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import TaiKhoan from "./TaiKhoan";
 import NhanVien from "./NhanVien";
 import GiaVP from "./GiaVP";
 import ButtonMenu from "../Common/ButtonMenu";
@@ -11,6 +12,7 @@ function DanhMuc({ site }) {
 
 
     const dm_list = [
+        { 'id': "taikhoan", 'name': "Tài khoản" },
         { 'id': "nhanvien", 'name': "Nhân viên" },
         { 'id': "duoc", 'name': "Biệt Dược" },
         { 'id': "giavp", 'name': "Giá viện phí" }
@@ -27,13 +29,9 @@ function DanhMuc({ site }) {
 
                 {/* <div className="font-bold text-xl">{selectedOption.name}</div> */}
             </div>
-
+            {selectedOption.id === 'taikhoan' && <TaiKhoan site={site} />}
             {selectedOption.id === 'nhanvien' && <NhanVien site={site} />}
             {selectedOption.id === 'giavp' && <GiaVP site={site} />}
-
-
-
-
         </>
     )
 }
