@@ -82,20 +82,26 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                                 :
                                 <div className="text-left italic py-0.5">Ngày <span className="font-bold">{item.solan}</span> lần, lần <span className="font-bold">{item.lan}</span> {item.donvidung}</div>
                             }
+                            <div className="min-w-40"><strong>Giờ BD</strong> {item.giobd}</div>
+                            <div className="min-w-40"><strong>Giờ dùng</strong> {item.giodung}</div>
+
+
+                        </div>
+                        <div className="grid grid-cols-3">
                             <div className="min-w-40"><strong>Liều dùng:</strong> {item.lieudungthuoc}</div>
                             <div className="min-w-40"><strong>Tốc độ:</strong> {item.tocdo}</div>
+                            <div className="text-left"><strong>Ghi chú: </strong>{item.ghichu}</div>
                         </div>
                         <div className="grid grid-cols-2">
                             <div className="min-w-40"><strong>Cách dùng: </strong><i>{item.cachdung}</i></div>
-                            <div className="text-left"><strong>Ghi chú: </strong>{item.ghichu}</div>
                         </div>
                         <div className="grid grid-cols-6 text-xs py-1">
-                            {item.l1 && <div><strong>L1:</strong> {moment.utc(item.l1).format('DD/MM/YYYY HH:mm:ss')}</div> }
-                            {item.l2 && <div><strong>L2:</strong> {moment.utc(item.l2).format('DD/MM/YYYY HH:mm:ss')}</div> }
-                            {item.l3 && <div><strong>L3:</strong> {moment.utc(item.l3).format('DD/MM/YYYY HH:mm:ss')}</div> }
-                            {item.l4 && <div><strong>L4:</strong> {moment.utc(item.l4).format('DD/MM/YYYY HH:mm:ss')}</div> }
-                            {item.l5 && <div><strong>L5:</strong> {moment.utc(item.l5).format('DD/MM/YYYY HH:mm:ss')}</div> }
-                            {item.l6 && <div><strong>L6:</strong> {moment.utc(item.l6).format('DD/MM/YYYY HH:mm:ss')}</div> }
+                            {item.l1 && <div><strong>L1:</strong> {moment.utc(item.l1).format('DD/MM/YYYY HH:mm:ss')}</div>}
+                            {item.l2 && <div><strong>L2:</strong> {moment.utc(item.l2).format('DD/MM/YYYY HH:mm:ss')}</div>}
+                            {item.l3 && <div><strong>L3:</strong> {moment.utc(item.l3).format('DD/MM/YYYY HH:mm:ss')}</div>}
+                            {item.l4 && <div><strong>L4:</strong> {moment.utc(item.l4).format('DD/MM/YYYY HH:mm:ss')}</div>}
+                            {item.l5 && <div><strong>L5:</strong> {moment.utc(item.l5).format('DD/MM/YYYY HH:mm:ss')}</div>}
+                            {item.l6 && <div><strong>L6:</strong> {moment.utc(item.l6).format('DD/MM/YYYY HH:mm:ss')}</div>}
                         </div>
 
 
