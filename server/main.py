@@ -564,7 +564,7 @@ def noitru_insertbhyt(site):
     connection.autocommit = True
     cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
     
-    if site != 'HCM_UAT':
+    if site != 'HCM_UAT' and site != 'HCM_DEV':
         return jsonify({'error':'Site không có quyền'}), 500
     data = request.get_json()
     mabn = data['pid']

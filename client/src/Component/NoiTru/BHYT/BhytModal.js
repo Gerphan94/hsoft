@@ -45,11 +45,11 @@ function BHYTModal({ site, setModalShow, selected }) {
 
     }
 
-    const generateRandomString = () => {
+    const generateRandomString = (n) => {
         let result = '';
         const characters = '0123456789';
         const charactersLength = characters.length;
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < n; i++) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
@@ -59,7 +59,7 @@ function BHYTModal({ site, setModalShow, selected }) {
         const nextYear = new Date(today);
         nextYear.setFullYear(today.getFullYear() + 1);
         nextYear.setDate(nextYear.getDate() - 1);
-        const tmp_sothe = 'GD4' + generateRandomString() + '79669'
+        const tmp_sothe = 'GD479' + generateRandomString(10) + '79669'
         setFormData({
             sothe: tmp_sothe,
             fromDate: today,
@@ -143,32 +143,23 @@ function BHYTModal({ site, setModalShow, selected }) {
         <>
             <div className=" fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
                 <div className="relative w-1/4 h-2/3  mx-auto bg-white">
-                    <form className="w-full h-full flex flex-col justify-between" onSubmit={(e) => onSubmit(e)}>
-                        {/* HEADER */}
+                    <form
+                        className="w-full h-full flex flex-col justify-between"
+                        onSubmit={(e) => onSubmit(e)}
+                        spellCheck="false"
+                        autoComplete="off"
+                    >
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
                             THÔNG TIN ĐỐI TƯỢNG
                         </div>
-                        {/* BODY */}
-                        <div className=" h-full flex flex-col flex-grow p-4 overflow-hidden ">
-                            {/* <div className="text-left p-2">
-                                <label htmlFor="doituong" className="w-24">Đối tượng</label>
-                                <div className="py-1">
-                                    <Dropdown
-                                        name="doituong"
-                                        data={[{ id: 2, name: 'Thu phí' }, { id: 1, name: 'BHYT' }]}
-                                        selectedOption={selectedDT}
-                                        setSelectedOption={setSelectedDT}
-                                        searchable={false}
-                                    />
-                                </div>
-                            </div> */}
 
+                        <div className=" h-full flex flex-col flex-grow p-4 overflow-hidden ">
                             <div className="text-left p-2">
                                 <label htmlFor="KCB" className="w-24">Tỉnh/thành</label>
                                 <div className="py-1">
                                     <Dropdown
                                         name="KCB"
-                                        id="KCB" 
+                                        id="KCB"
                                         data={tinhthanh}
                                         selectedOption={selectedTinhthanh}
                                         searchable={false}
@@ -197,6 +188,12 @@ function BHYTModal({ site, setModalShow, selected }) {
                                     type="text"
                                     className="border w-full px-2 py-1 outline-none"
                                     value={formData.sothe}
+                                />
+                                <input
+                                    className="border w-full px-2 py-1 outline-none"
+
+                                    name='sothe-l'
+                                    type="text"
                                 />
                             </div>
                             <div className="flex gap-2">
