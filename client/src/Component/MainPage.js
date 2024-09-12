@@ -11,6 +11,7 @@ import DanhMuc from "./DanhMuc/DanhMuc";
 import Duoc from "./Duoc/Duoc";
 import ToDieuTri from "./ToDieuTri/ToDieuTri";
 import NoiTru from "./NoiTru/NoiTru";
+import PhongLuu from "./NoiTru/PhongLuu";
 import MainPageHeader from "./MainPageHeader";
 
 import SideMenu from "./SideMenu";
@@ -73,6 +74,7 @@ function MainPage() {
                             {selectedFunc === 1 && <Inpatient site={site.id} />}
                             {selectedFunc === 'goikham' && <GoiKham site={site.id} />}
                             {selectedFunc === 'khambenh' && <KhamBenh site={site.id} />}
+                            {selectedFunc === 'phongluu' && <PhongLuu site={site.id} />}
                             {selectedFunc === 'noitru' && <NoiTru site={site.id} />}
                             {selectedFunc === 'datkham' && <DatKham site={site.id} />}
                             {selectedFunc === 'duoc' && <Duoc site={site.id} />}

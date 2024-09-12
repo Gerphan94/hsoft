@@ -5,7 +5,7 @@ import { CiPill } from "react-icons/ci";
 import { PiFileSqlDuotone } from "react-icons/pi";
 import { IoFileTrayFullSharp, IoNewspaperOutline } from "react-icons/io5";
 import { FaBook, FaBed } from "react-icons/fa";
-import { MdAttachMoney, MdBackpack } from "react-icons/md";
+import { MdAttachMoney, MdBackpack, MdLocalHospital } from "react-icons/md";
 
 function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle, setMainIcon }) {
 
@@ -14,6 +14,7 @@ function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle, setMainIcon }) 
         // { id: 1, name: 'Hiện diện BN', icon: GiEarbuds },
         { id: 'goikham', name: 'Gói khám', icon: MdBackpack },
         { id: 'khambenh', name: 'Khám bệnh', icon: GiEarbuds },
+        { id: 'phongluu', name: 'Phòng lưu', icon: MdLocalHospital },
         { id: 'noitru', name: 'Nội trú', icon: FaBed },
         { id: 'vienphi', name: 'Viện phí', icon: MdAttachMoney },
         { id: 'datkham', name: "Đặt khám", icon: GiAlarmClock },
