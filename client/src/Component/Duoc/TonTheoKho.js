@@ -28,8 +28,8 @@ function TonTheoKho({ site }) {
         { id: 'adr', name: 'ADR', value: false },
         { id: 'sldvsd', name: 'Sl DVSD', value: false }
     ])
-    const [tyleBH, setTyleBH] = useState({id: '100', name: '100'});
-    const [selectedAtc, setSelectedAtc] = useState({id:'', name: ''});
+    const [tyleBH, setTyleBH] = useState({ id: '100', name: '100' });
+    const [selectedAtc, setSelectedAtc] = useState({ id: '', name: '' });
 
     useEffect(() => async () => {
         try {
@@ -75,7 +75,7 @@ function TonTheoKho({ site }) {
                 if (filter.id === 'sldvsd' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.sluongdvbsd > 0;
                 }
-                
+
                 // Add more conditions for other filters here
             });
 
@@ -179,19 +179,19 @@ function TonTheoKho({ site }) {
                         setSelectedAtc={setSelectedAtc}
                         setTyleBH={setTyleBH}
                     />
-                    <button className={`${styles.btn} ${styles.btnNew }`} onClick={onClick} >
+                    <button className={`${styles.btn} ${styles.btnNew}`} onClick={onClick} >
                         Xem
                     </button>
                 </div>
-               
+
                 {selectedAtc.id}
 
                 <div>
-                    <SearchBar 
-                    placeholder='Nhập Mã, Tên, HC' 
-                    searchTerm={searchTerm} 
-                    setSearchTerm={setSearchTerm}
-                    handleSearch={handleSearch} />
+                    <SearchBar
+                        placeholder='Nhập Mã, Tên, HC'
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        handleSearch={handleSearch} />
                 </div>
             </div>
 

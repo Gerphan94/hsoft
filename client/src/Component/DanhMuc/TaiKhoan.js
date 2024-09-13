@@ -89,13 +89,14 @@ function TaiKhoan({ site }) {
                             <thead className="sticky top-0">
                                 <tr className="bg-gray-200 ">
                                     <th><div className=" py-1 text-center">STT</div></th>
-                                    <th className="w-24"><div className="">Mã</div></th>
-                                    <th className=""><div>Họ tên</div></th>
-                                    <th><div className="text-left w-20">Viết tắt</div></th>
-                                    <th><div className="text-left w-20">Nhóm</div></th>
-                                    <th><div>Duyệt BHYT</div></th>
-                                    <th><div className="text-right">Chứng chỉ</div></th>
-                                    <th><div className="w-10 text-center">...</div></th>
+                                    <th className="w-24"><div className="">ID</div></th>
+                                    <th className=""><div>UserID</div></th>
+                                    <th><div className="text-left w-20">User</div></th>
+                                    <th><div className="text-left w-20">Password</div></th>
+                                    <th><div>User Name</div></th>
+                                    <th><div className="text-right">Mã nhân viên</div></th>
+                                    <th><div className="w-10 text-center">Họ tên</div></th>
+                                    <th><div className="w-10 text-center">Số chứng chỉ</div></th>
                                 </tr>
 
                             </thead>

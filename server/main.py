@@ -995,9 +995,9 @@ def duoc_tonkho_theokho(site, idkho):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr', 'sluongdvbsd']
+    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr','adrcao', 'sluongdvbsd']
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR, C.SOLUONGDVSD
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR,D.ADRCAO, C.SOLUONGDVSD
         FROM {schema_now()}.D_TONKHOTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
@@ -1101,16 +1101,18 @@ def duoc_tontutruc(site, idtutruc):
     cursor = connection.cursor()
     result = []
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR, D.ADRCAO
         FROM {schema_now()}.D_TUTRUCTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
         WHERE A.MAKP = {idtutruc}
     '''
+    col_names = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr', 'adrcao']
+
     datas = cursor.execute(stm).fetchall()
     for data in datas:
         obj = {}
-        for idx, col in  enumerate(medicine_cols):
+        for idx, col in  enumerate(col_names):
             obj[col] = data[idx]
         result.append(obj)
     return jsonify(result), 200
@@ -1129,6 +1131,7 @@ def duoc_tontutruc_chitiet(site, idtutruc):
         WHERE A.MAKP = {idtutruc}
         ORDER BY C.MA ASC
     '''
+
     datas = cursor.execute(stm).fetchall()
     for data in datas:
         obj = {}
@@ -1310,22 +1313,36 @@ def danhmuc_coso_kcb_of_tinhthanh(site, matinhthanh):
   
 
 # DANH MỤC NHÓM NHÂN VIÊN
-@app.route('/danh-muc/tai-khoan/<site>/<type>', methods=['GET'])
-def danhmuc_taikhoan(site, type):
+@app.route('/danh-muc/tai-khoan-hsoft/<site>', methods=['GET'])
+def danhmuc_taikhoan(site):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
-    
-    
-    if type == 'hsoft':
-        table_name = 'DLOGIN'
-    else:
-        return jsonify({'error': 'Type not found'}), 200
+    result = []
+    col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhom', 'makp', 'mabs', 'hoten', 'manhom','tennhopm', 'viettat', 'duyetkhambhyt', 'sochungchi' ]
     
     stm = f'''
-        
-    
+        WITH DMNV AS (
+        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI 
+        FROM DMBS A 
+        INNER JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
+        )
+        SELECT A.ID, A.USERID, A.PASSWORD_,A.HOTEN AS TENTAIKHOAN, A.MANHOM, A.MAKP, B.*
+        FROM DLOGIN A
+        LEFT JOIN DMNV B ON A.MABS = B.MA
+        FETCH FIRST 100 ROWS ONLY
+
     '''
+    taikhoans = cursor.execute(stm).fetchall()
+    for taikhoan in taikhoans:
+        obj = {}
+        for idx, col in  enumerate(col_names):
+            obj[col] = taikhoan[idx]
+        result.append(obj)
+    return jsonify(result), 200
+    
+    
+
     
     
     
@@ -1353,15 +1370,27 @@ def danhmuc_nhomnhanvien(site):
         })
     return jsonify(result), 200
 
-@app.route('/danhmuc/nhanvien/<site>', methods=['GET'])
-def danhmuc_nhanvien(site): 
+# @app.route('/danhmuc/nhanvien/<site>', defaults={'nghiviec': False}, methods=['GET'])
+@app.route('/danhmuc/nhanvien/<site>/<nghiviec>', methods=['GET'])
+def danhmuc_nhanvien(site, nghiviec): 
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
     
-    stm = "SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI FROM DMBS A INNER JOIN NHOMNHANVIEN B ON A.NHOM = B.ID"
+    stm_nghiviec = ''
+    if (nghiviec == 'true'):
+        stm_nghiviec = 'A.NHOM = 9'
+    else:
+        stm_nghiviec = 'A.NHOM <> 9'
     
+    stm = f'''
+        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI 
+        FROM DMBS A 
+        INNER JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
+        WHERE {stm_nghiviec}
+    '''
+        
     nhanviens = cursor.execute(stm).fetchall()
     for nhanvien in nhanviens:
         result.append({

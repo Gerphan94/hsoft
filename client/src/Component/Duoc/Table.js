@@ -83,9 +83,11 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                                     <TbCircleLetterK className="text-red-700" /> :
                                                 ''}
                                         </span>
-
                                         <span>
                                             {item.adr === 1  && <GiPoisonBottle className="text-purple-700" />}
+                                        </span>
+                                        <span>
+                                            {item.adrcao === 1 && <GiPoisonBottle className="text-red-700" />}
                                         </span>
 
 
@@ -103,8 +105,6 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                         </div>
                                         <div> {item.tenbd}
                                                 {item.sluongdvbsd > 0 ? <span className="italic text-zinc-500"> ({item.sluongdvbsd} {item.dvd})</span> : ''}
-
-
                                         </div>
                                         {/* <span className="italic text-zinc-500">{item.tenhc}</span> */}
                                     </div>

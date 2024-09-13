@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { FaEye, FaBars } from "react-icons/fa";
 
 import Dropdown from "../Common/Dropdown";
+import Toggle from "../Common/ToggleSwitch";
 
+const NhanVien = memo(({ site }) => {
 
-function NhanVien({ site }) {
+    console.log('rending nhanvien')
 
     const apiURL = process.env.REACT_APP_API_URL;
 
@@ -13,6 +15,8 @@ function NhanVien({ site }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [nhanviens, setNhanviens] = useState([]);
     const [viewDatas, setViewDatas] = useState([]);
+    const [nghiviec, setNghiviec] = useState(false);
+    const [duyetBhyt, setDuyetBhyt] = useState(false);
 
     useEffect(() => async () => {
         try {
@@ -29,7 +33,7 @@ function NhanVien({ site }) {
 
     const handeleView = async () => {
         try {
-            const fecthURL = apiURL + "/danhmuc/nhanvien/" + site;
+            const fecthURL = apiURL + "/danhmuc/nhanvien/" + site + "/" + nghiviec;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setNhanviens(data);
@@ -56,7 +60,12 @@ function NhanVien({ site }) {
         <>
             <div className="w-full flex justify-center">
                 <div className="w-2/3">
-                    <div className="px-4 flex gap-4 justify-between">
+                    <div className="w-full flex flex-row-reverse bg-white border">
+                        <Toggle idname='duyet-bhyt' enabled={duyetBhyt} setEnabled={setDuyetBhyt} displayName={'Duyệt khám BHYT'} />
+                        <Toggle idname='nghiviec' enabled={nghiviec} setEnabled={setNghiviec} displayName={'Nghỉ việc'} />
+                    </div>
+
+                    <div className="px-4 flex gap-4 justify-between mt-4">
                         <button
                             className="flex items-center gap-2 text-white bg-blue-400 px-2 py-1"
                             onClick={() => handeleView()}
@@ -72,56 +81,52 @@ function NhanVien({ site }) {
                             onChange={handleSearch}
                         />
                         <div>
-                        < Dropdown data={nhomnvs} selectedOption={selectedNhomnv} setSelectedOption={setSelectedNhomnv} />
+                            < Dropdown data={nhomnvs} selectedOption={selectedNhomnv} setSelectedOption={setSelectedNhomnv} />
                         </div>
 
 
-                        <div className="flex items-center gap-2">
-                            <input id="cboff" name="cboff" type="checkbox" />
-                            <label className="select-none cursor-pointer" htmlFor="cboff">Nghỉ việc</label>
 
-                        </div>
 
                     </div>
                     <div>
-                    <div className="mt-2 px-4 w-full lg:max-h-[720px] overflow-y-auto flex justify-center" >
-                        <table className="w-full">
-                            <thead className="sticky top-0">
-                                <tr className="bg-gray-200 ">
-                                    <th><div className=" py-1 text-center">STT</div></th>
-                                    <th className="w-24"><div className="">Mã</div></th>
-                                    <th className=""><div>Họ tên</div></th>
-                                    <th><div className="text-left w-20">Viết tắt</div></th>
-                                    <th><div className="text-left w-20">Nhóm</div></th>
-                                    <th><div>Duyệt BHYT</div></th>
-                                    <th><div className="text-right">Chứng chỉ</div></th>
-                                    <th><div className="w-10 text-center">...</div></th>
-                                </tr>
-
-                            </thead>
-                            <tbody>
-                                {viewDatas.map((item, index) => (
-                                    <tr
-                                        key={index}
-                                        className="border-b hover:bg-gray-100"
-                                    >
-                                        <td><div className="py-1 text-center">{index + 1}</div></td>
-                                        <td className="w-24">{item.ma}</td>
-                                        <td><div className="text-left h-4">{item.hoten}</div></td>
-                                        <td><div className="text-left">{item.viettat}</div></td>
-                                        <td><div className="text-left">{item.tennhom}</div></td>
-                                        <td><div className="text-left">{item.duyetkhambhyt}</div></td>
-                                        <td><div className="text-left">{item.sochungchi}</div></td>
+                        <div className="mt-2 px-4 w-full lg:max-h-[720px] overflow-y-auto flex justify-center" >
+                            <table className="w-full">
+                                <thead className="sticky top-0">
+                                    <tr className="bg-gray-200 ">
+                                        <th><div className=" py-1 text-center">STT</div></th>
+                                        <th className="w-24"><div className="">Mã</div></th>
+                                        <th className=""><div>Họ tên</div></th>
+                                        <th><div className="text-left w-20">Viết tắt</div></th>
+                                        <th><div className="text-left w-20">Nhóm</div></th>
+                                        <th><div>Duyệt BHYT</div></th>
+                                        <th><div className="text-right">Chứng chỉ</div></th>
+                                        <th><div className="w-10 text-center">...</div></th>
                                     </tr>
-                                ))
 
-                                }
+                                </thead>
+                                <tbody>
+                                    {viewDatas.map((item, index) => (
+                                        <tr
+                                            key={index}
+                                            className="border-b hover:bg-gray-100"
+                                        >
+                                            <td><div className="py-1 text-center">{index + 1}</div></td>
+                                            <td className="w-24">{item.ma}</td>
+                                            <td><div className="text-left h-4">{item.hoten}</div></td>
+                                            <td><div className="text-left">{item.viettat}</div></td>
+                                            <td><div className="text-left">{item.tennhom}</div></td>
+                                            <td><div className="text-left">{item.duyetkhambhyt}</div></td>
+                                            <td><div className="text-left">{item.sochungchi}</div></td>
+                                        </tr>
+                                    ))
+
+                                    }
 
 
-                            </tbody>
+                                </tbody>
 
-                        </table>
-                    </div>
+                            </table>
+                        </div>
 
                     </div>
 
@@ -131,6 +136,6 @@ function NhanVien({ site }) {
     )
 
 
-}
+});
 
 export default NhanVien;
