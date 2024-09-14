@@ -1370,29 +1370,50 @@ def danhmuc_nhomnhanvien(site):
         })
     return jsonify(result), 200
 
+@app.route('/danh-muc/vaitro-nhanvien/<site>', methods=['GET'])
+def danhmuc_vaitro_nhanvien(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+   
+    return jsonify([{'id': row[0], 'name': row[1]} for row in cursor.execute('SELECT ID, TEN FROM E_DMVAITRO ORDER BY STT ASC').fetchall()])
+    
+
 # @app.route('/danhmuc/nhanvien/<site>', defaults={'nghiviec': False}, methods=['GET'])
-@app.route('/danhmuc/nhanvien/<site>/<nghiviec>', methods=['GET'])
-def danhmuc_nhanvien(site, nghiviec): 
+@app.route('/danhmuc/nhanvien/<site>/<nghiviec>/<duyetbhyt>/<vaitro>', methods=['GET'])
+def danhmuc_nhanvien(site, nghiviec, duyetbhyt, vaitro): 
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
+    print(nghiviec, duyetbhyt, vaitro)
     
-    stm_nghiviec = ''
     if (nghiviec == 'true'):
         stm_nghiviec = 'A.NHOM = 9'
     else:
         stm_nghiviec = 'A.NHOM <> 9'
     
+    if (duyetbhyt == '-1'):
+        stm_duyetbhyt = ''
+    elif (duyetbhyt == '0'):
+        stm_duyetbhyt = 'AND A.DUYETKHAMBHYT = 0'
+    else:
+        stm_duyetbhyt = 'AND A.DUYETKHAMBHYT = 1'
+    if (vaitro == '0'):
+        stm_vaitro = ''
+    else:
+        stm_vaitro = f"AND A.VAITRO like '%{vaitro}%'"
+    
     stm = f'''
-        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI 
+        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI, A.VAITRO
         FROM DMBS A 
         INNER JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
-        WHERE {stm_nghiviec}
+        WHERE {stm_nghiviec} {stm_duyetbhyt} {stm_vaitro}
     '''
         
     nhanviens = cursor.execute(stm).fetchall()
     for nhanvien in nhanviens:
+     
         result.append({
             'ma': nhanvien[0],
             'hoten': nhanvien[1],
@@ -1400,7 +1421,9 @@ def danhmuc_nhanvien(site, nghiviec):
             'tennhom': nhanvien[3],
             'viettat': nhanvien[4],
             'duyetkhambhyt': nhanvien[5],
-            'sochungchi': nhanvien[6]
+            'sochungchi': nhanvien[6],
+            'vaitro': nhanvien[7]
+            
         })      
     
     return jsonify(result), 200
