@@ -191,7 +191,6 @@ function BHYTModal({ site, setModalShow, selected }) {
                                 />
                                 <input
                                     className="border w-full px-2 py-1 outline-none"
-
                                     name='sothe-l'
                                     type="text"
                                 />
@@ -205,6 +204,7 @@ function BHYTModal({ site, setModalShow, selected }) {
                                         id='fromDate'
                                         dateFormat="dd/MM/yyyy"
                                         selected={formData.fromDate}
+                                        onChange={(date) => setFormData({ ...formData, fromDate: date })}
                                     />
                                 </div>
                                 <div className="text-left p-2">
@@ -215,6 +215,7 @@ function BHYTModal({ site, setModalShow, selected }) {
                                         id="toDate"
                                         dateFormat="dd/MM/yyyy"
                                         selected={formData.toDate}
+                                        onChange={(date) => setFormData({ ...formData, toDate: date })}
                                     />
                                 </div>
                             </div>
