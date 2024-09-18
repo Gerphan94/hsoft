@@ -45,6 +45,7 @@ function NoiTru({ site }) {
 
 
     useEffect(() => async () => {
+
         try {
             const fecthURL = apiURL + "/noitru/dskhoa/" + site;
             const response = await fetch(fecthURL);
@@ -117,18 +118,9 @@ function NoiTru({ site }) {
                         onClick={() => setShowTodieuTriModal(true)}
                     >TĐT
                     </button>
-
                     <div>
-
-
-                        {/* <ButtonList data={otherBTN} setSelectedOption={setSelectedBNT} /> */}
                     </div>
                 </div>
-
-
-
-
-
             </div>
 
 
