@@ -1,49 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
 
-function ListMenu({ data }) {
+const ListMenu = ({ data }) => {
+  // State to track which item has its submenu open
+  const [showIndex, setShowIndex] = useState(null);
 
-    const apiURL = process.env.REACT_APP_API_URL;
+  // Function to handle clicking on a parent item
+  const handleClickNhom = (id) => {
+    // Toggle the submenu for the clicked item
+    setShowIndex(showIndex === id ? null : id);
+  };
 
-
-    const [showIndex, setShowIndex] = useState(0);
-    const [selectedNhom, setSelectedNhom] = useState(0);
-
-    // theonhombhyt
-    const handleClickNhom = (id) => {
-        if (showIndex === id) {
-            setShowIndex(0);
-            return
-        }
-
-        setShowIndex(id);
-        setSelectedNhom(id);
-    }
-
-    return (
-
-        <>
-            {data.map((item) => (
-                <div className="text-left">
-                    <div className=" px-2 py-1 text-white bg-[#35374B] hover:bg-[#667BC6] hover:border-b-white select-none" 
-                    onClick={() => handleClickNhom(item.id)}>
-                        {item.name}
-                        </div>
-                    {showIndex === item.id && (
-                        <div className="px-2">
-                            {item.child.map((item1) => (
-                                <div key={item1.id} className="px-2 py-1 ">{item1.name}</div>
-                            ))}
-                            
-                        </div>
-                    )}
-
-
+  return (
+    <div>
+      {data.map((item) => (
+        <div key={item.id} className="text-left">
+          {/* Parent Menu Item */}
+          <div
+            className="px-2 py-1 text-white bg-[#35374B] hover:bg-[#667BC6] hover:border-b-white select-none"
+            onClick={() => handleClickNhom(item.id)}
+          >
+            {item.name}
+          </div>
+          
+          {/* Submenu: only show if the parent menu item is clicked */}
+          {showIndex === item.id && (
+            <div className="px-2">
+              {item.child.map((childItem) => (
+                <div key={childItem.id} className="px-2 py-1">
+                  {childItem.name}
                 </div>
-            ))}
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
 
-        </>
-    )
-
-}
-
-export default ListMenu
+export default ListMenu;

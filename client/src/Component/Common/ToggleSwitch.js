@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Toggle({ idname, enabled, setEnabled, displayName, toggleble = true }) {
+export default function Toggle({ idname, enabled, setEnabled, displayName='', toggleble = true }) {
 
  
 

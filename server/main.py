@@ -628,10 +628,10 @@ def noitru_getchidinhbyidkhoa(site, idkhoa):
     iNow = datetime.now()  
     schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
     
-    col_names = ['ngay', 'doituong', 'tendichvu', 'soluong', 'dongia', 'idchidinh', 'ghichu', 'thuchien', 'ngayylenh', 'ngaythuchien', 'maphieu', 'benhpham', 'idloai', 'idnhom']
+    col_names = ['ngay', 'doituong', 'tendichvu', 'soluong', 'dongia', 'idchidinh', 'ghichu', 'thuchien', 'ngayylenh', 'ngaythuchien', 'maphieu', 'benhpham', 'idloai', 'idnhom', 'loaiba']
     for schema in reversed(schema_ar):
         stm = f'''
-            SELECT TO_CHAR(A.NGAY, 'dd/MM/yyyy') AS NGAY, C.DOITUONG, B.TEN, A.SOLUONG, A.DONGIA, TO_CHAR(A.IDCHIDINH) AS IDCHIDINH, A.GHICHU, A.THUCHIEN, TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI') AS NGAYYLENH, TO_CHAR(A.NGAYTHUCHIEN, 'dd/MM/yyyy HH24:MI') AS NGAYTHUCHIEN, A.MAPHIEU, D.TEN AS BENHPHAM, E.ID AS IDLOAI, E.ID_NHOM AS IDNHOM
+            SELECT TO_CHAR(A.NGAY, 'dd/MM/yyyy') AS NGAY, C.DOITUONG, B.TEN, A.SOLUONG, A.DONGIA, TO_CHAR(A.IDCHIDINH) AS IDCHIDINH, A.GHICHU, A.THUCHIEN, TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI') AS NGAYYLENH, TO_CHAR(A.NGAYTHUCHIEN, 'dd/MM/yyyy HH24:MI') AS NGAYTHUCHIEN, A.MAPHIEU, D.TEN AS BENHPHAM, E.ID AS IDLOAI, E.ID_NHOM AS IDNHOM, A.LOAIBA
             FROM {schema}.V_CHIDINH A
             INNER JOIN V_GIAVP B ON B.ID = A.MAVP
             INNER JOIN DOITUONG C ON C.MADOITUONG = A.MADOITUONG
@@ -654,9 +654,7 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     result = []
     ngaynhapkhoa = cursor.execute(f'SELECT NGAY FROM NHAPKHOA WHERE ID = {idkhoa}').fetchone()[0]
     iNow = datetime.now()  
-    schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
-    print(schema_ar)
-    # get all phieu 
+    schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))    # get all phieu 
     col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu', 'schema'] 
     for schema in reversed(schema_ar):
         stm =f'''
@@ -697,7 +695,6 @@ def noitru_phieu_info(site,type, id, ngay):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = {}
-    
     if type == 2:
         d_table = 'D_XTUTRUCLL'
     else:
@@ -734,7 +731,6 @@ def noitru_dutru_ct(site,type, id):
         d_table = 'D_XTUTRUCCT'
     else:
         d_table = 'D_DUTRUCT'
-    
     stm = f'''
         SELECT A.STT AS STT_INDEX, A.TT, B.DOITUONG, A.MABD AS IDBD, C.MA AS MABD, (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG, C.DANG, C.DONVIDUNG, A.DUONGDUNG,
         A.SOLAN , A.LAN ,  A.SLYEUCAU AS SOLUONG,
@@ -781,10 +777,22 @@ def noitru_toaravien_ct(site, id):
     result = []
     stm = f'''
 
-    
     '''
-
     return jsonify(result), 200
+
+@app.route('/noitru/thuoc-phatiem/<site>/<toathuocid>', methods=['GET'])
+def noitru_thuoc_phatiem(site, toathuocid):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    stm = f'''
+    
+
+    '''
+    return jsonify(result), 200
+
+
 
 @app.route('/to-dieu-tri/get-empty-dien-bien/<site>/<idkhoa>', methods=['GET'])
 def to_dieu_tri_get_empty_dien_bien(site, idkhoa):
@@ -1319,19 +1327,20 @@ def danhmuc_taikhoan(site):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhom', 'makp', 'mabs', 'hoten', 'manhom','tennhopm', 'viettat', 'duyetkhambhyt', 'sochungchi' ]
+    col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhom', 'makp', 'mabs', 'hoten', 'manhom','tennhom', 'viettat', 'duyetkhambhyt', 'sochungchi', 'chungthuso', 'pin' ]
     
     stm = f'''
         WITH DMNV AS (
-        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI 
+        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI, C.CHUNGTHUSO, C.PIN
         FROM DMBS A 
         INNER JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
+        LEFT JOIN DMBS_SIGNATURE C ON A.MA = C.MANV
+        WHERE A.NHOM <> 9
         )
         SELECT A.ID, A.USERID, A.PASSWORD_,A.HOTEN AS TENTAIKHOAN, A.MANHOM, A.MAKP, B.*
         FROM DLOGIN A
-        LEFT JOIN DMNV B ON A.MABS = B.MA
-        FETCH FIRST 100 ROWS ONLY
-
+        INNER JOIN DMNV B ON A.MABS = B.MA
+        
     '''
     taikhoans = cursor.execute(stm).fetchall()
     for taikhoan in taikhoans:
@@ -1557,13 +1566,7 @@ def toamau_tonkho(site, idkho):
     
     return jsonify(result), 200
     
-    
-
-    
-
-
-    
-    
+     
 if __name__=='__main__':
     app.run(debug=True)
     

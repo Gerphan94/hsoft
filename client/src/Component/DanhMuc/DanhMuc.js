@@ -4,12 +4,12 @@ import TaiKhoan from "./TaiKhoan";
 import NhanVien from "./NhanVien";
 import GiaVP from "./GiaVP";
 import ButtonMenu from "../Common/ButtonMenu";
+import Dropdown from "../Dropdown";
 
 
 function DanhMuc({ site }) {
 
     const [selectedOption, setSelectedOption] = useState({ 'id': 0, 'name': '' })
-
 
     const dm_list = [
         { 'id': "taikhoan", 'name': "Tài khoản" },
@@ -18,20 +18,18 @@ function DanhMuc({ site }) {
         { 'id': "giavp", 'name': "Giá viện phí" }
     ]
 
-
     return (
 
         <>
-            <div className="flex items-center">
-                <div className="size-10">
-                    <ButtonMenu className="mr-4 " data={dm_list} setSelectedOption={setSelectedOption} />
+        <div className="size-10">
+        <ButtonMenu className="mr-4 " data={dm_list} setSelectedOption={setSelectedOption} />
+        </div>
+                <div className="w-full">
+                    {selectedOption.id === 'taikhoan' && <TaiKhoan site={site} />}
+                    {selectedOption.id === 'nhanvien' && <NhanVien site={site} />}
+                    {selectedOption.id === 'giavp' && <GiaVP site={site} />}
                 </div>
-
-                {/* <div className="font-bold text-xl">{selectedOption.name}</div> */}
-            </div>
-            {selectedOption.id === 'taikhoan' && <TaiKhoan site={site} />}
-            {selectedOption.id === 'nhanvien' && <NhanVien site={site} />}
-            {selectedOption.id === 'giavp' && <GiaVP site={site} />}
+          
         </>
     )
 }

@@ -27,9 +27,6 @@ function MainPage() {
     const [pageTitle, setPageTitle] = useState('')
     const [mainIcon, setMainIcon] = useState(null);
 
-    
-
-
 
     const [isChooseSite, setIsChooseSite] = useState(false);
 
@@ -93,9 +90,6 @@ function MainPage() {
                 { site.name}
                 </div>
                 
-
-
-
             </div>
             {isChooseSite &&
                 <ChooseSite

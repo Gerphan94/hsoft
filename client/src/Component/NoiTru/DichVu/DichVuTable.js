@@ -17,6 +17,7 @@ function DichvuTable( { data=[] } ) {
                             {/* <th className="w-40"> <div>Ngày dự kiến</div></th> */}
                             <th className="w-40"><div className="text-center">Số phiếu</div></th>
                             <th><div className="text-center w-[300px]">Bệnh phẩm</div></th>
+                            <th><div className="text-center]">Loại BA</div></th>
                             <th><div className="text-center]">...</div></th>
                         </tr>
                     </thead>
@@ -41,6 +42,7 @@ function DichvuTable( { data=[] } ) {
                                 {/* <td><div>{item.ngaythuchien}</div></td> */}
                                 <td><div className="text-center">{item.maphieu}</div></td>
                                 <td><div className="text-left">{item.benhpham}</div></td>
+                                <td><div className="text-center">{item.loaiba}</div></td>
                                 <td><div className="text-center">...</div></td>
                             </tr>
                         ))}

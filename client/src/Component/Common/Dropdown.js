@@ -3,21 +3,36 @@ import { FaAngleDown } from "react-icons/fa6";
 
 const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, placeholder = '', chooseIndex = 0, optionALL = false }) => {
 
+
+    const [initData, setInitData] = useState([]);
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const dropdownRef = useRef(null);
 
-    useEffect(() => {
-        setViewData(data);
-    }, [data]);
 
     useEffect(() => {
-        if (chooseIndex > 0 && data.length > 0) {
-            setSelectedOption({ id: data[chooseIndex - 1].id, name: data[chooseIndex - 1].name });
-            setSearchTerm(data[chooseIndex - 1].name)
+        if (optionALL) {
+            setInitData([{ id: 0, name: 'Tất cả' }, ...data]);
+            setViewData([{ id: 0, name: 'Tất cả' }, ...data]);
         }
-    }, [data, setSelectedOption]);
+        else {
+            setInitData(data);
+            setViewData(data);
+        }
+        if (chooseIndex > 0 && initData.length > 0) {
+            setSelectedOption({ id: initData[chooseIndex - 1].id, name: initData[chooseIndex - 1].name });
+            // setSearchTerm(initData[chooseIndex - 1].name)
+        }
+
+    }, [data]);
+
+    // useEffect(() => {
+    //     if (chooseIndex > 0 && viewData.length > 0) {
+    //         setSelectedOption({ id: viewData[chooseIndex - 1].id, name: viewData[chooseIndex - 1].name });
+    //         setSearchTerm(viewData[chooseIndex - 1].name)
+    //     }
+    // }, [data, setSelectedOption]);
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -27,7 +42,7 @@ const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, 
         setSelectedOption({ id, name });
         setIsDropdownOpen(false);
         setSearchTerm('')
-        setViewData(data);
+        setViewData(initData);
 
     };
 
@@ -41,10 +56,10 @@ const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, 
         setSearchTerm(e.target.value);
         setIsDropdownOpen(true);
         if (e.target.value === '') {
-            setViewData(data);
+            setViewData(initData);
         }
         else {
-            const filedata = data.filter((item) =>
+            const filedata = initData.filter((item) =>
                 item.name.toLowerCase().includes(e.target.value.toLowerCase())
             );
             setViewData(filedata);
@@ -62,6 +77,8 @@ const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, 
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [isDropdownOpen]);
+
+    
 
     return (
         <div className='w-full h-full inline-block text-left' ref={dropdownRef}>
@@ -94,7 +111,7 @@ const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, 
                                     placeholder='Search'
                                     autoComplete='off'
                                     spellCheck={false}
-                                    // readOnly={!searchable}
+                                // readOnly={!searchable}
                                 />
                             </div>
                         }
@@ -109,21 +126,7 @@ const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, 
 
                                 </li> :
                                 <>
-                                    {optionALL &&
-                                        <li className="border-b border-t">
-                                            <button
-                                                className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
-                                                onClick={() => handleClick(0, 'Tất cả')}
-                                            >
-                                                Tất cả
-                                            </button>
-
-
-                                        </li>
-                                    }
                                     <div className='overflow-y-auto max-h-64'>
-
-
                                         {viewData.map((item) => (
                                             <li key={item.id}>
                                                 <button

@@ -21,7 +21,6 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                 const response = await fetch(fetchURL);
                 const data = await response.json();
                 setDetail(data);
-                console.log(data);
             }
             catch (error) {
                 console.error('Error fetching data:', error);
@@ -36,6 +35,7 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                 <div className="flex items-center w-full bg-gray-100">
                     <div className="font-bold px-2">{TITLE}</div>
                     <div className="flex-1 text-left">{detail && detail.ten}</div>
+                    <input type="text" className="w-48 text-center border outline-none px-2 py-0.5" value={selectedCoupon.id} />
                     <div>
                         <Dausinhton />
                     </div>
@@ -82,18 +82,16 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                                 :
                                 <div className="text-left italic py-0.5">Ngày <span className="font-bold">{item.solan}</span> lần, lần <span className="font-bold">{item.lan}</span> {item.donvidung}</div>
                             }
-                            <div className="min-w-40"><strong>Giờ BD</strong> {item.giobd}</div>
-                            <div className="min-w-40"><strong>Giờ dùng</strong> {item.giodung}</div>
-
-
+                            <div className="min-w-40"><span className="font-medium">Giờ BD</span> {item.giobd}</div>
+                            <div className="min-w-40"><span className="font-medium">Giờ dùng</span> {item.giodung}</div>
                         </div>
                         <div className="grid grid-cols-3">
-                            <div className="min-w-40"><strong>Liều dùng:</strong> {item.lieudungthuoc}</div>
-                            <div className="min-w-40"><strong>Tốc độ:</strong> {item.tocdo}</div>
-                            <div className="text-left"><strong>Ghi chú: </strong>{item.ghichu}</div>
+                            <div className="min-w-40"><span className="font-medium">Liều dùng:</span> {item.lieudungthuoc}</div>
+                            <div className="min-w-40"><span className="font-medium">Tốc độ:</span> {item.tocdo}</div>
+                            <div className="text-left"><span className="font-medium">Ghi chú: </span>{item.ghichu}</div>
                         </div>
                         <div className="grid grid-cols-2">
-                            <div className="min-w-40"><strong>Cách dùng: </strong><i>{item.cachdung}</i></div>
+                            <div className="min-w-40"><span className="font-medium">Cách dùng: </span><i>{item.cachdung}</i></div>
                         </div>
                         <div className="grid grid-cols-6 text-xs py-1">
                             {item.l1 && <div><strong>L1:</strong> {moment.utc(item.l1).format('DD/MM/YYYY HH:mm:ss')}</div>}
@@ -110,6 +108,9 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                     // </div>
                 ))}
             </div>
+
+            {/* PHA TIÊM */}
+            
 
 
         </>
