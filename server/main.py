@@ -1327,7 +1327,7 @@ def danhmuc_taikhoan(site):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhom', 'makp', 'mabs', 'hoten', 'manhom','tennhom', 'viettat', 'duyetkhambhyt', 'sochungchi', 'chungthuso', 'pin' ]
+    col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhomtk', 'makp', 'mabs', 'hoten', 'manhomnv','tennhom', 'viettat', 'duyetkhambhyt', 'sochungchi', 'chungthuso', 'pin' ]
     
     stm = f'''
         WITH DMNV AS (

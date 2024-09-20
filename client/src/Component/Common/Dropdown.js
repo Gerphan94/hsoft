@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useMemo, memo } from 'react'
 import { FaAngleDown } from "react-icons/fa6";
 
-const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, placeholder = '', chooseIndex = 0, optionALL = false }) => {
+const Dropdown = memo(({ data, selectedOption, setSelectedOption, searchable = true, placeholder = '', chooseIndex = 0, optionALL = false }) => {
 
-
+    console.log('render dropdown')
     const [initData, setInitData] = useState([]);
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -150,6 +150,6 @@ const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, 
             </div>
         </div>
     )
-}
+})
 
 export default Dropdown;
