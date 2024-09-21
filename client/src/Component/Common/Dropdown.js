@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo, memo } from 'react'
 import { FaAngleDown } from "react-icons/fa6";
 
-const Dropdown = memo(({ data, selectedOption, setSelectedOption, searchable = true, placeholder = '', chooseIndex = 0, optionALL = false }) => {
+const Dropdown = memo(({ data, selectedOption, setSelectedOption, searchable = false, placeholder = '', chooseIndex = 0, optionALL = false }) => {
 
     console.log('render dropdown')
     const [initData, setInitData] = useState([]);

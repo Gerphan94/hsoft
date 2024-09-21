@@ -81,11 +81,12 @@ function TaiKhoan({ site }) {
         if (debouncedSearchTerm === '') {
             setViewDatas(TaiKhoans);
         } else {
-            const filedata = TaiKhoans.filter((item) => {
+            const filedata = viewDatas.filter((item) => {
+                const userid = item.userid ? item.userid.toLowerCase() : '';
                 const ma = item.ma ? item.ma.toLowerCase() : '';
                 const hoten = item.hoten ? item.hoten.toLowerCase() : '';
 
-                return ma.includes(debouncedSearchTerm.toLowerCase()) || hoten.includes(debouncedSearchTerm.toLowerCase());
+                return ma.includes(debouncedSearchTerm.toLowerCase()) || hoten.includes(debouncedSearchTerm.toLowerCase()) || userid.includes(debouncedSearchTerm.toLowerCase());
             });
             setViewDatas(filedata);
         }
@@ -114,13 +115,18 @@ function TaiKhoan({ site }) {
 
     const handleFilter = () => {
         console.log('handleFilter', selectedKP, selectedNhomnv)
+        setSearchTerm('');
         const filterData = TaiKhoans.filter((item) => {
             let matchesAllFilters = true;
             if (selectedNhomnv.id > 0) {
                 matchesAllFilters = item.manhomnv === selectedNhomnv.id;
             }
-            if (selectedKP.id > 0) {
-                matchesAllFilters = item.makp === selectedKP.id;
+            if (selectedKP.id > 0 && item.makp !== '' && item.makp !== null) {
+                const isPresent = item.makp
+                    .split(',')
+                    .map(item => item.trim()) // Remove any extra spaces around the numbers
+                    .includes(selectedKP.id.toString());
+                matchesAllFilters = isPresent
             }
 
             return matchesAllFilters;
@@ -130,11 +136,10 @@ function TaiKhoan({ site }) {
 
     return (
         <>
-            <div className="w-full p-2">
-                <div className="">
+            <div className="w-full p-2 flex flex-col flex-grow">
                     <div className="px-4 flex gap-4 justify-between">
                         <button
-                            className="flex items-center gap-2 text-white bg-blue-400 px-2 py-1"
+                            className="flex items-center gap-2 text-white bg-blue-400 px-2 py-1 select-none"
                             onClick={() => handeleView()}
                         >Xem
                             <FaEye />
@@ -156,27 +161,27 @@ function TaiKhoan({ site }) {
                         </div> */}
                         <div className="flex gap-4">
                             <div className="w-96">
-                            <Dropdown
-                                data={khoaphongs}
-                                selectedOption={selectedKP}
-                                setSelectedOption={setSelectedKP}
-                                optionALL
-                                chooseIndex={1}
-                                memoized
-                            />
+                                <Dropdown
+                                    data={khoaphongs}
+                                    selectedOption={selectedKP}
+                                    setSelectedOption={setSelectedKP}
+                                    optionALL
+                                    chooseIndex={1}
+                                    memoized
+                                />
                             </div>
                             <div className="w-56">
-                            <Dropdown
-                                data={nhomnvs}
-                                selectedOption={selectedNhomnv}
-                                setSelectedOption={selectNhomnv}
-                                optionALL
-                                chooseIndex={1}
-                                memoized
-                            />
+                                <Dropdown
+                                    data={nhomnvs}
+                                    selectedOption={selectedNhomnv}
+                                    setSelectedOption={selectNhomnv}
+                                    optionALL
+                                    chooseIndex={1}
+                                    memoized
+                                />
                             </div>
-                           
-                            
+
+
                             <button
                                 className="text-white bg-blue-400 px-2 py-1 w-20 select-none rounded-md opacity-80 hover:opacity-100"
                                 onClick={() => handleFilter()}
@@ -185,7 +190,7 @@ function TaiKhoan({ site }) {
                         </div>
                     </div>
                     <div>
-                        <div className="mt-2 px-4 w-full lg:max-h-[720px] overflow-auto flex justify-center" >
+                        <div className="mt-2 px-4 w-full h-[600px]  overflow-auto" >
                             <table className="w-full">
                                 <thead className="sticky top-0">
                                     <tr className="bg-gray-200 ">
@@ -229,10 +234,7 @@ function TaiKhoan({ site }) {
 
                             </table>
                         </div>
-
                     </div>
-
-                </div>
             </div>
         </>
     )
