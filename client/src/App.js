@@ -18,12 +18,8 @@ function App() {
   const Pages = [
     { id: "mainpage", path: "/", title: 'Main Pgae', component: <MainPage /> },
     { id: "danhmuc", path: "/danh-muc", title: 'Danh mục', component: <DanhMuc /> },
-
+    
     { id: "notfound", path: "*", title: 'Not Found', component: <NotFound /> }
-
-
-
-
   ]
 
   return (
