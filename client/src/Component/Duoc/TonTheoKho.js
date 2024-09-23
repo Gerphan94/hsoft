@@ -157,7 +157,6 @@ function TonTheoKho({ site }) {
 
     return (
         <div className="px-4">
-
             <div className="flex items-center gap-10">
                 <div className="flex items-center gap-2">
                     <label className="font-bold">Kho: </label>

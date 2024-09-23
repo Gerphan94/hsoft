@@ -35,7 +35,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
     }
     return (
         <>
-            <div className="mt-2 w-full lg:h-[700px] overflow-y-auto" >
+            <div className="mt-2 w-full lg:h-[720px] overflow-y-auto mb-5" >
                 <table className="w-full">
                     <thead className="sticky top-0 z-100">
                         <tr className="bg-gray-200">

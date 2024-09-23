@@ -19,7 +19,6 @@ code {
 }
 
 table {
-
   width: 100%;
 }
 
@@ -27,7 +26,13 @@ table {
 thead{
   position:sticky;
   top:0;
-  background-color: #7D8ABC;
+}
+
+thead tr {
+  background-color: #8EACCD;
+  color: #F5F7F8;
+
+
 }
 
 tbody tr:nth-of-type(odd) {

@@ -136,30 +136,26 @@ function TaiKhoan({ site }) {
 
     return (
         <>
-            <div className="w-full p-2 flex flex-col flex-grow">
-                    <div className="px-4 flex gap-4 justify-between">
+
+            <div className="flex flex-col overflow-auto">
+                <div className='fixed w-full text-md bg-white h-14 p-3 z-50'>
+                    <div className="flex justify-between items-center">
                         <button
                             className="flex items-center gap-2 text-white bg-blue-400 px-2 py-1 select-none"
                             onClick={() => handeleView()}
-                        >Xem
-                            <FaEye />
+                        >
+                            Xem <FaEye />
                         </button>
-                        <input
-                            type="text"
-                            className="border w-56 px-2 py-1 outline-none"
-                            placeholder="Nhập mã, tên, ..."
-                            value={searchTerm}
-                            spellCheck="false"
-                            onChange={(event) => handleSearch(event)}
-                        />
-                        <div>
-
-                        </div>
-                        {/* <div className="flex items-center gap-2">
-                            <input id="cboff" name="cboff" type="checkbox" />
-                            <label className="select-none cursor-pointer" htmlFor="cboff">Nghỉ việc</label>
-                        </div> */}
                         <div className="flex gap-4">
+                            <input
+                                type="text"
+                                className="border w-56 px-2 py-1 outline-none"
+                                placeholder="Nhập mã, tên, ..."
+                                value={searchTerm}
+                                spellCheck="false"
+                                onChange={handleSearch}
+                            />
+
                             <div className="w-96">
                                 <Dropdown
                                     data={khoaphongs}
@@ -186,59 +182,53 @@ function TaiKhoan({ site }) {
                                 className="text-white bg-blue-400 px-2 py-1 w-20 select-none rounded-md opacity-80 hover:opacity-100"
                                 onClick={() => handleFilter()}
                             >Lọc</button>
-
                         </div>
                     </div>
-                    <div>
-                        <div className="mt-2 px-4 w-full h-[600px]  overflow-auto" >
-                            <table className="w-full">
-                                <thead className="sticky top-0">
-                                    <tr className="bg-gray-200 ">
-                                        <th><div className=" py-1 text-center">STT</div></th>
-                                        <th className="w-24"><div className="">ID</div></th>
-                                        <th className=""><div>UserID</div></th>
-                                        <th><div className="text-left w-20">Pwd</div></th>
-                                        <th><div className="text-left w-20">Tên TK</div></th>
-                                        <th><div>Mã NV</div></th>
-                                        <th><div className="text-left">Họ tên NV</div></th>
-                                        <th><div className="text-left">Tên Nhóm</div></th>
-                                        {/* <th><div className="text-center">Số chứng chỉ</div></th> */}
-                                        <th><div className="text-left">Chứng thư số</div></th>
-                                        <th><div className="text-left">Pin</div></th>
-                                        <th><div className="text-left hidden">khoa/phong</div></th>
-                                    </tr>
+                </div>
+            
+            <div className=" px-3 mt-14">
+                <table className="table-auto w-full">
+                    <thead className="sticky top-14 bg-white z-30 ">
+                        <tr className="">
+                            <th className="py-1 text-center">STT</th>
+                            <th className="w-24">ID</th>
+                            <th>UserID</th>
+                            <th className="text-left w-20">Pwd</th>
+                            <th className="text-left">Tên TK</th>
+                            <th>Mã NV</th>
+                            <th className="text-left">Họ tên NV</th>
+                            <th className="text-left">Tên Nhóm</th>
+                            <th className="text-left">Chứng thư số</th>
+                            <th className="text-left">Pin</th>
+                            <th className="text-left hidden">Khoa/Phong</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {viewDatas.map((item, index) => (
+                            <tr key={index}>
+                                <td className="py-1 text-center">{index + 1}</td>
+                                <td className="w-24">{item.id}</td>
+                                <td className="text-left">{item.userid}</td>
+                                <td className="text-left">{item.password_}</td>
+                                <td className="text-left">{item.tentaikhoan}</td>
+                                <td>{item.mabs}</td>
+                                <td className="text-left">{item.hoten}</td>
+                                <td>{item.tennhom}</td>
+                                <td>{item.chungthuso}</td>
+                                <td>{item.pin}</td>
+                                <td className="hidden">{item.makp}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
 
-                                </thead>
-                                <tbody>
-                                    {viewDatas.map((item, index) => (
-                                        <tr
-                                            key={index}
-                                            className={`border-b hover:bg-gray-100 ${item.duyetkhambhyt === 1 && 'text-blue-500'}`}
-                                        >
-                                            <td><div className="py-1 text-center">{index + 1}</div></td>
-                                            <td className="w-24">{item.id}</td>
-                                            <td><div className="text-left h-4">{item.userid}</div></td>
-                                            <td><div className="text-left">{item.password_}</div></td>
-                                            <td><div className="text-left">{item.tentaikhoan}</div></td>
-                                            <td><div className="text-left">{item.mabs}</div></td>
-                                            <td><div className="text-left">{item.hoten}</div></td>
-                                            <td><div className="text-left">{item.tennhom}</div></td>
-                                            {/* <td><div className="text-left">{item.sochungchi}</div></td> */}
-                                            <td><div className="text-left">{item.chungthuso}</div></td>
-                                            <td><div className="text-left">{item.pin}</div></td>
-                                            <td><div className="text-left hidden">{item.makp}</div></td>
-                                        </tr>
-                                    ))
-                                    }
-                                </tbody>
 
-                            </table>
-                        </div>
-                    </div>
             </div>
+
+        </div>
+
         </>
     )
-
 
 }
 

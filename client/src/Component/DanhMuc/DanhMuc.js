@@ -7,7 +7,6 @@ import ButtonMenu from "../Common/ButtonMenu";
 import MenuDropdown from "./MenuDropdown";
 import { FcManager, FcCurrencyExchange, FcConferenceCall } from "react-icons/fc";
 
-
 function DanhMuc({ site }) {
 
     const [selectedOption, setSelectedOption] = useState({ 'id': 0, 'name': '' })
@@ -19,16 +18,15 @@ function DanhMuc({ site }) {
         { id: 'nhanvien', name: 'Nhân viên', icon: <FcConferenceCall /> },
         { id: 'giavp', name: 'Giá viện phí', icon: <FcCurrencyExchange /> }
     ]
-
     return (
-
-        <>
-            <div className="p-4 flex flex-col flex-grow">
+        <div className="h-screen flex flex-col overflow-y-auto">
+            <header className="p-2 sticky top-0 flex justify-between items-center border-b bg-white">
+                <h1 className="text-xl font-bold text-left px-4">Danh mục</h1>
                 <div className="grid gap-2 grid-flow-col justify-start">
                     {menuList.map((menu) =>
                         <button
                             key={menu.id}
-                            className={`flex gap-1 justify-between items-center text-left border select-none outline-none h-full w-full py-2 px-3 text-[#0C1844] hover:border-[#667BC6] hover:shadow-md rounded-lg shadow-[#667BC6] ${selectedMenu === menu.id && 'shadow-md  border-[#667BC6]'} }`}
+                            className={`items-center text-left border select-none outline-none h-full w-full py-1 px-3 text-[#0C1844] hover:border-[#667BC6] hover:shadow-md rounded-lg shadow-[#667BC6] ${selectedMenu === menu.id && 'shadow-md  border-[#667BC6]'} }`}
                             onClick={() => setSelectedMenu(menu.id)}
                         >
                             <div className='flex gap-1 items-center'>
@@ -39,14 +37,12 @@ function DanhMuc({ site }) {
                         </button>
                     )}
                 </div>
-                <div className="w-full border rounded-lg mt-4 p-4">
-                    {selectedMenu === 'taikhoan' && <TaiKhoan site={site} />}
-                    {selectedMenu === 'nhanvien' && <NhanVien site={site} />}
-                    {selectedMenu === 'giavp' && <GiaVP site={site} />}
-                </div>
+            </header>
 
-            </div>
-        </>
-    )
+            <TaiKhoan />
+
+        </div>
+    );
 }
+
 export default DanhMuc;
