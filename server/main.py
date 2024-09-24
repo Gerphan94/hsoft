@@ -1125,25 +1125,26 @@ def duoc_tontutruc(site, idtutruc):
         result.append(obj)
     return jsonify(result), 200
 
+
 @app.route('/duoc/tutruc/tontutruc-chitiet/<site>/<idtutruc>', methods=['GET'])
 def duoc_tontutruc_chitiet(site, idtutruc):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
+    cols = ['mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'handung', 'losx', 'nhombo', 'dalieu']
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
-        FROM {schema_now()}.D_TUTRUCCT A 
-        INNER JOIN D_DMBD C ON A.MABD = C.ID
-        INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
+        SELECT A.MABD , B.TEN || ' ' || B.HAMLUONG AS TEN_HAMLUONG , B.DANG, B.DONVIDUNG, B.DUONGDUNG , B.BHYT,  A.TONDAU , A.SLNHAP , A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,  D.HANDUNG , D.LOSX, B.NHOMBO, C.DALIEU 
+        FROM {schema_now()}.D_TUTRUCCT A
+        INNER JOIN D_DMBD B ON A.MABD = B.ID
+        INNER JOIN D_DMBD_ATC C ON B.ID = C.ID
+        LEFT JOIN {schema_now()}.D_THEODOI D ON A.STT = D.ID
         WHERE A.MAKP = {idtutruc}
-        ORDER BY C.MA ASC
     '''
-
     datas = cursor.execute(stm).fetchall()
     for data in datas:
         obj = {}
-        for idx, col in  enumerate(medicine_cols):
+        for idx, col in  enumerate(cols):
             obj[col] = data[idx]
         result.append(obj)
     return jsonify(result), 200
@@ -1340,6 +1341,7 @@ def danhmuc_taikhoan(site):
         SELECT A.ID, A.USERID, A.PASSWORD_,A.HOTEN AS TENTAIKHOAN, A.MANHOM, A.MAKP, B.*
         FROM DLOGIN A
         INNER JOIN DMNV B ON A.MABS = B.MA
+        WHERE A.HIDE = 0
         
     '''
     taikhoans = cursor.execute(stm).fetchall()

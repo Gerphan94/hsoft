@@ -12,13 +12,15 @@ import MainPage from './Component/MainPage';
 import NotFound from './Page/404';
 
 import DanhMuc from './Component/DanhMuc/DanhMuc';
-
+import Duoc from './Component/Duoc/Duoc';
+import SQLColection from './Component/SQL/SQLCollection';
 function App() {
 
   const Pages = [
     { id: "mainpage", path: "/", title: 'Main Pgae', component: <MainPage /> },
     { id: "danhmuc", path: "/danh-muc", title: 'Danh mục', component: <DanhMuc /> },
-    
+    { id: "duoc", path: "/duoc", title: 'Dược', component: <Duoc /> },
+    { id: "sql", path: "/sql", title: 'SQL', component: <SQLColection /> },
     { id: "notfound", path: "*", title: 'Not Found', component: <NotFound /> }
   ]
 

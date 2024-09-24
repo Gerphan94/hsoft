@@ -166,7 +166,6 @@ function TonTheoKho({ site }) {
                             setSelectedOption={setSelectedKho}
                             placeholder="Chọn kho --- "
                             selectedOption={selectedKho}
-
                         />
 
                     </div>
@@ -182,9 +181,7 @@ function TonTheoKho({ site }) {
                         Xem
                     </button>
                 </div>
-
                 {selectedAtc.id}
-
                 <div>
                     <SearchBar
                         placeholder='Nhập Mã, Tên, HC'
@@ -198,9 +195,7 @@ function TonTheoKho({ site }) {
             <div>
                 <Table data={viewDatas} setIsShowModal={setIsShowModal} setSelectedPharmarId={setSelectedPharmarId} />
             </div>
-
             {isShowModal && <PharmarDetailModal site={site} pharmarId={selectedPharmarId} setModalShow={setIsShowModal} />}
-
         </div >
     );
 }

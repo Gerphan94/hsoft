@@ -4,6 +4,7 @@ import ViewButton from "../Button/ViewButton";
 import PharmarDetailModal from "./PharmarDetailModal";
 import Table from "./Table";
 import TableDetail from "./TableDetail";
+import Toggle from "../Common/ToggleSwitch";
 
 function TonTuTruc({ site }) {
 
@@ -24,7 +25,6 @@ function TonTuTruc({ site }) {
     const [isDetail, setIsDetail] = useState(false);
 
 
-
     useEffect(() => async () => {
         try {
             // const fecthURL = apiURL + "duoc/tutruc/ds_khoaphong/" + site;
@@ -42,16 +42,26 @@ function TonTuTruc({ site }) {
             try {
                 const response = await fetch(`${apiURL}duoc/tutruc/ds_tutruc/${site}/${selectedKhoaphong.id}`);
                 const data = await response.json();
-                setTuTrucList(data);
+
+                // Add id into name
+                const updatedData = data.map(item => ({
+                    ...item,
+                    name: `${item.name} (${item.id})` // Append id to name
+                }));
+
+                setTuTrucList(updatedData); // Set updated data to state
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
         fetchTuTrucList();
-        return () => {
 
+        return () => {
+            // Cleanup logic if necessary
         };
     }, [selectedKhoaphong.id, site]);
+
 
     const getMedicines = async () => {
         try {
@@ -102,7 +112,7 @@ function TonTuTruc({ site }) {
         <div className="px-4">
 
             <div className="flex items-center gap-10">
-                <div className="flex gap-10 items-center gap-10">
+                <div className="flex gap-10 items-center">
                     <div className="max-w-[500px] flex items-center gap-2">
                         <label className="w-[100px] text-left font-bold">Khoa phòng:</label>
                         <div className="w-[400px]">
@@ -130,16 +140,13 @@ function TonTuTruc({ site }) {
 
                         </div>
                     </div>
-                    <div className="flex gap-2 w-32">
-                        <input
-                            className=""
-                            id='ton-chitiet'
-                            name='ton-chitiet'
-                            type="checkbox"
-                            checked={isDetail}
-                            onChange={() => setIsDetail(!isDetail)}
+                    <div className="">
+                        <Toggle
+                            idname="ton-chitiet"
+                            enabled={isDetail}
+                            setEnabled={setIsDetail}
+                            displayName="Tồn chi tiết"
                         />
-                        <label className="select-none" htmlFor="ton-chitiet">Tồn Chi tiết</label>
 
                     </div>
                     <div className=" flex items-center gap-2">

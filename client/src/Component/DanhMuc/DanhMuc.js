@@ -6,7 +6,7 @@ import GiaVP from "./GiaVP";
 import ButtonMenu from "../Common/ButtonMenu";
 import MenuDropdown from "./MenuDropdown";
 import { FcManager, FcCurrencyExchange, FcConferenceCall } from "react-icons/fc";
-
+import SideMenu from "../SideMenu";
 function DanhMuc({ site }) {
 
     const [selectedOption, setSelectedOption] = useState({ 'id': 0, 'name': '' })
@@ -19,7 +19,10 @@ function DanhMuc({ site }) {
         { id: 'giavp', name: 'Giá viện phí', icon: <FcCurrencyExchange /> }
     ]
     return (
-        <div className="h-screen flex flex-col overflow-y-auto">
+        <div className="flex">
+            <SideMenu />
+       
+        <div className="h-screen w-full flex flex-col overflow-y-auto">
             <header className="p-2 sticky top-0 flex justify-between items-center border-b bg-white">
                 <h1 className="text-xl font-bold text-left px-4">Danh mục</h1>
                 <div className="grid gap-2 grid-flow-col justify-start">
@@ -41,6 +44,7 @@ function DanhMuc({ site }) {
 
             <TaiKhoan />
 
+        </div>
         </div>
     );
 }

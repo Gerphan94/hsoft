@@ -8,6 +8,7 @@ import TonTheoKho from "./TonTheoKho";
 import DMBD from "./DMBD";
 import TonTuTruc from "./TonTuTruc";
 import ButtonMenu from "../ButtonMenu";
+import SideMenu from "../SideMenu";
 
 function Duoc({ site }) {
 
@@ -25,18 +26,23 @@ function Duoc({ site }) {
 
     return (
         <>
-            <div className="flex items-center">
-                <div className="w-8">
-                    <ButtonMenu data={menuData} setSelectedOption={setSelectedOption} />
+            <div className="flex">
+                <SideMenu selectedMenu='duoc' />
+                <div className="w-full">
+                    <div className="flex items-center">
+                        <div className="w-8">
+                            <ButtonMenu data={menuData} setSelectedOption={setSelectedOption} />
+                        </div>
+                        <div className="font-bold text-lg uppercase">{selectedOption.name}</div>
+                    </div>
+                    <div>
+                        {selectedOption.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
+                        {selectedOption.id === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
+                        {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site} />}
+                        {selectedOption.id === 'tontutruc' && <TonTuTruc site={site} />}
+                        {selectedOption.id === 'dmbd' && <DMBD site={site} />}
+                    </div>
                 </div>
-                <div className="font-bold text-lg uppercase">{selectedOption.name}</div>
-            </div>
-            <div>
-                {selectedOption.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
-                {selectedOption.id === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
-                {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site} />}
-                {selectedOption.id === 'tontutruc' && <TonTuTruc site={site} />}
-                {selectedOption.id === 'dmbd' && <DMBD site={site} />}
             </div>
         </>
     )

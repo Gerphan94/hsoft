@@ -120,19 +120,27 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                         {item.duongdung}
                                     </div>
                                 </td>
-                                <td className="text-center">{item.maatc}</td>
+                                <td className="text-center">
+                                    {item.maatc !== null && item.maatc !== undefined && item.maatc.trim() !== '' ?
+                                        <div className={`${item.maatc.trim() !== item.maatc ? 'text-red-500' : ''}`}>
+                                            {item.maatc}
+                                        </div>
+                                        : ''
+                                    }
+                                    
+                                    </td>
                                 <td className="text-right px-1">{Number(item.tondau).toLocaleString('en-US')}</td>
                                 <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
                                 <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
                                 <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
                                 <td className="text-right px-1">{Number(item.slyeucau).toLocaleString('en-US')}</td>
                                 <td className="text-right px-1">{Number(item.tonkhadung).toLocaleString('en-US')}</td>
-                                {/* <td></td> */}
+                                {/* <td></td> */ }
                             </tr>
                         ))}
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
+        </div >
 
         </>
     )
