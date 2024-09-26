@@ -57,7 +57,6 @@ def conn_info(env):
             'password':'hsofttamanh',
             'dsn':"hsoft-dev.vdc.tahcm.vn/dev3"
         }
-        
 def arrays_equal(arr1, arr2):
     return set(arr1) == set(arr2)
         

@@ -155,7 +155,6 @@ function TaiKhoan({ site }) {
         setTotalPage(Math.ceil(filterData.length / itemsPerPage));
         setCurrentPage(1);
         setDataInPage(constDataInPage(1, filterData));
-
         setViewDatas(filterData);
     };
     return (
