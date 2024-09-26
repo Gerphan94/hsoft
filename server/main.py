@@ -32,6 +32,7 @@ def schema_mutil(fromDate, toDate):
     return date_strings
 
 def conn_info(env):
+    env = env.upper()
     if (env == 'HN_LIVE'):
         return {
             'user':"hsofttamanh",

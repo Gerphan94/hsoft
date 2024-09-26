@@ -3,6 +3,7 @@ import { FaEye, FaBars } from "react-icons/fa";
 
 import Dropdown from "../Common/Dropdown";
 import Toggle from "../Common/ToggleSwitch";
+import Pagination from "../Common/Pagination";
 
 function TaiKhoan({ site }) {
 
@@ -15,44 +16,57 @@ function TaiKhoan({ site }) {
     const [selectedNhomnv, setSelectedNhomnv] = useState({ id: 0, name: '' });
     const [selectedKP, setSelectedKP] = useState({ id: 0, name: '' });
     const [searchTerm, setSearchTerm] = useState('');
-    const [TaiKhoans, setTaiKhoans] = useState([]);
+    const [data, setData] = useState([]);
     const [viewDatas, setViewDatas] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
-    useEffect(() => () => {
-        const fetchNhomnvs = async () => {
-            try {
-                const fecthURL = apiURL + "/danh-muc/nhom-nhan-vien/" + site;
-                console.log("call", fecthURL)
-                const response = await fetch(fecthURL);
-                const data = await response.json();
-                setNhomnvs(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-        const fetchKhoaphongs = async () => {
-            try {
-                const fecthURL = apiURL + "noitru/dskhoa/" + site;
-                console.log("call", fecthURL)
-                const response = await fetch(fecthURL);
-                const data = await response.json();
-                setKhoaphongs(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(20);
+    const [totalPage, setTotalPage] = useState(0);
+    const [dataInPage, setDataInPage] = useState([]);
 
-        fetchNhomnvs();
-        fetchKhoaphongs();
-
-
-    }, [site]);
-
+    useEffect(() => {
+        const fetchData = async () => {
+          if (site === '') return;
+      
+          const nhomnvsURL = `${apiURL}/danh-muc/nhom-nhan-vien/${site}`;
+          const khoaphongsURL = `${apiURL}noitru/dskhoa/${site}`;
+      
+          try {
+            const [nhomnvsResponse, khoaphongsResponse] = await Promise.all([
+              fetch(nhomnvsURL),
+              fetch(khoaphongsURL)
+            ]);
+      
+            const nhomnvsData = await nhomnvsResponse.json();
+            const khoaphongsData = await khoaphongsResponse.json();
+      
+            setNhomnvs(nhomnvsData);
+            setKhoaphongs(khoaphongsData);
+      
+            console.log("Fetched data:", { nhomnvsURL, khoaphongsURL });
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+      
+        fetchData();
+      }, [site]);
+      
 
     const selectNhomnv = useCallback((selected) => {
         setSelectedNhomnv({ id: selected.id, name: selected.name });
     }, [])
+
+    const constDataInPage = (iPage, iData) => {
+        const indexOfLastItem = iPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        return iData.slice(indexOfFirstItem, indexOfLastItem);
+    }
+
+    useEffect(() => {
+        setDataInPage(constDataInPage(currentPage, viewDatas));
+    }, [currentPage]);
 
 
     const handeleView = async () => {
@@ -61,8 +75,11 @@ function TaiKhoan({ site }) {
             console.log("call", fecthURL)
             const response = await fetch(fecthURL);
             const data = await response.json();
-            setTaiKhoans(data);
+            setData(data);
             setViewDatas(data);
+            setTotalPage(Math.ceil(data.length / itemsPerPage));
+            setDataInPage(constDataInPage(1, data));
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -80,16 +97,18 @@ function TaiKhoan({ site }) {
 
     useEffect(() => {
         if (debouncedSearchTerm === '') {
-            setViewDatas(TaiKhoans);
+            setViewDatas(data);
         } else {
             const lowerCasedSearchTerm = debouncedSearchTerm.toLowerCase();
-            const filteredData = TaiKhoans.filter(item => {
+            const filteredData = data.filter(item => {
                 const userid = item.userid?.toLowerCase() ?? '';
                 const ma = item.ma?.toLowerCase() ?? '';
                 const hoten = item.hoten?.toLowerCase() ?? '';
 
                 return ma.includes(lowerCasedSearchTerm) || hoten.includes(lowerCasedSearchTerm) || userid.includes(lowerCasedSearchTerm);
             });
+            setTotalPage(Math.ceil(filteredData.length / itemsPerPage));
+            setDataInPage(constDataInPage(1, filteredData));
             setViewDatas(filteredData);
         }
     }, [debouncedSearchTerm]);
@@ -104,9 +123,9 @@ function TaiKhoan({ site }) {
     //     setSearchTerm(event.target.value);
 
     //     if (event.target.value === '') {
-    //         setViewDatas(TaiKhoans);  // Reset to the full list
+    //         setViewDatas(data);  // Reset to the full list
     //     } else {
-    //         const filedata = TaiKhoans.filter((item) => {
+    //         const filedata = data.filter((item) => {
     //             const ma = item.ma ? item.ma.toLowerCase() : '';  // Default to an empty string if ma is undefined
     //             const hoten = item.hoten ? item.hoten.toLowerCase() : '';  // Default to an empty string if hoten is undefined
 
@@ -118,7 +137,7 @@ function TaiKhoan({ site }) {
 
     const handleFilter = () => {
         setSearchTerm('');
-        const filterData = TaiKhoans.filter((item) => {
+        const filterData = data.filter((item) => {
             let matchesAllFilters = true;
             if (selectedNhomnv.id > 0) {
                 matchesAllFilters = matchesAllFilters && (item.manhomnv === selectedNhomnv.id);
@@ -130,11 +149,15 @@ function TaiKhoan({ site }) {
                     .includes(selectedKP.id.toString());
                 matchesAllFilters = matchesAllFilters && isPresent;
             }
-            return matchesAllFilters; 
+            return matchesAllFilters;
         });
-    
-        setViewDatas(filterData); 
-    };    
+
+        setTotalPage(Math.ceil(filterData.length / itemsPerPage));
+        setCurrentPage(1);
+        setDataInPage(constDataInPage(1, filterData));
+
+        setViewDatas(filterData);
+    };
     return (
         <>
             <div className="flex flex-col">
@@ -186,7 +209,7 @@ function TaiKhoan({ site }) {
                     </div>
                 </div>
 
-                <div className=" px-3 mt-14 overflow-y-auto h-[780px] w-full">
+                <div className=" px-3 mt-14 overflow-y-auto h-[750px] w-full flex flex-col justify-between">
                     <table className="table-auto w-full">
                         <thead className="sticky top-0 bg-white z-30 ">
                             <tr className="">
@@ -204,7 +227,7 @@ function TaiKhoan({ site }) {
                             </tr>
                         </thead>
                         <tbody>
-                            {viewDatas.map((item, index) => (
+                            {dataInPage.map((item, index) => (
                                 <tr key={index}>
                                     <td className="py-1 text-center">{index + 1}</td>
                                     <td className="w-24">{item.id}</td>
@@ -225,9 +248,17 @@ function TaiKhoan({ site }) {
                             ))}
                         </tbody>
                     </table>
-
-
+                    <div className="w-full flex flex-row-reverse p-2">
+                        <Pagination
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            totalPage={totalPage}
+                        />
+                    </div>
                 </div>
+
+                {/* Pagination */}
+
 
             </div>
 

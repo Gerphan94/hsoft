@@ -1,21 +1,14 @@
 import React from "react";
 import styles from "../styles.module.css"; // Assuming you are using this styles file
-import { useNavigate } from "react-router-dom";
-import { useAppContext } from "../Store/AppContext";
 
 function ChooseSite({ setModalShow }) {
-
-    const { setSite } = useAppContext();
-
-    const navigate = useNavigate();
     const sites = [
         { id: 'HCM_DEV', name: 'HCM - DEV' },
     ];
 
     const handleClick = (id) => {
-        localStorage.setItem('site', id);
-        setSite(id);
-        navigate('/');
+        localStorage.setItem('site', id); // Save the selected site ID in local storage
+        setModalShow(false); // Close the modal
     };
 
     return (
