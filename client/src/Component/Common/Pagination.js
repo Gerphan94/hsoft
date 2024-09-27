@@ -51,7 +51,7 @@ function Pagination({ currentPage, setCurrentPage, totalPage }) {
     };
 
     return (
-        <div className="px-4">
+        <div className="px-4 py-2 bg-slate-100 w-full flex - flex-row-reverse">
             <div className="flex gap-1">
                 <button
                     disabled={currentPage === 1}

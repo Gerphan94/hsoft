@@ -6,8 +6,11 @@ import Table from "./Table";
 import styles from "../styles.module.css";
 import SearchBar from "../Common/SearchBar";
 
-function TonTheoKho({ site }) {
+import { useAppContext } from "../Store/AppContext";
 
+function TonTheoKho() {
+
+    const { site } = useAppContext();
     const apiURL = process.env.REACT_APP_API_URL;
     const [timeoutId, setTimeoutId] = useState(null);
 
@@ -33,7 +36,7 @@ function TonTheoKho({ site }) {
 
     useEffect(() => async () => {
         try {
-            const fecthURL = apiURL + "/duoc/tonkho/theokho/dskho/" + site;
+            const fecthURL = apiURL + "/duoc/danhsach-kho/" + site;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setKhoList(data);

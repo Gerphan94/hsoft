@@ -9,8 +9,11 @@ import DMBD from "./DMBD";
 import TonTuTruc from "./TonTuTruc";
 import ButtonMenu from "../ButtonMenu";
 import SideMenu from "../SideMenu";
+import { useAppContext  } from "../Store/AppContext";
 
-function Duoc({ site }) {
+function Duoc() {
+
+    const { site } = useAppContext();
 
     const [selectedOption, setSelectedOption] = useState({ id: 0, name: '' })
 
@@ -27,7 +30,7 @@ function Duoc({ site }) {
     return (
         <>
             <div className="flex">
-                <SideMenu selectedMenu='duoc' />
+                <SideMenu site={site} selectedMenu='duoc' />
                 <div className="w-full">
                     <div className="flex items-center">
                         <div className="w-8">

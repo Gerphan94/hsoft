@@ -38,7 +38,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
             <div className="mt-2 w-full lg:h-[720px] overflow-y-auto mb-5" >
                 <table className="w-full">
                     <thead className="sticky top-0 z-100">
-                        <tr className="bg-gray-200">
+                        <tr>
                             <th></th>
                             <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
                             <th className="w-24"><div className="">Mã BD</div></th>

@@ -14,6 +14,7 @@ function SideMenu({ site, selectedMenu = '' }) {
 
     console.log(selectedMenu)
 
+
     const [showChooseSite, setShowChooseSite] = useState(false);
 
     const funcs = [
@@ -31,30 +32,33 @@ function SideMenu({ site, selectedMenu = '' }) {
         { id: 'document', name: 'Documents', icon: FaBook, path: '/document' }
     ];
 
+
     return (
         <>
-            <div className="w-56  h-screen border-r-2 bg-[#031C30]">
-                <div className="flex justify-between">
-                    <button
-                        className="text-white font-bold text-2xl p-2 w-full"
-                        onClick={() => setShowChooseSite(true)}
-                        
+            {site &&
+                <div className="w-56  h-screen border-r-2 bg-[#031C30]">
+                    <div className="flex justify-between">
+                        <button
+                            className="text-white font-bold text-2xl p-2 w-full"
+                            onClick={() => setShowChooseSite(true)}
+
                         >
-                        
-                        {site}
-                    </button>
-                </div>
-                {funcs.map((func, index) => (
-                    <div key={index} className={`px-2 flex gap-1 text-white text-lg items-center hover:opacity-100 ${selectedMenu === func.id ? 'opacity-100' : 'opacity-60'} `}>
-                        <func.icon className="ml-2" />
-                        <Link
-                            key={index}
-                            to={`${func.path}`}
-                            className={`block py-2 w-full text-left px-1 `}
-                        >{func.name}</Link>
+
+                            {site}
+                        </button>
                     </div>
-                ))}
-            </div>
+                    {funcs.map((func, index) => (
+                        <div key={index} className={`px-2 flex gap-1 text-white text-lg items-center hover:opacity-100 ${selectedMenu === func.id ? 'opacity-100' : 'opacity-60'} `}>
+                            <func.icon className="ml-2" />
+                            <Link
+                                key={index}
+                                to={`${func.path}`}
+                                className={`block py-2 w-full text-left px-1 `}
+                            >{func.name}</Link>
+                        </div>
+                    ))}
+                </div>
+            }
 
 
             {showChooseSite && <ChooseSite setModalShow={setShowChooseSite} />}

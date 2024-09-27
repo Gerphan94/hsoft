@@ -4,11 +4,19 @@ import { FaEye, FaBars } from "react-icons/fa";
 import Dropdown from "../Common/Dropdown";
 import Toggle from "../Common/ToggleSwitch";
 import Pagination from "../Common/Pagination";
+import { useSearchParams } from 'react-router-dom';
 
 function TaiKhoan({ site }) {
 
     console.log('rending tai khoan')
     const apiURL = process.env.REACT_APP_API_URL;
+
+    const accountTypes = [
+        {id: 'hsoft', name: 'Hsoft'},
+        {id: 'vienphi', name: 'Viện phí'},
+        {id: 'duoc', name: 'Dược'}
+    ];
+    const [accountType, setAccountType] = useState({ id: 'hsoft', name: 'Hsoft' });
 
     const [nhomnvs, setNhomnvs] = useState([]);
     const [khoaphongs, setKhoaphongs] = useState([]);
@@ -25,34 +33,36 @@ function TaiKhoan({ site }) {
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
 
+    const [disableFilterBtn, setdisableFilterBtn] = useState(true);
+
     useEffect(() => {
         const fetchData = async () => {
-          if (site === '') return;
-      
-          const nhomnvsURL = `${apiURL}/danh-muc/nhom-nhan-vien/${site}`;
-          const khoaphongsURL = `${apiURL}noitru/dskhoa/${site}`;
-      
-          try {
-            const [nhomnvsResponse, khoaphongsResponse] = await Promise.all([
-              fetch(nhomnvsURL),
-              fetch(khoaphongsURL)
-            ]);
-      
-            const nhomnvsData = await nhomnvsResponse.json();
-            const khoaphongsData = await khoaphongsResponse.json();
-      
-            setNhomnvs(nhomnvsData);
-            setKhoaphongs(khoaphongsData);
-      
-            console.log("Fetched data:", { nhomnvsURL, khoaphongsURL });
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
+            if (site === '') return;
+
+            const nhomnvsURL = `${apiURL}/danh-muc/nhom-nhan-vien/${site}`;
+            const khoaphongsURL = `${apiURL}noitru/dskhoa/${site}`;
+
+            try {
+                const [nhomnvsResponse, khoaphongsResponse] = await Promise.all([
+                    fetch(nhomnvsURL),
+                    fetch(khoaphongsURL)
+                ]);
+
+                const nhomnvsData = await nhomnvsResponse.json();
+                const khoaphongsData = await khoaphongsResponse.json();
+
+                setNhomnvs(nhomnvsData);
+                setKhoaphongs(khoaphongsData);
+
+                console.log("Fetched data:", { nhomnvsURL, khoaphongsURL });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         };
-      
+
         fetchData();
-      }, [site]);
-      
+    }, [site]);
+
 
     const selectNhomnv = useCallback((selected) => {
         setSelectedNhomnv({ id: selected.id, name: selected.name });
@@ -71,7 +81,7 @@ function TaiKhoan({ site }) {
 
     const handeleView = async () => {
         try {
-            const fecthURL = apiURL + "/danh-muc/tai-khoan-hsoft/" + site;
+            const fecthURL = apiURL + "danh-muc/tai-khoan-hsoft/" + site;
             console.log("call", fecthURL)
             const response = await fetch(fecthURL);
             const data = await response.json();
@@ -79,6 +89,8 @@ function TaiKhoan({ site }) {
             setViewDatas(data);
             setTotalPage(Math.ceil(data.length / itemsPerPage));
             setDataInPage(constDataInPage(1, data));
+
+            setdisableFilterBtn(false);
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -118,23 +130,6 @@ function TaiKhoan({ site }) {
         console.log(event.target.value)
         setSearchTerm(event.target.value);
     };
-
-    // const handleSearch = (event) => {
-    //     setSearchTerm(event.target.value);
-
-    //     if (event.target.value === '') {
-    //         setViewDatas(data);  // Reset to the full list
-    //     } else {
-    //         const filedata = data.filter((item) => {
-    //             const ma = item.ma ? item.ma.toLowerCase() : '';  // Default to an empty string if ma is undefined
-    //             const hoten = item.hoten ? item.hoten.toLowerCase() : '';  // Default to an empty string if hoten is undefined
-
-    //             return ma.includes(event.target.value.toLowerCase()) || hoten.includes(event.target.value.toLowerCase());
-    //         });
-    //         setViewDatas(filedata);
-    //     }
-    // };
-
     const handleFilter = () => {
         setSearchTerm('');
         const filterData = data.filter((item) => {
@@ -162,6 +157,14 @@ function TaiKhoan({ site }) {
             <div className="flex flex-col">
                 <div className='fixed w-full text-md bg-white h-14 p-3 z-50'>
                     <div className="flex gap-10 items-center">
+                        <div className="w-40">
+                            <Dropdown
+                                data={accountTypes}
+                                setSelectedOption={setAccountType}
+                                selectedOption={accountType}
+                            
+                            />
+                        </div>
                         <button
                             className="flex items-center gap-2 text-white bg-blue-400 px-2 py-1 select-none"
                             onClick={() => handeleView()}
@@ -198,10 +201,9 @@ function TaiKhoan({ site }) {
                                     memoized
                                 />
                             </div>
-
-
                             <button
-                                className="text-white bg-blue-400 px-2 py-1 w-20 select-none rounded-md opacity-80 hover:opacity-100"
+                                disabled={disableFilterBtn}
+                                className="text-white bg-blue-400 px-2 py-1 w-20 select-none rounded-md opacity-80 hover:opacity-100 disabled:bg-gray-300 disabled:cursor-not-allowed"
                                 onClick={() => handleFilter()}
                             >Lọc</button>
                         </div>
@@ -247,7 +249,7 @@ function TaiKhoan({ site }) {
                             ))}
                         </tbody>
                     </table>
-                    <div className="w-full flex flex-row-reverse p-2">
+                    <div className="w-full">
                         <Pagination
                             currentPage={currentPage}
                             setCurrentPage={setCurrentPage}
