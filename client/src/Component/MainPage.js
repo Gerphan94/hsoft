@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css"
-import Welcome from "./Welcome";
 import Inpatient from "./Inpatient";
 import HoSoBA from "./HoSo/HoSoBA";
 import GoiKham from "./GoiKham/GoiKham";
@@ -66,7 +65,7 @@ function MainPage() {
                     <div className={styles.MainPage}>
                         <MainPageHeader title={pageTitle} />
                         <div>
-                            {selectedFunc === 'welcome' && <Welcome site={site.id} />}
+                            {/* {selectedFunc === 'welcome' && <Welcome site={site.id} />} */}
                             {selectedFunc === 'hosobenhan' && <HoSoBA site={site.id} />}
                             {selectedFunc === 1 && <Inpatient site={site.id} />}
                             {selectedFunc === 'goikham' && <GoiKham site={site.id} />}

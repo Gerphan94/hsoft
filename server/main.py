@@ -455,20 +455,7 @@ def khambenh_xuattutruc(site , maql):
 # API for NOI TRU ##############################################################
 # ##############################################################################
 
-@app.route('/noitru/dskhoa/<site>', methods=['GET'])
-def noitru_dskhoa(site):
-    cn = conn_info(site)
-    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
-    cursor = connection.cursor()
-    result = []
-    stm = 'SELECT * FROM BTDKP_BV WHERE LOAI = 0 AND KHAMBENH = 0'
-    khoas = cursor.execute(stm).fetchall()
-    for khoa in khoas:
-        result.append({
-            'id': khoa[0],
-            'name': khoa[1]
-        })
-    return jsonify(result)
+
 
 @app.route('/noitru/hiendien/<site>/<makp>', methods=['GET'])
 def noitru_hiendien(site, makp):
@@ -1315,26 +1302,7 @@ def danhmuc_taikhoan(site):
 
 
 # DANH MỤC NHÂN VIÊN
-@app.route('/danh-muc/nhom-nhan-vien/<site>', methods=['GET'])
-def danhmuc_nhomnhanvien(site):
-    cn = conn_info(site)
-    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
-    cursor = connection.cursor()
-    result = []
-    
-    stm = '''
-        SELECT ID, TEN
-        FROM NHOMNHANVIEN 
-        ORDER BY ID ASC
-    '''
-    
-    nhomnvs = cursor.execute(stm).fetchall()
-    for nhomnv in nhomnvs:
-        result.append({
-            'id': nhomnv[0],
-            'name': nhomnv[1]
-        })
-    return jsonify(result), 200
+
 
 @app.route('/danh-muc/vaitro-nhanvien/<site>', methods=['GET'])
 def danhmuc_vaitro_nhanvien(site):

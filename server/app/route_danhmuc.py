@@ -7,7 +7,29 @@ from .db import get_cursor
 
 dm = Blueprint('dm', __name__)
 
-@dm.route('/danh-muc/tai-khoan-hsoft/<site>', methods=['GET'])
+
+# stm = '''
+#         SELECT ID, TEN
+#         FROM NHOMNHANVIEN 
+#         ORDER BY ID ASC
+#     '''
+
+@dm.route("/danhmuc/nhom-nhanvien/<site>", methods=["GET"])
+def get_nhom_nhanvien(site):
+    """
+    Get all nhom nhan vien from database
+    """
+    cursor = get_cursor(site)
+    query = """
+        SELECT id, ten
+        FROM NHOMNHANVIEN
+        ORDER BY id ASC
+    """
+    results = cursor.execute(query).fetchall()
+    nhom_nhan_vien_list = [{"id": row[0], "name": row[1]} for row in results]
+    return jsonify(nhom_nhan_vien_list), 200
+
+@dm.route('/danhmuc/taikhoan-hsoft/<site>', methods=['GET'])
 def danhmuc_taikhoan(site):
     cursor = get_cursor(site)
     result = []
@@ -73,6 +95,28 @@ def vienphi_dmloaivp(site, idnhom):
             'name': loaivp[1]
         })  
     return jsonify(result), 200
+
+@dm.route('/danhmuc-vienphi/gia-vp/<site>', methods=['GET'])
+def vienphi_giavp(site):
+    cursor = get_cursor(site)
+    result = []
+    col_name = ['id', 'idloai', 'idnhom', 'idnhombhyt', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi', 'benhphamrangbuoc']
+    stm = f'''
+    SELECT A.ID, A.ID_LOAI, B.ID_NHOM, C.IDNHOMBHYT, A.MA, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI, A.BENHPHAMRANGBUOC
+    FROM V_GIAVP A
+    INNER JOIN V_LOAIVP B ON A.ID_LOAI = B.ID
+    INNER JOIN V_NHOMVP C ON B.ID_NHOM = C.MA
+    WHERE A.DIEUTIET = 0 AND A.HIDE = 0 AND A.TRONGOI = 0
+    ORDER BY A.TEN ASC
+    '''
+    giavps = cursor.execute(stm).fetchall()
+    for giavp in giavps:
+        obj = {}
+        for idx, col in  enumerate(col_name):
+            obj[col] = giavp[idx]
+        result.append(obj)
+    return jsonify(result), 200
+
     
     
 

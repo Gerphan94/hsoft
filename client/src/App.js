@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // import js
 // import Navbar from './Component/navBar';
 
-// import NotFound from './Page/404';
+import DashBoard from './Component/DashBoard';
 import MainPage from './Component/MainPage';
 import NotFound from './Page/404';
 import KhamBenh from './Component/KhamBenh/KhamBenh';
@@ -20,7 +20,8 @@ import { useAppContext } from './Component/Store/AppContext';
 function App() {
 
   const Pages = [
-    { id: "mainpage", path: "/", title: 'Main Pgae', component: <MainPage /> },
+    { id: "dashboard", path: "/", title: 'Dash Board', component: <DashBoard /> },
+    // { id: "mainpage", path: "/", title: 'Main Pgae', component: <MainPage /> },
     { id: "khambenh", path: "/kham-benh", title: 'Khám bẹnh', component: <KhamBenh /> },
     { id: "danhmuc", path: "/danh-muc", title: 'Danh mục', component: <DanhMuc /> },
     { id: "duoc", path: "/duoc", title: 'Dược', component: <Duoc /> },

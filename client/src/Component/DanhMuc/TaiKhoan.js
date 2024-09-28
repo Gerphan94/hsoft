@@ -39,7 +39,7 @@ function TaiKhoan({ site }) {
         const fetchData = async () => {
             if (site === '') return;
 
-            const nhomnvsURL = `${apiURL}/danh-muc/nhom-nhan-vien/${site}`;
+            const nhomnvsURL = `${apiURL}/danhmuc/nhom-nhanvien/${site}`;
             const khoaphongsURL = `${apiURL}noitru/dskhoa/${site}`;
 
             try {
@@ -50,7 +50,7 @@ function TaiKhoan({ site }) {
 
                 const nhomnvsData = await nhomnvsResponse.json();
                 const khoaphongsData = await khoaphongsResponse.json();
-
+                console.log('nhomnvsData', nhomnvsData)
                 setNhomnvs(nhomnvsData);
                 setKhoaphongs(khoaphongsData);
 
@@ -81,7 +81,7 @@ function TaiKhoan({ site }) {
 
     const handeleView = async () => {
         try {
-            const fecthURL = apiURL + "danh-muc/tai-khoan-hsoft/" + site;
+            const fecthURL = apiURL + "danhmuc/taikhoan-hsoft/" + site;
             console.log("call", fecthURL)
             const response = await fetch(fecthURL);
             const data = await response.json();
@@ -124,10 +124,9 @@ function TaiKhoan({ site }) {
             setViewDatas(filteredData);
         }
     }, [debouncedSearchTerm]);
-
-    // Input onChange handler
+    
     const handleSearch = (event) => {
-        console.log(event.target.value)
+        setCurrentPage(1);
         setSearchTerm(event.target.value);
     };
     const handleFilter = () => {
@@ -198,7 +197,7 @@ function TaiKhoan({ site }) {
                                     setSelectedOption={selectNhomnv}
                                     optionALL
                                     chooseIndex={1}
-                                    memoized
+                                    
                                 />
                             </div>
                             <button
@@ -214,7 +213,7 @@ function TaiKhoan({ site }) {
                     <table className="table-auto w-full">
                         <thead className="sticky top-0 bg-white z-30 ">
                             <tr className="">
-                                <th className="py-1 text-center">STT</th>
+                                <th className="py-1 text-center w-10">STT</th>
                                 <th className="w-24">ID</th>
                                 <th>UserID</th>
                                 <th className="text-left w-20">Pwd</th>
@@ -230,7 +229,7 @@ function TaiKhoan({ site }) {
                         <tbody>
                             {dataInPage.map((item, index) => (
                                 <tr key={index}>
-                                    <td className="py-1 text-center">{index + 1}</td>
+                                    <td className="py-1 text-center">{(currentPage-1)*20 + (index + 1)}</td>
                                     <td className="w-24">{item.id}</td>
                                     <td className="text-left">{item.userid}</td>
                                     <td className="text-left">{item.password_}</td>

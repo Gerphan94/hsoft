@@ -12,7 +12,7 @@ const Dropdown = memo(({
     disabled = false
 }) => {
 
-    console.log('render dropdown')
+    console.log('render dropdown', data)
     const [initData, setInitData] = useState([]);
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -86,7 +86,6 @@ const Dropdown = memo(({
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [isDropdownOpen]);
-
 
 
     return (

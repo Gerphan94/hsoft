@@ -6,6 +6,20 @@ from .db import get_cursor, schema_now
 
 noitru = Blueprint('noitru', __name__)
 
+
+@noitru.route('/noitru/dskhoa/<site>', methods=['GET'])
+def noitru_dskhoa(site):
+    cursor = get_cursor(site)
+    result = []
+    stm = 'SELECT * FROM BTDKP_BV WHERE LOAI = 0 AND KHAMBENH = 0'
+    khoas = cursor.execute(stm).fetchall()
+    for khoa in khoas:
+        result.append({
+            'id': khoa[0],
+            'name': khoa[1]
+        })
+    return jsonify(result)
+
 @noitru.route('/noitru/danhsach-khoaphong/<site>', methods=['GET'])
 def get_khoaphong(site):
     """
