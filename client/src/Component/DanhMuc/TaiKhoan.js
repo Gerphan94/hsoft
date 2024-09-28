@@ -25,6 +25,7 @@ function TaiKhoan({ site }) {
     const [selectedKP, setSelectedKP] = useState({ id: 0, name: '' });
     const [searchTerm, setSearchTerm] = useState('');
     const [data, setData] = useState([]);
+    
     const [viewDatas, setViewDatas] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
