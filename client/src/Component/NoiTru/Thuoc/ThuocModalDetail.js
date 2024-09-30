@@ -11,11 +11,10 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
     const title_ar = ['DỰ TRÙ THƯỜNG QUY', 'XUẤT TỦ TRỰC', 'TOA THUỐC RA VIỆN']
     const TITLE = title_ar[selectedCoupon.type - 1];
 
-
     const [detail, setDetail] = useState({});
 
     useEffect(() => {
-        const fetchURL = apiURL + "noitru/phieu_info/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id + "/" + selectedCoupon.ngay;
+        const fetchURL = apiURL + "noitru/thuoc-dutrull-thongtin/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id + "/" + selectedCoupon.ngay;
         const fetchDetail = async () => {
             try {
                 const response = await fetch(fetchURL);
@@ -29,6 +28,14 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
         fetchDetail();
     }, [couponId, couponType, site, apiURL]);
 
+    const mutileLineChandoan = (cd) => {
+        if (!cd) {
+            return ''
+        }
+        return cd.split(';').join(';\n')
+
+    }
+
     return (
         <>
             <div>
@@ -40,24 +47,31 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                         <Dausinhton />
                     </div>
                 </div>
-                <div className="border rounded-md p-2 mt-4">
-                    <div className="px-2 py-1 flex gap-2 items-center">
-                        <label className="w-20 text-left">ICD:</label>
-                        <input type="text" className="w-1/3 border outline-none px-2 py-0.5" readOnly={true} value={detail && detail.maicd} />
+              
+                <div className="flex gap-2 border rounded-md p-2 mt-4 bg-[#F7FBFF]">
+                    <div className="w-24 space-y-2">
+                        <label className="w-24 text-left inline-block">ICD:</label>
+                        <label className="w-24 text-left inline-block">Chẩn đoán:</label>
                     </div>
-                    <div className="px-2 py-1 flex gap-2 items-center">
-                        <label className="w-20 text-left">Chẩn đoán:</label>
-                        <input type="text" className="w-full border outline-none px-2 py-0.5" readOnly={true} value={detail && detail.chandoan} />
+                    <div className="w-full text-left space-y-2">
+                        <input type="text" className="w-1/3 border outline-none px-2 py-0.5" readOnly={true} value={detail && detail.maicd} />
+                        <textarea
+                            type="text"
+                            className="w-full h-24 border outline-none px-2 py-0.5"
+                            readOnly={true}
+                           
+                            value={detail && mutileLineChandoan(detail.chandoan)}
+                        />
                     </div>
 
                 </div>
             </div>
 
-            <div className="border rounded-md p-2 mt-4">
+            <div className="border rounded-md p-2 mt-4 bg-[#F7FBFF]">
                 {data.map((item) => (
                     // <div className="pt-2 text-sm border rounded-md p-2 mt-4">
                     <div className="relative border-b rounded-md p-3 mb-3 text-left">
-                        <span className="absolute top-0 text-[10px] right-0 w-10 rounded-md bg-slate-300">{item.stt_index}</span>
+                        <span className="absolute top-0 text-[10px] text-center right-0 w-10 rounded-md bg-slate-300">{item.stt_index}</span>
                         <div className="flex justify-between">
                             <div className="flex gap-2 items-center">
                                 <span className="size-6 rounded-full bg-[#379777] border text-center">
@@ -110,7 +124,7 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
             </div>
 
             {/* PHA TIÊM */}
-            
+
 
 
         </>

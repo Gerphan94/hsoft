@@ -17,14 +17,14 @@ function ThuocModal({ site, selected, setModalShow }) {
     const [dutrullDetail, setDutrullDetail] = useState({});
 
     const fetchDutrull = async () => {
-        const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selected.idkhoa
+        const fetchUrl = apiURL + "noitru/thuoc-dutrull-by-idkhoa/" + site + "/" + selected.idkhoa
         const response = await fetch(fetchUrl);
         const data = await response.json();
         console.log('-------', data)
 
         const grouped = data.reduce((acc, item) => {
             console.log(acc)
-            const date = moment(item.ngaytao).format('DD/MM/YYYY');
+            const date = moment(item.ngaytao).utc().format('DD/MM/YYYY');
             if (!acc[date]) {
                 acc[date] = [];
             }
@@ -51,7 +51,7 @@ function ThuocModal({ site, selected, setModalShow }) {
 
 
     useEffect(() => {
-        const fetchUrl = apiURL + "/noitru/phieuct/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id;
+        const fetchUrl = apiURL + "/noitru/thuoc-chitiet/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id;
        
         const fetchMedicineDetail = async () => {
             const response = await fetch(fetchUrl);

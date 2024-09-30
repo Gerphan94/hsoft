@@ -457,48 +457,7 @@ def khambenh_xuattutruc(site , maql):
 
 
 
-@app.route('/noitru/hiendien/<site>/<makp>', methods=['GET'])
-def noitru_hiendien(site, makp):
-    cn = conn_info(site)
-    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
-    cursor = connection.cursor()
-    result = []
-    stm = f'''
-        WITH tmp_bhyt AS (
-            SELECT TO_CHAR(MAQL) AS MAQL , SOTHE FROM BHYT WHERE SUDUNG = 1 
-        )
-        SELECT TO_CHAR(A.ID), TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN, TO_CHAR(A.MAQL), A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE, B.MAU_ABO, B.MAU_RH
-        FROM HIENDIEN A
-        INNER JOIN BTDBN B ON A.MABN = B.MABN
-        INNER JOIN ICD10 C ON A.MAICD = C.CICD10
-        left JOIN BENHANDT D ON A.MAVAOVIEN = D.MAVAOVIEN AND A.MAQL = D.MAQL
-        INNER JOIN DOITUONG E ON D.MADOITUONG = E.MADOITUONG
-        LEFT JOIN tmp_bhyt F ON A.MAQL = F.MAQL
-        WHERE A.MAKP = {makp} AND A.NHAPKHOA = 1 
-        ORDER BY A.NGAY DESC
-    '''
-    data_list = cursor.execute(stm).fetchall()
-    
-    for data in data_list:
-        result.append({
-            'id': data[0],
-            'mavaovien': data[1],
-            'maql': data[2],
-            'mabn': data[3],
-            'hoten': data[4],
-            'phai': data[5],
-            'namsinh': data[6],
-            'ngayvv': data[7].strftime("%d/%m/%Y, %H:%M"),
-            'ngayvk': data[8].strftime("%d/%m/%Y, %H:%M"),
-            'maicd': data[9],
-            'madoituong': data[10],
-            'doituong': data[11],
-            'sothe': data[12],
-            'mauabo': data[13],
-            'maurh': data[14]
-        })
-    
-    return jsonify(result), 200
+
 
 @app.route('/noi-tru/get-benhandt-doituong/<site>/<maql>', methods=['GET'])
 def noitru_benhandt_doituong(site, maql):

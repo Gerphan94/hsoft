@@ -260,9 +260,9 @@ function GiaVP({ site }) {
                                 <th className="text-left px-2">Tên VP</th>
                                 <th className="text-center w-14">DVT</th>
                                 <th className="text-center w-10">BHYT</th>
-                                <th className="px-2 text-right w-20">Giá TH</th>
-                                <th className="text-right w-20">Giá BHYT</th>
-                                <th className="text-right w-20">Giá DV</th>
+                                <th className="text-right w-24 px-2">Thường</th>
+                                <th className="text-right w-24 px-2">BHYT</th>
+                                <th className="text-right w-24 px-2">Dịch vụ</th>
                             </tr>
 
                         </thead>
@@ -272,7 +272,7 @@ function GiaVP({ site }) {
                                 <tr key={index} className="even:bg-gray-200">
 
                                     <td className="text-center  py-1">{index + 1}</td>
-                                    <td className="text-left px-2">{giavp.ten} </td>
+                                    <td className="text-left px-2 w-full max-w-xs truncate">{giavp.ten} </td>
                                     <td className="text-center">{giavp.dvt}</td>
                                     <td><div className="text-center">{giavp.bhyt}</div></td>
                                     <td className="text-right px-2">{Number(giavp.giath).toLocaleString()}</td>

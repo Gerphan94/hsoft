@@ -12,7 +12,7 @@ function ViewButton({ onClick }) {
 
                 type="button"
                 onClick={onClick}
-                class="relative inline-flex w-20 items-center justify-center px-1 py-1  overflow-hidden text-indigo-600 transition duration-300 ease-out border border-blue-500 shadow-md group">
+                className="relative inline-flex w-20 items-center justify-center px-1 py-1  overflow-hidden text-indigo-600 transition duration-300 ease-out border border-blue-500 shadow-md group">
                 <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-blue-400 group-hover:translate-x-0 ease">
                     <FaEye className="h-5 w-5" />
                 </span>

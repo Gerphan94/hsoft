@@ -80,10 +80,12 @@ function CouponComponent({ item, selectedCoupon, setMedicineDetail, setSelectedC
                             }
                             <div className="text-left">{item.tenphieu}</div>
                         </div>
-                        <div className="italic text-sm">{moment(item.ngaytao).format("DD/MM/YYYY HH:mm")} {item.giotao}</div>
+                        <div className="italic text-sm">{moment(item.ngaytao).utc().format("DD/MM/YYYY HH:mm")} {item.giotao}</div>
                        
                     </div>
                 </div>
+
+                <div className="hidden">{item.id}</div>
 
 
             </div>

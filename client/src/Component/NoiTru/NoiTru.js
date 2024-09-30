@@ -10,10 +10,13 @@ import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
 
 import ToDieuTriModal from "./ToDieuTri/ToDieuTrIModal";
+import SideMenu from "../SideMenu";
+import { useAppContext } from "../Store/AppContext";
 
-function NoiTru({ site }) {
+function NoiTru() {
 
     const apiURL = process.env.REACT_APP_API_URL;
+    const site = localStorage.getItem('site');
 
     const [selectedBTN, setSelectedBNT] = useState(1);
 
@@ -22,11 +25,7 @@ function NoiTru({ site }) {
     const [hiendiens, setHiendiens] = useState([]);
     const [viewData, setViewData] = useState([]);
 
-    const [selectedPatient, setSelectedPatient] = useState({ 'pid': '', 'name': '' });
-    const [selectedIdKhoaOfPatinent, setSelectedIdKhoaOfPatinent] = useState('');
-
     const [selected, setSelected] = useState({ pid: '', pname: '', idkhoa: '', maql: '' });
-
 
     const [isShowModalThuoc, setIsShowModalThuoc] = useState(false);
     const [showDichVuModal, setShowDichVuModal] = useState(false);
@@ -34,18 +33,8 @@ function NoiTru({ site }) {
     const [showBHYTModal, setShowBHYTModal] = useState(false);
     const [showTodieuTriModal, setShowTodieuTriModal] = useState(false);
 
-    const funcBTN = [
-        { id: 'thuoc', name: 'Thuốc' },
-        { id: 'dichvu,', name: 'Dịch vụ' }
-    ]
-
-    const otherBTN = [
-        { id: 'bhyt', name: 'BHYT' }
-    ]
-
 
     useEffect(() => async () => {
-
         try {
             const fecthURL = apiURL + "/noitru/dskhoa/" + site;
             const response = await fetch(fecthURL);
@@ -71,65 +60,71 @@ function NoiTru({ site }) {
 
     return (
         <>
-
-            <div className="flex p-2 gap-2 items-center">
-                <label className="font-bold">Khoa: </label>
-                <div className="w-[600px]">
-                    <Dropdown data={khoas} selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
-                </div>
-                <div className="h-full">
-                    <ViewButton onClick={gethiendien} />
-                </div>
-                <TouchSwitch />
-                <div>
-                    <input type="text" className="border px-2 py-1 outline-none h-8 " />
-                </div>
-
-            </div>
-            <div className="px-4 py-1 flex flex-row justify-between">
-                <div className="flex gap-2 items-center text-left">
-                    <div className="font-bold text-xl">{selected.pid}</div>
-                    <div className="font-bold text-xl">{selected.pname}</div>
-                </div>
-
-                <div className="flex">
-                    <button
-                        className="w-20 border px-2 py-1 select-none"
-                        onClick={() => setShowBHYTModal(true)}
-                    >BHYT
-                    </button>
-                    <button
-                        className="w-20 border px-2 py-1 select-none"
-                        onClick={() => setShowDichVuModal(true)}
-                    >Dịch vụ
-                    </button>
-                    <button
-                        className="w-20 border px-2 py-1 select-none"
-                        onClick={() => setShowMauModal(true)}
-                    >Máu
-                    </button>
-                    <button
-                        className="w-20 border px-2 py-1 select-none"
-                        onClick={() => setIsShowModalThuoc(true)}
-                    >Thuốc
-                    </button>
-                    <button
-                        className="w-20 border px-2 py-1 select-none"
-                        onClick={() => setShowTodieuTriModal(true)}
-                    >TĐT
-                    </button>
-                    <div>
+            <div className="flex">
+                <SideMenu site={site} />
+                <div className="w-full">
+                    <div className="flex p-2 gap-2 items-center">
+                        <label className="font-bold">Khoa: </label>
+                        <div className="w-[600px]">
+                            <Dropdown data={khoas} selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
+                        </div>
+                        <div className="h-full">
+                            <ViewButton onClick={gethiendien} />
+                        </div>
+                        <TouchSwitch />
+                        <div>
+                            <input type="text" className="border px-2 py-1 outline-none h-8 " />
+                        </div>
                     </div>
+                    <div className="px-4 py-1 flex flex-row justify-between">
+                        <div className="flex gap-2 items-center text-left">
+                            <div className="font-bold text-xl">{selected.pid}</div>
+                            <div className="font-bold text-xl">{selected.pname}</div>
+                        </div>
+
+                        <div className="flex bg-white">
+                            <button
+                                className={`w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none disabled:bg-[#E5E5E5] disabled:text-[#ACACAC] disabled:border-[#ACACAC] disabled:cursor-not-allowed`}
+                                onClick={() => setShowBHYTModal(true)}
+                                disabled={selected.pid === ''}
+                            >BHYT
+                            </button>
+                            <button
+                                className="w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none"
+                                onClick={() => setShowDichVuModal(true)}
+                            >Dịch vụ
+                            </button>
+                            <button
+                                className="w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none"
+                                onClick={() => setShowMauModal(true)}
+                            >Máu
+                            </button>
+                            <button
+                                className="w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none"
+                                onClick={() => setIsShowModalThuoc(true)}
+                            >Thuốc
+                            </button>
+                            <button
+                                className="w-20 border  border-[#B7E0FF] px-2 py-1 select-none"
+
+                                onClick={() => setShowTodieuTriModal(true)}
+                            >TĐT
+                            </button>
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+                    <Hiendien
+                        site={site}
+                        data={viewData}
+                        selected={selected}
+                        setSelected={setSelected}
+                    />
                 </div>
             </div>
 
 
-            <Hiendien
-                site={site}
-                data={viewData}
-                setSelected={setSelected}
-                setSelectedIdKhoaOfPatinent={setSelectedIdKhoaOfPatinent}
-            />
+
             {isShowModalThuoc &&
                 <ThuocModal
                     site={site}
