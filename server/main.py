@@ -634,64 +634,9 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
 
 
 
-@app.route('/noitru/phieu_info/<site>/<int:type>/<id>/<ngay>', methods=['GET'])
-def noitru_phieu_info(site,type, id, ngay):
-    print(ngay)
-    cn = conn_info(site)
-    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
-    cursor = connection.cursor()
-    result = {}
-    if type == 2:
-        d_table = 'D_XTUTRUCLL'
-    else:
-        d_table = 'D_DUTRULL'
-        
-    stm = f'''
-        SELECT A.ID, C.TEN, D.MAICD, D.CHANDOAN,
-        D.MACH, D.NHIETDO,D.HUYETAP, D.NHIPTHO, D.CANNANG, D.CHIEUCAO
-        FROM {schema_now()}.{d_table} A
-        INNER JOIN {schema_now()}.D_DUYET B ON A.IDDUYET = B.ID
-        INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
-        LEFT JOIN {schema_now()}.D_DAUSINHTON D ON D.IDDUTRU = A.ID 
-        WHERE A.ID = '{id}'
-    '''
-    detail = cursor.execute(stm).fetchone()
-    result['id'] = detail[0]
-    result['ten'] = detail[1]
-    result['maicd'] = detail[2]
-    result['chandoan'] = detail[3]
-    result['dst'] = { 'mach': detail[4], 'nhietdo': detail[5], 'huyetap': detail[6], 'nhiptho': detail[7], 'cannang': detail[8], 'chieucao': detail[9] }
-    return jsonify(result), 200
 
 
-@app.route('/noitru/phieuct/<site>/<type>/<id>', methods=['GET'])
-def noitru_dutru_ct(site,type, id):
-    cn = conn_info(site)
-    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
-    cursor = connection.cursor()
-    result = []
-    col_names = ['stt_index', 'tt', 'doituong','idbd', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi', 'giobd', 'giodung ','lieudungthuoc', 'tocdo', 'cachdung','dalieu', 'ghichu', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6']
-    d_table = ''
-    print("type is" , type)
-    if type == '2':
-        d_table = 'D_XTUTRUCCT'
-    else:
-        d_table = 'D_DUTRUCT'
-    stm = f'''
-        SELECT A.STT AS STT_INDEX, A.TT, B.DOITUONG, A.MABD AS IDBD, C.MA AS MABD, (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG, C.DANG, C.DONVIDUNG, A.DUONGDUNG,
-        A.SOLAN , A.LAN ,  A.SLYEUCAU AS SOLUONG,
-        A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI, A.GIOBD, A.GIODUNG, A.LIEUDUNGTHUOC, A.TOCDO, A.CACHDUNG, A.DALIEU, A.GHICHU, A.L1, A.L2, A.L3, A.L4, A.L5, A.L6
-        FROM {schema_now()}.{d_table} A
-        INNER JOIN D_DOITUONG B ON B.MADOITUONG = A.MADOITUONG
-        INNER JOIN D_DMBD C ON C.ID = A.MABD 
-        WHERE A.ID = '{id}'
-        ORDER BY A.TT ASC
-    '''
-    print(stm)
-    dutruct = cursor.execute(stm).fetchall()
-    for dutru in dutruct:
-        result.append(dict(zip(col_names, dutru)))
-    return jsonify(result), 200
+
 
 @app.route('/noitru/tutruc_ct/<site>/<id>', methods=['GET'])
 def noitru_tutruc_ct(site, id):

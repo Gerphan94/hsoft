@@ -90,23 +90,26 @@ function NoiTru() {
                             >BHYT
                             </button>
                             <button
-                                className="w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none"
+                                className="w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none disabled:bg-[#E5E5E5] disabled:text-[#ACACAC] disabled:border-[#ACACAC] disabled:cursor-not-allowed"
                                 onClick={() => setShowDichVuModal(true)}
+                                disabled={selected.pid === ''}
                             >Dịch vụ
                             </button>
                             <button
-                                className="w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none"
+                                className="w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none disabled:bg-[#E5E5E5] disabled:text-[#ACACAC] disabled:border-[#ACACAC] disabled:cursor-not-allowed"
                                 onClick={() => setShowMauModal(true)}
+                                disabled={selected.pid === ''}
                             >Máu
                             </button>
                             <button
-                                className="w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none"
+                                className="w-20 border border-r-0 border-[#B7E0FF] px-2 py-1 select-none disabled:bg-[#E5E5E5] disabled:text-[#ACACAC] disabled:border-[#ACACAC] disabled:cursor-not-allowed"
                                 onClick={() => setIsShowModalThuoc(true)}
+                                disabled={selected.pid === ''}
                             >Thuốc
                             </button>
                             <button
-                                className="w-20 border  border-[#B7E0FF] px-2 py-1 select-none"
-
+                                className="w-20 border  border-[#B7E0FF] px-2 py-1 select-none disabled:bg-[#E5E5E5] disabled:text-[#ACACAC] disabled:border-[#ACACAC] disabled:cursor-not-allowed"
+                                disabled={selected.pid === ''}
                                 onClick={() => setShowTodieuTriModal(true)}
                             >TĐT
                             </button>

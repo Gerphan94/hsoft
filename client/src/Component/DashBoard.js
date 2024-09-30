@@ -11,7 +11,7 @@ import { MdAttachMoney, MdBackpack, MdLocalHospital } from "react-icons/md";
 import { Link } from "react-router-dom";
 function DashBoard() {
 
-    const { site } = useAppContext();
+    const site = localStorage.getItem('site');
 
     const funcs = [
         { id: 'hosobenhan', name: 'Hồ sơ bệnh án', icon: IoFileTrayFullSharp, path: '/hosobenhan' },
