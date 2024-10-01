@@ -2,7 +2,7 @@
 from flask import Flask, jsonify, request, Blueprint
 from flask_cors import CORS
 from datetime import datetime, timedelta
-from .db import get_cursor, schema_now
+from .db import get_cursor, schema_now, schema_mutil
 
 noitru = Blueprint('noitru', __name__)
 
@@ -80,23 +80,28 @@ def noitru_hiendien(site, makp):
     
     return jsonify(result), 200
 
-@noitru.route('/noitru/thuoc-dutrull-by-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
+@noitru.route('/noitru/thuoc-danhsach-theo-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
 def noitru_get_thuoc_dutrull_by_idkhoa(site, idkhoa):
     """
     Get list of thuoc du tru by idkhoa
     """
     cursor = get_cursor(site)
     result = []
+    ngaynhapkhoa = cursor.execute(f'SELECT NGAY FROM NHAPKHOA WHERE ID = {idkhoa}').fetchone()[0]
+    iNow = datetime.now()  
+    print(iNow)
+    schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
+    print(schema_ar)
     col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu', 'schema'] 
-
-    query = f'''
-        WITH DSPHIEU AS (
+    for schema in reversed(schema_ar):
+        stm =f'''
+            WITH DSPHIEU AS (
                 SELECT A.ID, A.IDDUYET, A.SONGAY
-                FROM {schema_now()}.D_DUTRULL A
+                FROM {schema}.D_DUTRULL A
                 WHERE A.IDKHOA = '{idkhoa}'
                 UNION ALL 
                 SELECT B.ID, B.IDDUYET, B.SONGAY
-                FROM {schema_now()}.D_XTUTRUCLL B
+                FROM {schema}.D_XTUTRUCLL B
                 WHERE B.IDKHOA = '{idkhoa}'
             )
             SELECT to_char(DS.ID) AS ID, DS.IDDUYET, DS.SONGAY, B.NGAY AS NGAYTAO , C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP,
@@ -107,14 +112,14 @@ def noitru_get_thuoc_dutrull_by_idkhoa(site, idkhoa):
             END AS LOAIPHIEU, 
             'HSOFTTAMANH' || '' || TO_CHAR(B.NGAY, 'MMyy') AS SCHEMA
             FROM DSPHIEU DS
-            INNER JOIN {schema_now()}.D_DUYET B ON DS.IDDUYET = B.ID
+            INNER JOIN {schema}.D_DUYET B ON DS.IDDUYET = B.ID
             INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
             INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
             ORDER BY NGAYTAO DESC
-    '''
-    dutrull = cursor.execute(query).fetchall()
-    for dutru in dutrull:
-        result.append(dict(zip(col_names, dutru)))
+        '''
+        dutrull = cursor.execute(stm).fetchall()
+        for dutru in dutrull:
+            result.append(dict(zip(col_names, dutru)))
     return jsonify(result), 200
 
 @noitru.route('/noitru/thuoc-dutrull-thongtin/<site>/<int:type>/<id>/<ngay>', methods=['GET'])

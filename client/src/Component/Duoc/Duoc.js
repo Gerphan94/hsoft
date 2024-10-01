@@ -1,30 +1,37 @@
 import React, { useState, useEffect } from "react";
-import Dropdown from "./Dropdown";
+import Dropdown from "../Common/Dropdown";
 
 import TonBHYT from "./TonBHYT";
 import TonKho from "./TonKho";
 import TonKhoKeToa from "./TonKhoKeToa";
 import TonTheoKho from "./TonTheoKho";
-import DMBD from "./DMBD";
+import Dmbd from "./Dmbd";
 import TonTuTruc from "./TonTuTruc";
 import ButtonMenu from "../ButtonMenu";
 import SideMenu from "../SideMenu";
-import { useAppContext  } from "../Store/AppContext";
+import { useAppContext } from "../Store/AppContext";
 
 function Duoc() {
 
-    const { site } = useAppContext();
+    const site = localStorage.getItem('site');
 
-    const [selectedOption, setSelectedOption] = useState({ id: 0, name: '' })
+    const [selectedOption, setSelectedOption] = useState({ id: 'tonkho_theokho', name: 'Tồn Theo kho' })
 
+    // const menuData = [
+    //     { id: 'tonkho_ketoa_bhyt', name: 'Tồn kho - kê toa BHYT'},
+    //     { id: 'tonkho_ketoa_nhathuoc', name: 'Tồn kho - kê toa NT'},
+    //     { id: 'tonkho_tonbhyt', name: 'Tồn BHYT'},
+    //     { id: 'tonkho_theokho', name: 'Tồn Theo kho'},
+    //     { id: 'tontutruc', name: 'Tồn tủ trực', borderTop: true },
+    //     { id: 'dmbd', name: 'Danh mục Dược', borderTop: true },
+    //     { id: 4, name: 'Khác'}
+    // ]
     const menuData = [
-        { id: 'tonkho_ketoa_bhyt', name: 'Tồn kho - kê toa BHYT', borderTop: false },
-        { id: 'tonkho_ketoa_nhathuoc', name: 'Tồn kho - kê toa NT', borderTop: false },
-        { id: 'tonkho_tonbhyt', name: 'Tồn BHYT', borderTop: false },
-        { id: 'tonkho_theokho', name: 'Tồn Theo kho', borderTop: false },
-        { id: 'tontutruc', name: 'Tồn tủ trực', borderTop: true },
-        { id: 'dmbd', name: 'Danh mục Dược', borderTop: true },
-        { id: 4, name: 'Khác', borderTop: false }
+        { id: 'tonkho_theokho', name: 'Tồn Theo kho' },
+        { id: 'tontutruc', name: 'Tồn tủ trực' },
+        { id: 'tonkho_ketoa_bhyt', name: 'Tồn kho - kê toa BHYT' },
+        { id: 'tonkho_ketoa_nhathuoc', name: 'Tồn kho - kê toa NT' },
+        { id: 'tonkho_tonbhyt', name: 'Tồn BHYT' }
     ]
 
     return (
@@ -32,18 +39,27 @@ function Duoc() {
             <div className="flex">
                 <SideMenu site={site} selectedMenu='duoc' />
                 <div className="w-full">
-                    <div className="flex items-center">
-                        <div className="w-8">
+                    <div className="w-full bg-gray-50 border-b flex items-center p-2">
+                        {/* <div className="w-8">
                             <ButtonMenu data={menuData} setSelectedOption={setSelectedOption} />
+                        </div> */}
+                        <div className="w-64">
+                            <Dropdown
+                                data={menuData}
+                                setSelectedOption={setSelectedOption}
+                                selectedOption={selectedOption}
+
+
+                            />
                         </div>
-                        <div className="font-bold text-lg uppercase">{selectedOption.name}</div>
+
                     </div>
                     <div>
                         {selectedOption.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
                         {selectedOption.id === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
                         {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site} />}
                         {selectedOption.id === 'tontutruc' && <TonTuTruc site={site} />}
-                        {selectedOption.id === 'dmbd' && <DMBD site={site} />}
+                        {selectedOption.id === 'dmbd' && <Dmbd site={site} />}
                     </div>
                 </div>
             </div>

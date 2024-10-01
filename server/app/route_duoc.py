@@ -5,7 +5,7 @@ from flask_cors import CORS
 from datetime import datetime, timedelta
 from .db import get_cursor, schema_now
 
-duoc = Blueprint('duco', __name__)
+duoc = Blueprint('duoc', __name__)
 
 @duoc.route('/duoc/dm_duocbv/<site>', methods=['GET'])
 def duoc_dm_duocbv(site):

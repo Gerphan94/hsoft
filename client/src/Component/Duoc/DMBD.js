@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import Dropdown from "../Dropdown";
 
-function DMBD() {
-
-
+function Dmbd() {
 
     const primaryData = [
         { id: 'thuoc', name: 'Thuốc' },
         { id: 'vattu', name: 'Vật tư y tế' }
     ]
-
-
 
     const [primaryType, setPrimaryType] = useState({id:'thuoc', name:'Thuốc'})
 
@@ -23,7 +19,7 @@ function DMBD() {
 
             </div>
 
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
                 <div>Nhóm:</div>
                 <Dropdown data = {primaryData} setSelectedOption={setPrimaryType} />
 
@@ -34,7 +30,7 @@ function DMBD() {
                 <Dropdown data = {primaryData} setSelectedOption={setPrimaryType} />
 
                 
-            </div>
+            </div> */}
 
         </div>
 
@@ -43,4 +39,4 @@ function DMBD() {
     )
 }
 
-export default DMBD;
+export default Dmbd;

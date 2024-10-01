@@ -5,12 +5,13 @@ import Filter from "./Filter";
 import Table from "./Table";
 import styles from "../styles.module.css";
 import SearchBar from "../Common/SearchBar";
+import Pagination from "../Common/Pagination";
 
 import { useAppContext } from "../Store/AppContext";
 
 function TonTheoKho() {
 
-    const { site } = useAppContext();
+    const site = localStorage.getItem('site');
     const apiURL = process.env.REACT_APP_API_URL;
     const [timeoutId, setTimeoutId] = useState(null);
 
@@ -183,6 +184,14 @@ function TonTheoKho() {
                     <button className={`${styles.btn} ${styles.btnNew}`} onClick={onClick} >
                         Xem
                     </button>
+
+                    <div>
+                        <input
+                            
+                        
+                        />
+                    </div>
+
                 </div>
                 {selectedAtc.id}
                 <div>

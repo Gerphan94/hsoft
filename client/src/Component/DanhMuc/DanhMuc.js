@@ -9,8 +9,7 @@ import { useAppContext } from "../Store/AppContext";
 function DanhMuc() {
     console.log('-----DanhMuc');
 
-    const { site } = useAppContext();
-   
+    const site = localStorage.getItem('site');
     const [selectedMenu, setSelectedMenu] = useState('');
 
     const menuList = useMemo(() => [

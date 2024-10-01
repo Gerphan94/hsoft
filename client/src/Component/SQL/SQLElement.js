@@ -1,19 +1,20 @@
 import React from "react";
+import { PiClipboardTextLight } from "react-icons/pi";
 
 function SQLElement({ data }) {
 
 
     return (
         <>
-            <div className="p-4">
+            <div className="w-full px-4 py-2 border rounded-lg text-left space-y-2">
+                <div className="flex justify-between">
                 <div className="font-bold text-lg text-left">{data.name}</div>
-                {data['data'].map((childdata) =>
-                    <div className="text-left mb-5 w-[800px]">
-                        <div className="font-bold">{childdata.name}</div>
-                        <div className="italic">{childdata.des}</div>
-                        <div className="bg-gray-100 p-4 text-[#803D3B] whitespace-pre-wrap">{childdata.sql}</div>
-                    </div>
-                )}
+                <button className="size-6"><PiClipboardTextLight className="size-full" /></button>
+
+                </div>
+                <div>{data.des}</div>
+                <div className=" bg-pink-100 px-2 py-1">{data.query}</div>
+
             </div>
         </>
     )

@@ -677,7 +677,6 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
         dutrull = cursor.execute(stm).fetchall()
         for dutru in dutrull:
             result.append(dict(zip(col_names, dutru)))
-   
     return jsonify(result), 200
 
 

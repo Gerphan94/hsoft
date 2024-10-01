@@ -17,7 +17,7 @@ function ThuocModal({ site, selected, setModalShow }) {
     const [dutrullDetail, setDutrullDetail] = useState({});
 
     const fetchDutrull = async () => {
-        const fetchUrl = apiURL + "noitru/thuoc-dutrull-by-idkhoa/" + site + "/" + selected.idkhoa
+        const fetchUrl = apiURL + "noitru/thuoc-danhsach-theo-idkhoa/" + site + "/" + selected.idkhoa
         const response = await fetch(fetchUrl);
         const data = await response.json();
         console.log('-------', data)

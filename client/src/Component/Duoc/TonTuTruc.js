@@ -10,9 +10,9 @@ import { useAppContext } from "../Store/AppContext";
 
 function TonTuTruc() {
 
-    const { site } = useAppContext();
 
     const apiURL = process.env.REACT_APP_API_URL;
+    const site = localStorage.getItem('site');
 
     const [khoaphongList, setKhoaphongList] = useState([]);
     const [selectedKhoaphong, setSelectedKhoaphong] = useState({ id: 0, name: '' });
@@ -116,9 +116,9 @@ function TonTuTruc() {
         <div className="px-4">
 
             <div className="flex items-center gap-10">
-                <div className="flex gap-10 items-center">
-                    <div className="max-w-[500px] flex items-center gap-2">
-                        <label className="w-[100px] text-left font-bold">KP</label>
+                <div className="flex gap-10 items-center p-2">
+                    <div className="flex items-center gap-2">
+                        <label className="w-10 text-left font-bold">KP</label>
                         <div className="w-[400px]">
                             <Dropdown
                                 data={khoaphongList}
@@ -130,8 +130,8 @@ function TonTuTruc() {
 
                         </div>
                     </div>
-                    <div className="max-w-[500px] flex items-center gap-1">
-                        <label className="w-14 text-left font-bold">Tủ trực:</label>
+                    <div className=" flex items-center gap-1">
+                        <label className="w-20 text-left font-bold">Tủ trực:</label>
                         <div className="w-[400px]">
                             <Dropdown
                                 data={tuTrucList}
