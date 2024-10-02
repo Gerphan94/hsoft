@@ -12,6 +12,7 @@ import BHYTModal from "./BHYT/BhytModal";
 import ToDieuTriModal from "./ToDieuTri/ToDieuTrIModal";
 import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
+import TuTrucModal from "./TuTruc/TuTrucModal";
 
 function NoiTru() {
 
@@ -32,6 +33,8 @@ function NoiTru() {
     const [showMauModal, setShowMauModal] = useState(false);
     const [showBHYTModal, setShowBHYTModal] = useState(false);
     const [showTodieuTriModal, setShowTodieuTriModal] = useState(false);
+
+    const [showTuTrucModal, setShowTuTrucModal] = useState(false);
 
 
     useEffect(() => async () => {
@@ -61,21 +64,33 @@ function NoiTru() {
     return (
         <>
             <div className="flex">
-                <SideMenu site={site} />
+                <SideMenu site={site} selectedMenu="noitru" />
                 <div className="w-full">
-                    <div className="flex p-2 gap-2 items-center">
-                        <label className="font-bold">Khoa: </label>
-                        <div className="w-[600px]">
-                            <Dropdown data={khoas} selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
+                    <h0>Nội trú</h0>
+                    <div className="flex items-center px-4 justify-between">
+                        <div className="flex p-2 gap-2 items-center">
+
+                            <label className="font-bold">Khoa: </label>
+                            <div className="w-[600px]">
+                                <Dropdown data={khoas} selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
+                            </div>
+                            <div className="h-full">
+                                <ViewButton onClick={gethiendien} />
+                            </div>
+                            <TouchSwitch />
+                            <div>
+                                <input type="text" className="border px-2 py-1 outline-none h-8 " />
+                            </div>
                         </div>
-                        <div className="h-full">
-                            <ViewButton onClick={gethiendien} />
-                        </div>
-                        <TouchSwitch />
                         <div>
-                            <input type="text" className="border px-2 py-1 outline-none h-8 " />
+                            <button 
+                            className="border px-2 py-1"
+                            onClick={() => setShowTuTrucModal(true)}
+                            
+                            >Tồn tủ trực</button>
                         </div>
                     </div>
+
                     <div className="px-4 py-1 flex flex-row justify-between">
                         <div className="flex gap-2 items-center text-left">
                             <div className="font-bold text-xl">{selected.pid}</div>
@@ -161,6 +176,13 @@ function NoiTru() {
                     site={site}
                     selected={selected}
                     setModalShow={setShowTodieuTriModal}
+                />}
+
+            {showTuTrucModal &&
+                <TuTrucModal
+                    site={site}
+                    setShowModal={setShowTuTrucModal}
+                    khoa={selectedKhoa}
                 />}
 
 

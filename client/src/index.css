@@ -12,6 +12,17 @@ code {
     monospace;
 }
 
+h0 {
+  display: block;
+  padding: 4px 10px;
+  border-bottom: 1px solid #F5F5F7;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 700;
+  color: #384B70;
+  text-align: left;
+}
+
 .table-wrp  {
   max-height: 75vh;
   overflow-y: auto;

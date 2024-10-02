@@ -79,8 +79,11 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                                 </span>
                                 <div><strong>{item.mabd} | </strong></div>
                                 <div className="font-bold text-left">{item.ten_hamluong}</div>
+                                x
+                                <div className="font-bold">{item.soluong}</div>
+                                <div>{item.dang}</div>
                             </div>
-                            <div>{item.duongdung}</div>
+                            <div className="border rounded-2xl px-2 py-0.5 bg-white select-none">{item.duongdung}</div>
                             <div className={`text-sm rounded-xl px-2 py-0.5 text-white select-none ${item.doituong === 'BHYT' ? 'bg-[#4535C1]' : item.doituong === 'Thu phí' ? 'bg-[#E76F51]' : 'bg-[#379777]'} `}>
                                 {item.doituong}
                             </div>
@@ -96,16 +99,16 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                                 :
                                 <div className="text-left italic py-0.5">Ngày <span className="font-bold">{item.solan}</span> lần, lần <span className="font-bold">{item.lan}</span> {item.donvidung}</div>
                             }
-                            <div className="min-w-40"><span className="font-medium">Giờ BD</span> {item.giobd}</div>
-                            <div className="min-w-40"><span className="font-medium">Giờ dùng</span> {item.giodung}</div>
+                            <div className="min-w-40"><span className="font-medium">Giờ BD:</span> {item.giobd}</div>
+                            <div className="min-w-40"><span className="font-medium">Giờ dùng:</span> {item.giodung}</div>
                         </div>
                         <div className="grid grid-cols-3">
                             <div className="min-w-40"><span className="font-medium">Liều dùng:</span> {item.lieudungthuoc}</div>
                             <div className="min-w-40"><span className="font-medium">Tốc độ:</span> {item.tocdo}</div>
                             <div className="text-left"><span className="font-medium">Ghi chú: </span>{item.ghichu}</div>
                         </div>
-                        <div className="grid grid-cols-2">
-                            <div className="min-w-40"><span className="font-medium">Cách dùng: </span><i>{item.cachdung}</i></div>
+                        <div className="grid grid-cols-1">
+                            <div ><span className="font-medium">Cách dùng: </span><i>{item.cachdung}</i></div>
                         </div>
                         <div className="grid grid-cols-6 text-xs py-1">
                             {item.l1 && <div><strong>L1:</strong> {moment.utc(item.l1).format('DD/MM/YYYY HH:mm:ss')}</div>}

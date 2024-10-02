@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
 import PharmarDetailModal from "./PharmarDetailModal";
 import Filter from "./Filter";
+import Filter3 from "./Filter3";
 import Table from "./Table";
 import styles from "../styles.module.css";
 import SearchBar from "../Common/SearchBar";
@@ -181,19 +182,11 @@ function TonTheoKho() {
                         setSelectedAtc={setSelectedAtc}
                         setTyleBH={setTyleBH}
                     />
+
                     <button className={`${styles.btn} ${styles.btnNew}`} onClick={onClick} >
                         Xem
                     </button>
-
-                    <div>
-                        <input
-                            
-                        
-                        />
-                    </div>
-
                 </div>
-                {selectedAtc.id}
                 <div>
                     <SearchBar
                         placeholder='Nhập Mã, Tên, HC'
@@ -201,6 +194,19 @@ function TonTheoKho() {
                         setSearchTerm={setSearchTerm}
                         handleSearch={handleSearch} />
                 </div>
+                <div className="w-64">
+                <Filter3
+                    idkho={selectedKho.id}
+                    site={site}
+                    filters={filterList}
+                    setFilters={setFilterList}
+                   
+                />
+                </div>
+
+                
+
+
             </div>
 
             {/* Table */}

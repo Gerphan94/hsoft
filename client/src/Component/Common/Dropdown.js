@@ -93,7 +93,7 @@ const Dropdown = memo(({
             <div className="relative inline-block w-full">
                 <div className='relative group '>
                     <button
-                        className={`font-medium text-left flex items-center justify-between border select-none outline-none h-full w-full py-1 px-2 text-[#0C1844] group-hover:border-blue-200 rounded-lg ${disabled ? 'cursor-not-allowed bg-gray-200 text-gray-400' : 'cursor-pointer'}`}
+                        className={`font-medium text-left flex items-center justify-between border select-none outline-none h-full w-full py-1 px-2 text-[#0C1844] group-hover:border-blue-200  ${disabled ? 'cursor-not-allowed bg-gray-200 text-gray-400' : 'cursor-pointer'}`}
                         onClick={toggleDropdown}
                         disabled={disabled}
                     >
@@ -112,7 +112,7 @@ const Dropdown = memo(({
 
                 </div>
                 {isDropdownOpen && (
-                    <div className="origin-top-right absolute left-0 mt-2 w-full max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 ">
+                    <div className="origin-top-right absolute left-0 mt-0 w-full max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 ">
                         {searchable &&
                             <div className='p-2'>
                                 <input
