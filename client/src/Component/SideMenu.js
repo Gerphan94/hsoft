@@ -8,12 +8,11 @@ import { FaBook, FaBed } from "react-icons/fa";
 import { MdAttachMoney, MdBackpack, MdLocalHospital } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useAppContext } from "./Store/AppContext";
-import ChooseSite from "./Site/ChooseSite";
+import ChooseSiteModal from "./Site/ChooseSiteModal";
 
-function SideMenu({ site, selectedMenu = '' }) {
+function SideMenu({ site, setSite , selectedMenu = '' }) {
 
     console.log(selectedMenu)
-
 
     const [showChooseSite, setShowChooseSite] = useState(false);
 
@@ -37,13 +36,11 @@ function SideMenu({ site, selectedMenu = '' }) {
         <>
             {site &&
                 <div className="w-56  h-screen border-r-2 bg-[#031C30]">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between p-2">
                         <button
-                            className="text-white font-bold text-2xl p-2 w-full"
+                            className="text-white font-bold text-2xl px-2 py-1 w-full border border-white rounded-lg opacity-70 hover:opacity-100"
                             onClick={() => setShowChooseSite(true)}
-
                         >
-
                             {site}
                         </button>
                     </div>
@@ -60,8 +57,7 @@ function SideMenu({ site, selectedMenu = '' }) {
                 </div>
             }
 
-
-            {showChooseSite && <ChooseSite setModalShow={setShowChooseSite} />}
+            {showChooseSite && <ChooseSiteModal setSite={setSite} setShowModal={setShowChooseSite} />}
 
         </>
     )

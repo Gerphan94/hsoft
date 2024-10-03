@@ -24,6 +24,8 @@ function App() {
 
   const { site, setSite } = useAppContext();
 
+  localStorage.setItem('site', 'HN_DEV');
+
   const Pages = [
     { id: "dashboard", path: "/", title: 'Dash Board', component: <DashBoard /> },
     // { id: "mainpage", path: "/", title: 'Main Pgae', component: <MainPage /> },

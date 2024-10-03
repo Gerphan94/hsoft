@@ -1,14 +1,17 @@
 import React from "react";
 import styles from "../styles.module.css"; // Assuming you are using this styles file
 
-function ChooseSite({ setModalShow }) {
+function ChooseSiteModal({ setShowModal, setSite }) {
     const sites = [
         { id: 'HCM_DEV', name: 'HCM - DEV' },
+        { id: 'HN_DEV', name: 'HN - DEV' },
+
     ];
 
     const handleClick = (id) => {
-        localStorage.setItem('site', id); // Save the selected site ID in local storage
-        setModalShow(false); // Close the modal
+        localStorage.setItem('site', id); 
+        setShowModal(false);
+        setSite(id);
     };
 
     return (
@@ -35,4 +38,4 @@ function ChooseSite({ setModalShow }) {
     );
 }
 
-export default ChooseSite;
+export default ChooseSiteModal;

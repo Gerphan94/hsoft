@@ -13,7 +13,7 @@ import { useAppContext } from "../Store/AppContext";
 
 function Duoc() {
 
-    const site = localStorage.getItem('site');
+    const [site, setSite] = useState(localStorage.getItem('site'));
 
     const [selectedOption, setSelectedOption] = useState({ id: 'tonkho_theokho', name: 'Tồn Theo kho' })
 
@@ -37,12 +37,10 @@ function Duoc() {
     return (
         <>
             <div className="flex">
-                <SideMenu site={site} selectedMenu='duoc' />
+                <SideMenu site={site} setSite={setSite} selectedMenu='duoc' />
                 <div className="w-full">
                     <div className="w-full bg-gray-50 border-b flex items-center p-2">
-                        {/* <div className="w-8">
-                            <ButtonMenu data={menuData} setSelectedOption={setSelectedOption} />
-                        </div> */}
+
                         <div className="w-64">
                             <Dropdown
                                 data={menuData}

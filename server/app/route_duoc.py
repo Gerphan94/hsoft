@@ -65,10 +65,11 @@ def duoc_tonkho_theokho_dskho(site):
     cursor =get_cursor(site)
     result = []
     hcm_kho_ids = "4, 90, 91, 89, 2, 102, 104"
+    hn_kho_ids = '1, 3, 32'
     if (site == 'HCM_DEV'):
         kho_ids = hcm_kho_ids
-    else:
-        kho_ids = hcm_kho_ids 
+    elif (site == 'HN_DEV'):
+        kho_ids = hn_kho_ids 
     stm = f'''SELECT ID, TEN FROM D_DMKHO WHERE id IN ({kho_ids})'''
     schemaa = schema_now()
     khos = cursor.execute(stm).fetchall()

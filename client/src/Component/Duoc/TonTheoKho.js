@@ -10,9 +10,9 @@ import Pagination from "../Common/Pagination";
 
 import { useAppContext } from "../Store/AppContext";
 
-function TonTheoKho() {
-
-    const site = localStorage.getItem('site');
+function TonTheoKho( {site}) {
+    console.log('site', site)
+    // const site = localStorage.getItem('site');
     const apiURL = process.env.REACT_APP_API_URL;
     const [timeoutId, setTimeoutId] = useState(null);
 
@@ -36,17 +36,21 @@ function TonTheoKho() {
     const [tyleBH, setTyleBH] = useState({ id: '100', name: '100' });
     const [selectedAtc, setSelectedAtc] = useState({ id: '', name: '' });
 
-    useEffect(() => async () => {
-        try {
-            const fecthURL = apiURL + "/duoc/danhsach-kho/" + site;
-            const response = await fetch(fecthURL);
-            const data = await response.json();
-            setKhoList(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-
-    }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const fetchURL = apiURL + "/duoc/danhsach-kho/" + site;
+                const response = await fetch(fetchURL);
+                const data = await response.json();
+                setKhoList(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+    
+        fetchData();
+    }, [site]);
+    
 
     const filter = () => {
         const filterData = pharmars.filter((item) => {

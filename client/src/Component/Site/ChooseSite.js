@@ -10,6 +10,7 @@ function ChooseSite({ setModalShow }) {
     const navigate = useNavigate();
     const sites = [
         { id: 'HCM_DEV', name: 'HCM - DEV' },
+        { id: 'HN_DEV', name: 'HN - DEV' },
     ];
 
     const handleClick = (id) => {

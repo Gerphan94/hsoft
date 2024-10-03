@@ -7,6 +7,11 @@ CONN_INFO = {
          'user':"hsofttamanh",
             'password':'hsofttamanh',
             'dsn':"hsoft-dev.vdc.tahcm.vn/dev3"
+    },
+    'HN_DEV': {
+        'user':"hsofttamanh",
+            'password':'hsofttamanh',
+            'dsn':"192.168.8.5/hndev"
     }
 }
 

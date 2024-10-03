@@ -17,7 +17,7 @@ import TuTrucModal from "./TuTruc/TuTrucModal";
 function NoiTru() {
 
     const apiURL = process.env.REACT_APP_API_URL;
-    const site = localStorage.getItem('site');
+    const [site, setSite ] = useState(localStorage.getItem('site'));
 
     const [selectedBTN, setSelectedBNT] = useState(1);
 
@@ -37,16 +37,20 @@ function NoiTru() {
     const [showTuTrucModal, setShowTuTrucModal] = useState(false);
 
 
-    useEffect(() => async () => {
-        try {
-            const fecthURL = apiURL + "/noitru/dskhoa/" + site;
-            const response = await fetch(fecthURL);
-            const data = await response.json();
-            setKhoas(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
+    useEffect(() => {
+        const fetchDanhsachKhoa = async () => {
+            try {
+                const fecthURL = apiURL + "/noitru/dskhoa/" + site;
+                const response = await fetch(fecthURL);
+                const data = await response.json();
+                setKhoas(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         }
-    }, []);
+        fetchDanhsachKhoa();
+        
+    }, [site]);
 
     const gethiendien = async () => {
         try {
@@ -64,7 +68,7 @@ function NoiTru() {
     return (
         <>
             <div className="flex">
-                <SideMenu site={site} selectedMenu="noitru" />
+                <SideMenu site={site} setSite={setSite} selectedMenu="noitru" />
                 <div className="w-full">
                     <h0>Nội trú</h0>
                     <div className="flex items-center px-4 justify-between">
