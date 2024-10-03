@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaBottleDroplet, FaJar } from "react-icons/fa6";
 import { CiPill } from "react-icons/ci";
 import { TbCircleLetterK } from "react-icons/tb";
@@ -9,25 +9,26 @@ import Pagination from "../../Common/Pagination";
 
 function TuTrucTable({ data }) {
 
-
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(20);
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
 
+    const constDataInPage = (iPage, iData) => {
+        const indexOfLastItem = iPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        return iData.slice(indexOfFirstItem, indexOfLastItem);
+    }
+
+    useEffect(() => {
+        setDataInPage(constDataInPage(currentPage, data));
+        setTotalPage(Math.ceil(data.length / itemsPerPage));
+    }, [currentPage, data]);
+
     return (
         <>
-            <div>
-                <Pagination
-                    currentPage={currentPage}
-                    totalPage={totalPage}
-                    setCurrentPage={setCurrentPage}
-                    itemsPerPage={itemsPerPage}
-                    data={data}
-                    setDataInPage={setDataInPage}
-                />
-            </div>
-            <div className="w-full h-full overflow-y-auto flex flex-col " >
+           
+            <div className="w-full h-full flex flex-col justify-between space-y-2 py-2" >
                 <table className="w-full">
                     <thead className="sticky top-0 z-100">
                         <tr>
@@ -47,7 +48,7 @@ function TuTrucTable({ data }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item, index) => (
+                        {dataInPage.map((item, index) => (
                             <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200 text-md" >
                                 <td>
                                     <div className="flex items-center gap-0.5 px-1 py-1">
@@ -85,17 +86,15 @@ function TuTrucTable({ data }) {
                                 </td>
                                 <td className="text-center">{index + 1}</td>
                                 <td className="text-left">{item.mabd}</td>
-                                <td
-                                    className="text-left hover:underline hover:text-blue-600"
-                                >
+                                <td className="text-left hover:underline hover:text-blue-600">
                                     <div className="flex gap-1 items-center">
                                         <div className="mr-2">
                                             {/* <ItemComponent dvt={item.dvt} /> */}
                                         </div>
-                                        <div> {item.tenbd}
+                                        <div className="w-full truncate ..."> {item.tenbd}
                                             {item.sluongdvbsd > 0 ? <span className="italic text-zinc-500"> ({item.sluongdvbsd} {item.dvd})</span> : ''}
                                         </div>
-                                        {/* <span className="italic text-zinc-500">{item.tenhc}</span> */}
+                                        <span className="italic text-zinc-500">{item.tenhc}</span>
                                     </div>
                                 </td>
                                 <td>
@@ -129,12 +128,14 @@ function TuTrucTable({ data }) {
                     </tbody>
                 </table>
                 <Pagination
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            totalPage={totalPage}
-                        />
-            </div >
-
+                    currentPage={currentPage}
+                    totalPage={totalPage}
+                    setCurrentPage={setCurrentPage}
+                    itemsPerPage={itemsPerPage}
+                    data={data}
+                    setDataInPage={setDataInPage}
+                />
+</div>
         </>
     )
 
