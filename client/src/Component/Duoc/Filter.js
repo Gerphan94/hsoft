@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect , memo} from "react";
 import { MdFilterAlt, MdFilterAltOff } from "react-icons/md";
 import Dropdown from "../Dropdown";
 import styles from "../styles.module.css"
 
-function Filter({ idkho, site, filter, setFilter, setSelectedAtc, setTyleBH }) {
+export default memo(function Filter({ idkho, site, filter, setFilter, setSelectedAtc, setTyleBH }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
     console.log('rending filter......')
@@ -137,25 +137,11 @@ function Filter({ idkho, site, filter, setFilter, setSelectedAtc, setTyleBH }) {
                                             </div>
                                         }
 
-                                        {/* {item.id === 'bhyt' &&
-                                            <div className="w-32">
-                                                 <Dropdown
-                                                    searchable={false}
-                                                    data={tyleBHYTs}
-                                                    setSelectedOption={setTyleBH}
-                                                    firstChoose={true}
-                                                    />
-                                                </div>
-                                        } */}
+                                      
                                     </div>
                                 ))}
                             </div>
-                            {/* <div className="border rounded-xl p-3">
-                                <div className="flex gap-2">
-                                    <label className="w-40">Dược BV</label>
-                                    <Dropdown data={duocbvs} setSelectedOption={setFilterDuocBV} />
-                                </div>
-                            </div> */}
+                          
                             <div className="flex gap-4 mt-2">
                                 {count === 0 ?
                                     <button className={`${styles.btn} ${styles.btnNotAllowed}`}>Apply</button>
@@ -173,6 +159,5 @@ function Filter({ idkho, site, filter, setFilter, setSelectedAtc, setTyleBH }) {
             </div>
         </>
     )
-}
+})
 
-export default Filter;

@@ -10,7 +10,7 @@ import Pagination from "../Common/Pagination";
 
 import { useAppContext } from "../Store/AppContext";
 
-function TonTheoKho( {site}) {
+function TonTheoKho({ site }) {
     console.log('site', site)
     // const site = localStorage.getItem('site');
     const apiURL = process.env.REACT_APP_API_URL;
@@ -24,6 +24,11 @@ function TonTheoKho( {site}) {
     const [isShowModal, setIsShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [viewDatas, setViewDatas] = useState([]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(25);
+    const [totalPage, setTotalPage] = useState(0);
+    const [dataInPage, setDataInPage] = useState([]);
 
     // FILTER
     const [filterList, setFilterList] = useState([
@@ -47,10 +52,10 @@ function TonTheoKho( {site}) {
                 console.error('Error fetching data:', error);
             }
         };
-    
+
         fetchData();
     }, [site]);
-    
+
 
     const filter = () => {
         const filterData = pharmars.filter((item) => {
@@ -165,8 +170,8 @@ function TonTheoKho( {site}) {
     }, [timeoutId]);
 
     return (
-        <div className="px-4">
-            <div className="flex items-center gap-10">
+        <div className="">
+            <div className="flex items-center gap-10 px-4">
                 <div className="flex items-center gap-2">
                     <label className="font-bold">Kho: </label>
                     <div className="w-96">
@@ -199,24 +204,34 @@ function TonTheoKho( {site}) {
                         handleSearch={handleSearch} />
                 </div>
                 <div className="w-64">
-                <Filter3
-                    idkho={selectedKho.id}
-                    site={site}
-                    filters={filterList}
-                    setFilters={setFilterList}
-                   
-                />
+                    <Filter3
+                        idkho={selectedKho.id}
+                        site={site}
+                        filters={filterList}
+                        setFilters={setFilterList}
+
+                    />
                 </div>
 
-                
+
 
 
             </div>
 
             {/* Table */}
-            <div>
+
+            <div className="p-4">
                 <Table data={viewDatas} setIsShowModal={setIsShowModal} setSelectedPharmarId={setSelectedPharmarId} />
+
             </div>
+            <div>
+                <Pagination
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    totalPage={totalPage}
+                />
+            </div>
+
             {isShowModal && <PharmarDetailModal site={site} pharmarId={selectedPharmarId} setModalShow={setIsShowModal} />}
         </div >
     );

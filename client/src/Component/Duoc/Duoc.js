@@ -14,6 +14,8 @@ import { useAppContext } from "../Store/AppContext";
 function Duoc() {
 
     const [site, setSite] = useState(localStorage.getItem('site'));
+    console.log('fetching Dược')
+
 
     const [selectedOption, setSelectedOption] = useState({ id: 'tonkho_theokho', name: 'Tồn Theo kho' })
 
@@ -36,29 +38,28 @@ function Duoc() {
 
     return (
         <>
-            <div className="flex">
+            <div className="min-h-screen flex overflow-hidden">
                 <SideMenu site={site} setSite={setSite} selectedMenu='duoc' />
-                <div className="w-full">
-                    <div className="w-full bg-gray-50 border-b flex items-center p-2">
-
+               
+                <div className="w-full flex flex-col justify-between overflow-hidden">
+                    <div className="w-full h-12 bg-gray-50 border-b flex items-center p-2">
                         <div className="w-64">
                             <Dropdown
                                 data={menuData}
                                 setSelectedOption={setSelectedOption}
                                 selectedOption={selectedOption}
-
-
                             />
                         </div>
 
                     </div>
-                    <div>
+                    <div className="overflow-hidden">
                         {selectedOption.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
                         {selectedOption.id === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
                         {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site} />}
                         {selectedOption.id === 'tontutruc' && <TonTuTruc site={site} />}
                         {selectedOption.id === 'dmbd' && <Dmbd site={site} />}
                     </div>
+                   
                 </div>
             </div>
         </>

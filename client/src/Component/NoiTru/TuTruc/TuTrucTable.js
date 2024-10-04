@@ -27,64 +27,32 @@ function TuTrucTable({ data }) {
 
     return (
         <>
-           
+
             <div className="w-full h-full flex flex-col justify-between space-y-2 py-2" >
                 <table className="w-full">
                     <thead className="sticky top-0 z-100">
                         <tr>
-                            <th></th>
+
                             <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
+
                             <th className="w-24"><div className="">Mã BD</div></th>
-                            <th className="w-[400px]"><div>Tên BD</div></th>
+                            <th className="w-[400px] text-left px-2"><div>Tên BD</div></th>
                             <th><div className="w-36">Hoạt chất</div></th>
                             <th><div className="text-left w-20">DVD</div></th>
                             <th><div className="w-28">Đường dùng</div></th>
                             <th><div className="w-28">ATC</div></th>
-                            <th><div className="text-right w-20">Tồn đầu</div></th>
-                            <th><div className="text-right w-20">Nhập</div></th>
-                            <th><div className="text-right w-20">Xuất</div></th>
-                            <th><div className="text-right w-20">Tồn cuối</div></th>
-
+                            <th className="text-right w-20"><div >Tồn đầu</div></th>
+                            <th className="text-right w-20"><div >Nhập</div></th>
+                            <th className="text-right w-20"><div >Xuất</div></th>
+                            <th className="text-right w-20"><div >Tồn cuối</div></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {dataInPage.map((item, index) => (
                             <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200 text-md" >
-                                <td>
-                                    <div className="flex items-center gap-0.5 px-1 py-1">
-                                        <span tooltip="Đa liều">
-                                            {item.dalieu === 1 ?
-                                                <FaBottleDroplet className="text-green-700" /> :
-                                                <CiPill className="text-red-700" />
-                                            }
-                                        </span>
-                                        <span >
-                                            {item.bhyt === 100 ?
-                                                <WiMoonAltNew className="text-[#667BC6]" /> :
-                                                item.bhyt === 0 ?
-                                                    <WiMoonAltFull className="text-[#667BC6]" /> :
-                                                    <WiMoonAltFirstQuarter className="text-[#667BC6]" />
-                                            }
-                                        </span>
-                                        <span>
-                                            {item.duocbvid === 3 && item.maatc === '' ?
-                                                <TbCircleLetterK className="text-purple-700" /> :
-                                                item.duocbvid === 3 && item.maatc !== '' ?
-                                                    <TbCircleLetterK className="text-red-700" /> :
-                                                    ''}
-                                        </span>
-                                        <span>
-                                            {item.adr === 1 && <GiPoisonBottle className="text-purple-700" />}
-                                        </span>
-                                        <span>
-                                            {item.adrcao === 1 && <GiPoisonBottle className="text-red-700" />}
-                                        </span>
-                                        <span>
-                                            {item.bienban === 1 && <GoReport className="text-blue-700" />}
-                                        </span>
-                                    </div>
-                                </td>
-                                <td className="text-center">{index + 1}</td>
+                                <td className="text-center">{(currentPage - 1) * 20 + (index + 1)}</td>
                                 <td className="text-left">{item.mabd}</td>
                                 <td className="text-left hover:underline hover:text-blue-600">
                                     <div className="flex gap-1 items-center">
@@ -117,12 +85,45 @@ function TuTrucTable({ data }) {
                                     }
 
                                 </td>
-                                <td className="text-right px-1">{Number(item.tondau).toLocaleString('en-US')}</td>
-                                <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
-                                <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
-                                <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
-
-                                {/* <td></td> */}
+                                <td className="text-right px-2">{Number(item.tondau).toLocaleString('en-US')}</td>
+                                <td className="text-right px-2">{Number(item.slnhap).toLocaleString('en-US')}</td>
+                                <td className="text-right px-2">{Number(item.slxuat).toLocaleString('en-US')}</td>
+                                <td className={`text-right px-2 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
+                                <td>
+                                    <div className="flex items-center gap-0.5 px-1 py-1 border rounded">
+                                        <span tooltip="Đa liều">
+                                            {item.dalieu === 1 ?
+                                                <FaBottleDroplet className="text-green-700" /> :
+                                                <CiPill className="text-red-700" />
+                                            }
+                                        </span>
+                                        <span >
+                                            {item.bhyt === 100 ?
+                                                <WiMoonAltNew className="text-[#667BC6]" /> :
+                                                item.bhyt === 0 ?
+                                                    <WiMoonAltFull className="text-[#667BC6]" /> :
+                                                    <WiMoonAltFirstQuarter className="text-[#667BC6]" />
+                                            }
+                                        </span>
+                                        <span>
+                                            {item.duocbvid === 3 && item.maatc === '' ?
+                                                <TbCircleLetterK className="text-purple-700" /> :
+                                                item.duocbvid === 3 && item.maatc !== '' ?
+                                                    <TbCircleLetterK className="text-red-700" /> :
+                                                    ''}
+                                        </span>
+                                        <span>
+                                            {item.adr === 1 && <GiPoisonBottle className="text-purple-700" />}
+                                        </span>
+                                        <span>
+                                            {item.adrcao === 1 && <GiPoisonBottle className="text-red-700" />}
+                                        </span>
+                                        <span>
+                                            {item.bienban === 1 && <GoReport className="text-blue-700" />}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>...</td>
                             </tr>
                         ))}
                     </tbody>
@@ -135,7 +136,7 @@ function TuTrucTable({ data }) {
                     data={data}
                     setDataInPage={setDataInPage}
                 />
-</div>
+            </div>
         </>
     )
 

@@ -1,13 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaBottleDroplet, FaJar } from "react-icons/fa6";
 import { CiPill } from "react-icons/ci";
 import { TbCircleLetterK } from "react-icons/tb";
 import { WiMoonAltFull, WiMoonAltFirstQuarter, WiMoonAltNew } from "react-icons/wi";
 import { GiPoisonBottle } from "react-icons/gi";
 import { GoReport } from "react-icons/go";
+import Pagination from "../Common/Pagination";
 
 import ItemComponent from "./TableIconComponent";
 function Table({ data, setIsShowModal, setSelectedPharmarId }) {
+
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(25);
+    const [totalPage, setTotalPage] = useState(Math.ceil(data.length / itemsPerPage));
+    const [dataInPage, setDataInPage] = useState([]);
+
+
+    const constDataInPage = (iPage, iData) => {
+        const indexOfLastItem = iPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        return iData.slice(indexOfFirstItem, indexOfLastItem);
+    }
+
+    useEffect(() => {
+        setDataInPage(constDataInPage(1, data));
+    }, [data]);
+
+    useEffect(() => {
+        setDataInPage(constDataInPage(currentPage, data));
+    }, [currentPage]);
 
     const HighlightText = ({ text, highlight }) => {
         if (!highlight) {
@@ -36,7 +58,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
     }
     return (
         <>
-            <div className="mt-2 w-full lg:h-[720px] overflow-y-auto mb-5" >
+            <div className="mt-2 w-full h-[720px] flex flex-col justify-between space-y-2 py-2 overflow-x-auto overflow-y-hidden" >
                 <table className="w-full">
                     <thead className="sticky top-0 z-100">
                         <tr>
@@ -58,7 +80,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item, index) => (
+                        {dataInPage.map((item, index) => (
                             <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200 text-sm" >
                                 <td>
                                     <div className="flex items-center gap-0.5 px-1 py-1">
@@ -92,21 +114,23 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                         <span>
                                             {item.bienban === 1 && <GoReport className="text-blue-700" />}
                                         </span>
-
-
                                     </div>
                                 </td>
-                                <td className="text-center">{index + 1}</td>
+                                <td className="text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</td>
                                 <td className="text-left">{item.mabd}</td>
                                 <td
                                     className="text-left hover:underline hover:text-blue-600"
-                                    onClick={() => onClickPharmar(item.id)}
+                                    
                                 >
                                     <div className="flex gap-1 items-center">
                                         <div className="mr-2">
                                             <ItemComponent dvt={item.dvt} />
                                         </div>
-                                        <div> {item.tenbd}
+                                        <div
+                                        className="px-2 truncate ..." 
+                                        onClick={() => onClickPharmar(item.id)}
+                                        
+                                        > {item.tenbd}
                                             {item.sluongdvbsd > 0 ? <span className="italic text-zinc-500"> ({item.sluongdvbsd} {item.dvd})</span> : ''}
                                         </div>
                                         {/* <span className="italic text-zinc-500">{item.tenhc}</span> */}
