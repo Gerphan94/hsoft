@@ -13,7 +13,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(25);
-    const [totalPage, setTotalPage] = useState(Math.ceil(data.length / itemsPerPage));
+    const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
 
 
@@ -28,28 +28,9 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
     }, [data]);
 
     useEffect(() => {
+        setTotalPage(Math.ceil(data.length / itemsPerPage));
         setDataInPage(constDataInPage(currentPage, data));
     }, [currentPage]);
-
-    const HighlightText = ({ text, highlight }) => {
-        if (!highlight) {
-            return <div>{text}</div>;
-        }
-
-        const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-        return (
-            <div>
-                {parts.map((part, index) =>
-                    part.toLowerCase() === highlight.toLowerCase() ? (
-                        <span key={index} style={{ backgroundColor: 'yellow', fontWeight: 'bold' }}>{part}</span>
-                    ) : (
-                        part
-                    )
-                )}
-            </div>
-        );
-    };
-
 
 
     const onClickPharmar = (pharmarid) => {
@@ -59,7 +40,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
     return (
         <>
             <div className="mt-2 w-full h-[720px] flex flex-col justify-between space-y-2 py-2 overflow-x-auto overflow-y-hidden" >
-                <table className="w-full">
+                <table>
                     <thead className="sticky top-0 z-100">
                         <tr>
                             <th></th>
@@ -167,6 +148,11 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                         ))}
                     </tbody>
                 </table>
+                <Pagination
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    totalPage={totalPage}
+                />
             </div >
 
         </>

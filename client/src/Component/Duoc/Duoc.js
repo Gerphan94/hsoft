@@ -41,7 +41,7 @@ function Duoc() {
             <div className="min-h-screen flex overflow-hidden">
                 <SideMenu site={site} setSite={setSite} selectedMenu='duoc' />
                
-                <div className="w-full flex flex-col justify-between overflow-hidden">
+                <div className="w-full flex flex-col overflow-hidden">
                     <div className="w-full h-12 bg-gray-50 border-b flex items-center p-2">
                         <div className="w-64">
                             <Dropdown

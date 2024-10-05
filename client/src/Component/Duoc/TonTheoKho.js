@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Dropdown from "../Dropdown";
+import React, { useCallback, useEffect, useState } from "react";
+import Dropdown from "../Common/Dropdown";
 import PharmarDetailModal from "./PharmarDetailModal";
 import Filter from "./Filter";
 import Filter3 from "./Filter3";
@@ -11,7 +11,7 @@ import Pagination from "../Common/Pagination";
 import { useAppContext } from "../Store/AppContext";
 
 function TonTheoKho({ site }) {
-    console.log('site', site)
+    console.log('rending tồn kho theo kho', site)
     // const site = localStorage.getItem('site');
     const apiURL = process.env.REACT_APP_API_URL;
     const [timeoutId, setTimeoutId] = useState(null);
@@ -25,11 +25,6 @@ function TonTheoKho({ site }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [viewDatas, setViewDatas] = useState([]);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(25);
-    const [totalPage, setTotalPage] = useState(0);
-    const [dataInPage, setDataInPage] = useState([]);
-
     // FILTER
     const [filterList, setFilterList] = useState([
         { id: 'dalieu', name: 'Đa liều', value: false },
@@ -40,6 +35,10 @@ function TonTheoKho({ site }) {
     ])
     const [tyleBH, setTyleBH] = useState({ id: '100', name: '100' });
     const [selectedAtc, setSelectedAtc] = useState({ id: '', name: '' });
+
+    const handleSetSelectedKho = useCallback((newValue) => {
+        setSelectedKho(newValue);
+      }, []); 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -114,16 +113,15 @@ function TonTheoKho({ site }) {
 
     }
     const onClick = () => {
-        console.log(selectedKho.id)
         if (selectedKho.id === 0) {
             return;
         }
         getPharmars();
     }
 
-    useEffect(() => {
-        getPharmars();
-    }, [selectedKho]);
+    // useEffect(() => {
+    //     getPharmars();
+    // }, [selectedKho.id]);
 
 
     const onClickPharmar = (pharmarid) => {
@@ -171,18 +169,18 @@ function TonTheoKho({ site }) {
 
     return (
         <div className="">
-            <div className="flex items-center gap-10 px-4">
+            <div className="flex items-center gap-4 px-4">
                 <div className="flex items-center gap-2">
                     <label className="font-bold">Kho: </label>
                     <div className="w-96">
                         <Dropdown
                             data={khoList}
-                            setSelectedOption={setSelectedKho}
+                            setSelectedOption={handleSetSelectedKho}
                             placeholder="Chọn kho --- "
                             selectedOption={selectedKho}
                         />
-
                     </div>
+                    
                     <Filter
                         idkho={selectedKho.id}
                         site={site}
@@ -203,7 +201,7 @@ function TonTheoKho({ site }) {
                         setSearchTerm={setSearchTerm}
                         handleSearch={handleSearch} />
                 </div>
-                <div className="w-64">
+                {/* <div className="w-64">
                     <Filter3
                         idkho={selectedKho.id}
                         site={site}
@@ -211,7 +209,7 @@ function TonTheoKho({ site }) {
                         setFilters={setFilterList}
 
                     />
-                </div>
+                </div> */}
 
 
 
@@ -224,14 +222,7 @@ function TonTheoKho({ site }) {
                 <Table data={viewDatas} setIsShowModal={setIsShowModal} setSelectedPharmarId={setSelectedPharmarId} />
 
             </div>
-            <div>
-                <Pagination
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    totalPage={totalPage}
-                />
-            </div>
-
+           
             {isShowModal && <PharmarDetailModal site={site} pharmarId={selectedPharmarId} setModalShow={setIsShowModal} />}
         </div >
     );

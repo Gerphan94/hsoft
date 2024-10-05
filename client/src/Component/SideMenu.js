@@ -35,7 +35,7 @@ function SideMenu({ site, setSite , selectedMenu = '' }) {
     return (
         <>
             {site &&
-                <div className="w-56  border-r-2 bg-[#031C30]">
+                <div className="w-56 border-r-2 bg-[#031C30]">
                     <div className="flex justify-between p-2">
                         <button
                             className="text-white font-bold text-2xl px-2 py-1 w-full border border-white rounded-lg opacity-70 hover:opacity-100"

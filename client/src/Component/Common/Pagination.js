@@ -56,7 +56,7 @@ function Pagination({ currentPage, setCurrentPage, totalPage }) {
                 <button
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(currentPage - 1)}
-                    className="w-10 flex items-center justify-center text-lg border border-gray-300 rounded-md hover:bg-gray-100 disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed">
+                    className="w-10 flex items-center justify-center text-lg bg-white border border-gray-300 rounded-md hover:bg-gray-100 disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed">
                     <BiChevronsLeft />
                 </button>
                 {getVisiblePages().length === 0 ?
@@ -81,7 +81,7 @@ function Pagination({ currentPage, setCurrentPage, totalPage }) {
                 <button
                     disabled={currentPage === totalPage || totalPage === 0}
                     onClick={() => setCurrentPage(currentPage + 1)}
-                    className="w-10 flex items-center justify-center text-lg border border-gray-300 rounded-md hover:bg-gray-100 disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed">
+                    className="w-10 flex items-center justify-center text-lg bg-white border border-gray-300 rounded-md hover:bg-gray-100 disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed">
                     <BiChevronsRight />
 
                 </button>
