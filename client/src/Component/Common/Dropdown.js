@@ -11,12 +11,12 @@ const Dropdown = memo(({
     optionALL = false,
     disabled = false
 }) => {
-    console.log('render dropdown', data);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const dropdownRef = useRef(null);
+    const [viewData, setViewData] = useState([]);
 
-    // Memoize initial data to avoid unnecessary calculations
+
     const initData = useMemo(() => {
         if (optionALL) {
             return [{ id: 0, name: 'Tất cả' }, ...data];
@@ -24,13 +24,14 @@ const Dropdown = memo(({
         return data;
     }, [data, optionALL]);
 
-    const [viewData, setViewData] = useState(initData);
+    console.log('render dropdown', viewData);
 
     // Initialize selected option if chooseIndex > 0
     useEffect(() => {
         if (chooseIndex > 0 && initData.length > 0) {
             setSelectedOption({ id: initData[chooseIndex - 1].id, name: initData[chooseIndex - 1].name });
         }
+        setViewData(initData);
     }, [chooseIndex, initData, setSelectedOption]);
 
     const toggleDropdown = useCallback(() => {

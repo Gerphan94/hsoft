@@ -85,9 +85,9 @@ def duoc_tonkho_theokho_dskho(site):
 def duoc_tonkho_theokho(site, idkho):
     cursor =get_cursor(site)
     result = []
-    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr','adrcao', 'sluongdvbsd', 'bienban']
+    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr','adrcao', 'sluongdvbsd', 'bienban', 'luuy']
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR,D.ADRCAO, C.SOLUONGDVSD, C.BIENBAN
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR,D.ADRCAO, C.SOLUONGDVSD, C.BIENBAN, C.LUUY
         FROM {schema_now()}.D_TONKHOTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
@@ -155,7 +155,7 @@ def get_tutruc_tonkho(site, idtutruc):
     cursor = get_cursor(site)
     result = []
     stm = f'''
-        SELECT  a.mabd AS id, c.ma AS mabd,  c.ten || ' ' || c.hamluong AS ten_hamluong, c.dang AS dvt, c.donvidung AS dvd, c.duongdung, c.bhyt, a.tondau, a.slnhap, a.slxuat, (a.tondau + a.slnhap - a.slxuat) AS toncuoi, a.slyeucau , (a.tondau + a.slnhap - a.slxuat - a.slyeucau) AS tonkhadung, d.dalieu, c.nhombo, c.maatc, c.adr, d.adrcao
+        SELECT  a.mabd AS id, c.ma AS mabd,  c.ten || ' ' || c.hamluong AS ten_hamluong, c.dang AS dvt, c.donvidung AS dvd, c.duongdung, c.bhyt, a.tondau, a.slnhap, a.slxuat, (a.tondau + a.slnhap - a.slxuat) AS toncuoi, a.slyeucau , (a.tondau + a.slnhap - a.slxuat - a.slyeucau) AS tonkhadung, d.dalieu, c.nhombo, c.maatc, c.adr, d.adrcao, c.luuy
         FROM {schema_now()}.d_tutructh a 
         INNER JOIN d_dmbd c ON a.mabd = c.id
         INNER JOIN d_dmbd_atc d ON c.id = d.id
@@ -180,7 +180,8 @@ def get_tutruc_tonkho(site, idtutruc):
         'duocbvid',
         'maatc',
         'adr',
-        'adrcao'
+        'adrcao',
+        'luuy'
     ]
 
     datas = cursor.execute(stm, {'idtutruc': idtutruc}).fetchall()

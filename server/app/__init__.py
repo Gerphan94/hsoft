@@ -12,6 +12,7 @@ from .route_duoc import duoc
 from .route_noitru import noitru
 from .route_sql import sql
 from .route_kb import kb
+from .route_tdt import tdt
 # SECRET_KEY = os.urandom(24)
 SECRET_KEY = "th3DC0d3v3ryS3cr3tK3y"
 
@@ -33,4 +34,6 @@ def create_app():
     app.register_blueprint(noitru)
     app.register_blueprint(sql)
     app.register_blueprint(kb)
+    app.register_blueprint(tdt)
+
     return app

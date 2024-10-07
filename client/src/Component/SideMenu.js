@@ -9,12 +9,16 @@ import { MdAttachMoney, MdBackpack, MdLocalHospital } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useAppContext } from "./Store/AppContext";
 import ChooseSiteModal from "./Site/ChooseSiteModal";
+import { SiSitepoint } from "react-icons/si";
+import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 
-function SideMenu({ site, setSite , selectedMenu = '' }) {
+function SideMenu({ site, setSite, selectedMenu = '' }) {
 
     console.log(selectedMenu)
 
     const [showChooseSite, setShowChooseSite] = useState(false);
+
+    const [shortMenu, setShortMenu] = useState(false);
 
     const funcs = [
         { id: 'hosobenhan', name: 'Hồ sơ bệnh án', icon: IoFileTrayFullSharp, path: '/hosobenhan' },
@@ -27,7 +31,7 @@ function SideMenu({ site, setSite , selectedMenu = '' }) {
         { id: 'duoc', name: 'Dược', icon: CiPill, path: '/duoc' },
         { id: 'todieutri', name: 'Tờ điều trị', icon: IoNewspaperOutline, path: '/to-dieu-tri' },
         { id: 'danhmuc', name: 'Danh mục', icon: TbCategoryFilled, path: '/danh-muc' },
-        { id: 'sql', name: 'SQL', icon: PiFileSqlDuotone, path: '/sql' },
+        { id: 'sql', name: 'SQL', icon: PiFileSqlDuotone, path: 'https://aged-trader-e9b.notion.site/SQL-1150ea29bab180eeb4d6c8ad8290221b?pvs=4' },
         { id: 'document', name: 'Documents', icon: FaBook, path: '/document' }
     ];
 
@@ -35,24 +39,37 @@ function SideMenu({ site, setSite , selectedMenu = '' }) {
     return (
         <>
             {site &&
-                <div className="w-56 border-r-2 bg-[#031C30]">
-                    <div className="flex justify-between p-2">
-                        <button
-                            className="text-white font-bold text-2xl px-2 py-1 w-full border border-white rounded-lg opacity-70 hover:opacity-100"
-                            onClick={() => setShowChooseSite(true)}
-                        >
-                            {site}
-                        </button>
+                <div className={`relative ${shortMenu ? 'w-18' : 'w-56'} border-r-2 bg-[#031C30]`}>
+                    <div
+                        className="absolute flex items-center justify-center bg-[#031C30] rounded-full text-white size-6 right-0 top-6 transform -translate-y-1/2 translate-x-1/2 cursor-pointer"
+                        onClick={() => setShortMenu(!shortMenu)}
+                    >
+                        {shortMenu ? <FaAngleRight /> : <FaAngleLeft />}
+
+
+                    </div>
+                    <div className="text-left p-2">
+                        {shortMenu ?
+                            <button className="text-white text-left font-bold text-2xl px-2 py-1 w-full  rounded-lg opacity-70 hover:opacity-100"><SiSitepoint /></button>:
+                            <button
+                                className="text-white text-left font-bold text-2xl px-2 py-1 w-full  rounded-lg opacity-70 hover:opacity-100"
+                                onClick={() => setShowChooseSite(true)}
+                            >
+                                {site}
+                            </button>
+                        }
+
                     </div>
                     {funcs.map((func, index) => (
-                        <div key={index} className={`px-2 flex gap-1 text-white text-lg items-center hover:opacity-100 ${selectedMenu === func.id ? 'opacity-100' : 'opacity-60'} `}>
-                            <func.icon className="ml-2" />
-                            <Link
-                                key={index}
-                                to={`${func.path}`}
-                                className={`block py-2 w-full text-left px-1 `}
-                            >{func.name}</Link>
-                        </div>
+                        <Link
+                            key={index}
+                            to={`${func.path}`}
+                            className={`px-2 py-2 flex gap-3 text-white text-lg items-center hover:opacity-100 ${selectedMenu === func.id ? 'opacity-100' : 'opacity-60'} `}
+                        >
+                            <func.icon className={`${shortMenu ? 'size-8' : 'size-5'} `} />
+
+                            {!shortMenu && func.name}
+                        </Link>
                     ))}
                 </div>
             }

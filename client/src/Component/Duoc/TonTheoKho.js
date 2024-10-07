@@ -11,13 +11,15 @@ import Pagination from "../Common/Pagination";
 import { useAppContext } from "../Store/AppContext";
 
 function TonTheoKho({ site }) {
-    console.log('rending tồn kho theo kho', site)
-    // const site = localStorage.getItem('site');
+
+    console.count('rending tồn kho theo kho', site)
+    // const cousite = localStorage.getItem('site');
     const apiURL = process.env.REACT_APP_API_URL;
     const [timeoutId, setTimeoutId] = useState(null);
 
     const [khoList, setKhoList] = useState([]);
     const [selectedKho, setSelectedKho] = useState({ id: 0, name: '' });
+    const [selectedKhoId, setSelectedKhoId] = useState(0);
 
     const [pharmars, setPharmars] = useState([]);
     const [selectedPharmarId, setSelectedPharmarId] = useState(0);
@@ -34,30 +36,44 @@ function TonTheoKho({ site }) {
         { id: 'sldvsd', name: 'Sl DVSD', value: false }
     ])
     const [tyleBH, setTyleBH] = useState({ id: '100', name: '100' });
-    const [selectedAtc, setSelectedAtc] = useState({ id: '', name: '' });
 
     const handleSetSelectedKho = useCallback((newValue) => {
         setSelectedKho(newValue);
-      }, []); 
+    }, []);
 
     useEffect(() => {
+        if (!site) return; // Skip fetch if `site` is not valid or undefined
+
+        console.count("Số lần Callback trong useEffect chạy");
+
+        const controller = new AbortController(); // Create a new AbortController
+        const signal = controller.signal; // Get the signal to pass to fetch
+
         const fetchData = async () => {
             try {
                 const fetchURL = apiURL + "/duoc/danhsach-kho/" + site;
-                const response = await fetch(fetchURL);
+                const response = await fetch(fetchURL, { signal });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 const data = await response.json();
                 setKhoList(data);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                if (error.name === 'AbortError') {
+                    console.log('Fetch aborted');
+                } else {
+                    console.error('Error fetching data:', error);
+                }
             }
         };
-
         fetchData();
+        return () => controller.abort();
     }, [site]);
 
 
-    const filter = () => {
-        const filterData = pharmars.filter((item) => {
+
+    const filter = (iData) => {
+        const filterData = iData.filter((item) => {
             // Initialize match to true
             let matchesAllFilters = true;
             // Iterate through each filter in the list
@@ -88,39 +104,42 @@ function TonTheoKho({ site }) {
                 if (filter.id === 'sldvsd' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.sluongdvbsd > 0;
                 }
-
-                // Add more conditions for other filters here
             });
 
             return matchesAllFilters;
         });
-
         return filterData;
     };
 
-    const getPharmars = async () => {
-        try {
-            const fecthURL = apiURL + "duoc/tonkho/theokho/" + site + "/" + selectedKho.id;
-            console.log(fecthURL)
-            const response = await fetch(fecthURL);
-            const data = await response.json();
-            // console.log(data)
-            setPharmars(data);
-            setViewDatas(filter);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+    const handleFilter = () => {
+        setSearchTerm('');
+        const filterData = filter(pharmars);
+        setViewDatas(filterData);
+    };
 
-    }
     const onClick = () => {
-        if (selectedKho.id === 0) {
+        console.log('selectedKhoId', selectedKhoId)
+        if (!selectedKhoId) {
             return;
         }
-        getPharmars();
+        const fetchTonKho = async () => {
+            try {
+                const fecthURL = apiURL + "duoc/tonkho/theokho/" + site + "/" + selectedKhoId;
+                const response = await fetch(fecthURL);
+                const data = await response.json();
+                setPharmars(data);
+                setViewDatas(data);
+                
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchTonKho();
     }
 
     // useEffect(() => {
-    //     getPharmars();
+    //     getPharmars(selectedKho.id);
     // }, [selectedKho.id]);
 
 
@@ -172,27 +191,30 @@ function TonTheoKho({ site }) {
             <div className="flex items-center gap-4 px-4">
                 <div className="flex items-center gap-2">
                     <label className="font-bold">Kho: </label>
-                    <div className="w-96">
-                        <Dropdown
+                    <div className="w-96 px-4 py-2">
+                        {/* <Dropdown
                             data={khoList}
                             setSelectedOption={handleSetSelectedKho}
-                            placeholder="Chọn kho --- "
                             selectedOption={selectedKho}
-                        />
-                    </div>
-                    
-                    <Filter
-                        idkho={selectedKho.id}
-                        site={site}
-                        filter={filterList}
-                        setFilter={setFilterList}
-                        setSelectedAtc={setSelectedAtc}
-                        setTyleBH={setTyleBH}
-                    />
+                            chooseIndex={1}
+                        /> */}
+                        <select
+                            className="border px-2 py-1 w-full outline-none"
+                            value={selectedKhoId}
+                            onChange={(event) => setSelectedKhoId(event.target.value)} // Corrected the onChange handler
+                        >
+                            {khoList.map((kho) => (
+                                <option key={kho.id} value={kho.id}>{kho.name}</option>
+                            ))}
+                        </select>
 
+                    </div>
                     <button className={`${styles.btn} ${styles.btnNew}`} onClick={onClick} >
                         Xem
                     </button>
+
+                   
+                    
                 </div>
                 <div>
                     <SearchBar
@@ -201,28 +223,24 @@ function TonTheoKho({ site }) {
                         setSearchTerm={setSearchTerm}
                         handleSearch={handleSearch} />
                 </div>
-                {/* <div className="w-64">
+                <div className="w-96">
                     <Filter3
                         idkho={selectedKho.id}
                         site={site}
                         filters={filterList}
                         setFilters={setFilterList}
-
+                        onClick={handleFilter}
                     />
-                </div> */}
-
-
-
-
+                </div>
             </div>
-
-            {/* Table */}
-
             <div className="p-4">
-                <Table data={viewDatas} setIsShowModal={setIsShowModal} setSelectedPharmarId={setSelectedPharmarId} />
+                <Table
+                    data={viewDatas}
+                    setIsShowModal={setIsShowModal}
+                    setSelectedPharmarId={setSelectedPharmarId} />
 
             </div>
-           
+
             {isShowModal && <PharmarDetailModal site={site} pharmarId={selectedPharmarId} setModalShow={setIsShowModal} />}
         </div >
     );

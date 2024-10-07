@@ -5,6 +5,9 @@ import { TbCircleLetterK } from "react-icons/tb";
 import { WiMoonAltFull, WiMoonAltFirstQuarter, WiMoonAltNew } from "react-icons/wi";
 import { GiPoisonBottle } from "react-icons/gi";
 import { GoReport } from "react-icons/go";
+import { IoMdWarning } from "react-icons/io";
+
+
 import Pagination from "../Common/Pagination";
 
 import ItemComponent from "./TableIconComponent";
@@ -16,7 +19,6 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
 
-
     const constDataInPage = (iPage, iData) => {
         const indexOfLastItem = iPage * itemsPerPage;
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -25,10 +27,11 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
 
     useEffect(() => {
         setDataInPage(constDataInPage(1, data));
+        setTotalPage(Math.ceil(data.length / itemsPerPage));
     }, [data]);
 
     useEffect(() => {
-        setTotalPage(Math.ceil(data.length / itemsPerPage));
+        // setTotalPage(Math.ceil(data.length / itemsPerPage));
         setDataInPage(constDataInPage(currentPage, data));
     }, [currentPage]);
 
@@ -39,11 +42,11 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
     }
     return (
         <>
-            <div className="mt-2 w-full h-[720px] flex flex-col justify-between space-y-2 py-2 overflow-x-auto overflow-y-hidden" >
+            <div className="mt-2 w-full h-[720px] flex flex-col  py-2 overflow-x-auto overflow-y-hidden" >
                 <table>
                     <thead className="sticky top-0 z-100">
                         <tr>
-                            <th></th>
+                            <th className=""></th>
                             <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
                             <th className="w-24"><div className="">Mã BD</div></th>
                             <th className="w-[400px]"><div>Tên BD</div></th>
@@ -51,66 +54,46 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                             <th><div className="text-left w-20">DVD</div></th>
                             <th><div className="w-28">Đường dùng</div></th>
                             <th><div className="w-28">ATC</div></th>
+                            <th><div className="w-18">BHYT</div></th>
                             <th><div className="text-right w-20">Tồn đầu</div></th>
                             <th><div className="text-right w-20">Nhập</div></th>
                             <th><div className="text-right w-20">Xuất</div></th>
                             <th><div className="text-right w-20">Tồn cuối</div></th>
                             <th><div className="text-right w-20">SLYC</div></th>
                             <th><div className="text-right w-20">SLKD</div></th>
+
                             {/* <th><div className="text-center w-20">TồnBH</div></th> */}
                         </tr>
                     </thead>
+                   
                     <tbody>
+                        {data.length === 0 && <tr><td colSpan={15} className="text-center bg-gray-200 py-1">Không có kết quả</td></tr>}
+
                         {dataInPage.map((item, index) => (
                             <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200 text-sm" >
                                 <td>
                                     <div className="flex items-center gap-0.5 px-1 py-1">
-                                        <span tooltip="Đa liều">
-                                            {item.dalieu === 1 ?
-                                                <FaBottleDroplet className="text-green-700" /> :
-                                                <CiPill className="text-red-700" />
-                                            }
-                                        </span>
-                                        <span >
-                                            {item.bhyt === 100 ?
-                                                <WiMoonAltNew className="text-[#667BC6]" /> :
-                                                item.bhyt === 0 ?
-                                                    <WiMoonAltFull className="text-[#667BC6]" /> :
-                                                    <WiMoonAltFirstQuarter className="text-[#667BC6]" />
-                                            }
-                                        </span>
-                                        <span>
-                                            {item.duocbvid === 3 && item.maatc === '' ?
-                                                <TbCircleLetterK className="text-purple-700" /> :
-                                                item.duocbvid === 3 && item.maatc !== '' ?
-                                                    <TbCircleLetterK className="text-red-700" /> :
-                                                    ''}
-                                        </span>
-                                        <span>
-                                            {item.adr === 1 && <GiPoisonBottle className="text-purple-700" />}
-                                        </span>
-                                        <span>
-                                            {item.adrcao === 1 && <GiPoisonBottle className="text-red-700" />}
-                                        </span>
-                                        <span>
-                                            {item.bienban === 1 && <GoReport className="text-blue-700" />}
-                                        </span>
+                                        {item.dalieu === 1 && <FaBottleDroplet className="text-green-700" />}
+                                        {item.duocbvid === 3 && <TbCircleLetterK className="text-red-700" />}
+                                        {item.adr === 1 && <GiPoisonBottle className="text-purple-700" />}
+                                        {item.adrcao === 1 && <GiPoisonBottle className="text-red-700" />}
+                                        {item.bienban === 1 && <GoReport className="text-blue-700" />}
+                                        {item.luuy && <IoMdWarning className="text-[#FD8B51]" />}
                                     </div>
                                 </td>
                                 <td className="text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</td>
                                 <td className="text-left">{item.mabd}</td>
                                 <td
                                     className="text-left hover:underline hover:text-blue-600"
-                                    
                                 >
                                     <div className="flex gap-1 items-center">
                                         <div className="mr-2">
                                             <ItemComponent dvt={item.dvt} />
                                         </div>
                                         <div
-                                        className="px-2 truncate ..." 
-                                        onClick={() => onClickPharmar(item.id)}
-                                        
+                                            className="px-2 truncate ..."
+                                            onClick={() => onClickPharmar(item.id)}
+
                                         > {item.tenbd}
                                             {item.sluongdvbsd > 0 ? <span className="italic text-zinc-500"> ({item.sluongdvbsd} {item.dvd})</span> : ''}
                                         </div>
@@ -137,16 +120,19 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                     }
 
                                 </td>
+                                <td>{item.bhyt}</td>
                                 <td className="text-right px-1">{Number(item.tondau).toLocaleString('en-US')}</td>
                                 <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
                                 <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
                                 <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
                                 <td className="text-right px-1">{Number(item.slyeucau).toLocaleString('en-US')}</td>
                                 <td className="text-right px-1">{Number(item.tonkhadung).toLocaleString('en-US')}</td>
-                                {/* <td></td> */}
+
                             </tr>
                         ))}
                     </tbody>
+                    
+                   
                 </table>
                 <Pagination
                     currentPage={currentPage}

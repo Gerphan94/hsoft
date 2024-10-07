@@ -12,22 +12,13 @@ import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
 
 function Duoc() {
+    // const [site, setSite] = useState(localStorage.getItem('site'));
+    console.count('fetching Dược')
 
-    const [site, setSite] = useState(localStorage.getItem('site'));
-    console.log('fetching Dược')
+    const { site, setSite } = useAppContext();
 
+    const [selectedMenuId, seSelectedMenuId] = useState('')
 
-    const [selectedOption, setSelectedOption] = useState({ id: 'tonkho_theokho', name: 'Tồn Theo kho' })
-
-    // const menuData = [
-    //     { id: 'tonkho_ketoa_bhyt', name: 'Tồn kho - kê toa BHYT'},
-    //     { id: 'tonkho_ketoa_nhathuoc', name: 'Tồn kho - kê toa NT'},
-    //     { id: 'tonkho_tonbhyt', name: 'Tồn BHYT'},
-    //     { id: 'tonkho_theokho', name: 'Tồn Theo kho'},
-    //     { id: 'tontutruc', name: 'Tồn tủ trực', borderTop: true },
-    //     { id: 'dmbd', name: 'Danh mục Dược', borderTop: true },
-    //     { id: 4, name: 'Khác'}
-    // ]
     const menuData = [
         { id: 'tonkho_theokho', name: 'Tồn Theo kho' },
         { id: 'tontutruc', name: 'Tồn tủ trực' },
@@ -41,24 +32,28 @@ function Duoc() {
             <div className="min-h-screen flex overflow-hidden">
                 <SideMenu site={site} setSite={setSite} selectedMenu='duoc' />
                 <div className="w-full flex flex-col overflow-hidden">
-                    <div className="w-full h-12 bg-gray-50 border-b flex items-center p-2">
-                        <div className="w-64">
-                            <Dropdown
-                                data={menuData}
-                                setSelectedOption={setSelectedOption}
-                                selectedOption={selectedOption}
-                            />
+                    <div className="px-4 py-2 text-left flex gap-4 border-b shadow-md">
+                        <div className="text-xl font-medium">Dược</div>
+                        <div>
+                            {menuData.map((item) => (
+                                <button
+                                    key={item.id}
+                                    className={`border px-2 py-1 ${selectedMenuId === item.id ? 'bg-[#55679C]' : 'bg-[#7C93C3]'}  text-white hover:bg-[#55679C]`}
+                                    onClick={() => seSelectedMenuId(item.id)}
+
+                                >{item.name}</button>
+                            ))}
                         </div>
 
                     </div>
                     <div className="overflow-hidden">
-                        {selectedOption.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
-                        {selectedOption.id === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
-                        {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site} />}
-                        {selectedOption.id === 'tontutruc' && <TonTuTruc site={site} />}
-                        {selectedOption.id === 'dmbd' && <Dmbd site={site} />}
+                        {selectedMenuId === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
+                        {selectedMenuId === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
+                        {selectedMenuId === 'tonkho_theokho' && <TonTheoKho site={site} />}
+                        {selectedMenuId === 'tontutruc' && <TonTuTruc site={site} />}
+                        {selectedMenuId === 'dmbd' && <Dmbd site={site} />}
                     </div>
-                   
+
                 </div>
             </div>
         </>
