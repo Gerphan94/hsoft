@@ -14,6 +14,18 @@ dm = Blueprint('dm', __name__)
 #         ORDER BY ID ASC
 #     '''
 
+@dm.route('/danhmuc/danhmuc-khoaphong-in/<site>/<khoaphong_string>', methods=['GET'])
+def danhmuc_khoaphong_in(site, khoaphong_string):
+    cursor = get_cursor(site)
+    query = f"""
+        SELECT MAKP, TENKP
+        FROM BTDKP_BV
+        WHERE MAKP IN ({khoaphong_string})
+        ORDER BY MAKP ASC
+    """
+    results = cursor.execute(query).fetchall()
+    return jsonify([{"id": row[0], "name": row[1]} for row in results]), 200
+
 @dm.route("/danhmuc/nhom-nhanvien/<site>", methods=["GET"])
 def get_nhom_nhanvien(site):
     """
@@ -32,6 +44,7 @@ def get_nhom_nhanvien(site):
 @dm.route('/danhmuc/taikhoan-hsoft/<site>', methods=['GET'])
 def danhmuc_taikhoan(site):
     cursor = get_cursor(site)
+    
     result = []
     col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhomtk', 'makp', 'mabs', 'hoten', 'manhomnv','tennhom', 'viettat', 'duyetkhambhyt', 'sochungchi', 'chungthuso', 'pin' ]
     
@@ -39,7 +52,7 @@ def danhmuc_taikhoan(site):
         WITH DMNV AS (
         SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI, C.CHUNGTHUSO, C.PIN
         FROM DMBS A 
-        INNER JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
+        LEFT JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
         LEFT JOIN DMBS_SIGNATURE C ON A.MA = C.MANV
         WHERE A.NHOM <> 9
         )
@@ -47,13 +60,15 @@ def danhmuc_taikhoan(site):
         FROM DLOGIN A
         INNER JOIN DMNV B ON A.MABS = B.MA
         WHERE A.HIDE = 0
-        
+        ORDER BY A.ID 
     '''
     taikhoans = cursor.execute(stm).fetchall()
     for taikhoan in taikhoans:
         obj = {}
         for idx, col in  enumerate(col_names):
+            makp_string =  str(taikhoan[5]).rstrip(',')
             obj[col] = taikhoan[idx]
+            obj['makp'] = makp_string
         result.append(obj)
     return jsonify(result), 200
 

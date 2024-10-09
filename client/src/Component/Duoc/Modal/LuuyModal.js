@@ -1,9 +1,8 @@
 import React from "react";
 import styles from "../styles.module.css"
 
-function PharmarDetailModal({ site, pharmarId, setModalShow }) {
+function LuuyModal({ text, setShowModal }) {
 
-    const title = pharmarId;
 
     return (
         <>
@@ -12,18 +11,19 @@ function PharmarDetailModal({ site, pharmarId, setModalShow }) {
                     <div className="relative lg:w-1/3 md:w-2/3 top-1/4 w-full my-6 mx-auto max-w-3xl bg-white">
                         {/* HEADER */}
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
-                        {title}
+                          Lưu ý sử dụng thuốc
                         </div>
 
                         {/* BODY */}
                         <div className="min-h-40">
+                            {text}
                         </div>
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
                         <button
                                     className={`${styles.btn} ${styles.btnClose}`}
                                     type="button"
-                                    onClick={() => setModalShow(false)}
+                                    onClick={() => setShowModal(false)}
                                 >
                                     Đóng
                                 </button>
@@ -36,5 +36,5 @@ function PharmarDetailModal({ site, pharmarId, setModalShow }) {
     )
 }
 
-export default PharmarDetailModal;
+export default LuuyModal;
 

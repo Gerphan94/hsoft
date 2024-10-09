@@ -90,8 +90,9 @@ def duoc_tonkho_theokho(site, idkho):
         SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR,D.ADRCAO, C.SOLUONGDVSD, C.BIENBAN, C.LUUY
         FROM {schema_now()}.D_TONKHOTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
-        INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
+        LEFT JOIN D_DMBD_ATC D ON C.ID = D.ID
         WHERE A.MAKHO = {idkho}
+        ORDER BY C.MA ASC
     '''
     datas = cursor.execute(stm).fetchall()
     for data in datas:

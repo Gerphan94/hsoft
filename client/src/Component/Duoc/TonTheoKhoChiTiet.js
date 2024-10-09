@@ -10,7 +10,7 @@ import Pagination from "../Common/Pagination";
 
 import { useAppContext } from "../Store/AppContext";
 
-function TonTheoKho({ site }) {
+function TonTheoKhoChiTiet({ site }) {
 
     console.count('rending tồn kho theo kho', site)
     // const cousite = localStorage.getItem('site');
@@ -255,4 +255,4 @@ function TonTheoKho({ site }) {
         </div >
     );
 }
-export default TonTheoKho;
+export default TonTheoKhoChiTiet;

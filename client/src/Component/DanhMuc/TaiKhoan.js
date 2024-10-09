@@ -5,6 +5,8 @@ import Dropdown from "../Common/Dropdown";
 import Toggle from "../Common/ToggleSwitch";
 import Pagination from "../Common/Pagination";
 import { useSearchParams } from 'react-router-dom';
+import { FaGrip } from "react-icons/fa6";
+import TaiKhoaKpModal from "./Modal/TaiKhoaKpModal";
 
 function TaiKhoan({ site }) {
 
@@ -12,9 +14,9 @@ function TaiKhoan({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
     const accountTypes = [
-        {id: 'hsoft', name: 'Hsoft'},
-        {id: 'vienphi', name: 'Viện phí'},
-        {id: 'duoc', name: 'Dược'}
+        { id: 'hsoft', name: 'Hsoft' },
+        { id: 'vienphi', name: 'Viện phí' },
+        { id: 'duoc', name: 'Dược' }
     ];
     const [accountType, setAccountType] = useState({ id: 'hsoft', name: 'Hsoft' });
 
@@ -25,7 +27,7 @@ function TaiKhoan({ site }) {
     const [selectedKP, setSelectedKP] = useState({ id: 0, name: '' });
     const [searchTerm, setSearchTerm] = useState('');
     const [data, setData] = useState([]);
-    
+
     const [viewDatas, setViewDatas] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
@@ -35,6 +37,8 @@ function TaiKhoan({ site }) {
     const [dataInPage, setDataInPage] = useState([]);
 
     const [disableFilterBtn, setdisableFilterBtn] = useState(true);
+
+    const [kpModal, setKpModal] = useState({'show': false, 'data': ''});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -125,7 +129,7 @@ function TaiKhoan({ site }) {
             setViewDatas(filteredData);
         }
     }, [debouncedSearchTerm]);
-    
+
     const handleSearch = (event) => {
         setCurrentPage(1);
         setSearchTerm(event.target.value);
@@ -152,17 +156,20 @@ function TaiKhoan({ site }) {
         setDataInPage(constDataInPage(1, filterData));
         setViewDatas(filterData);
     };
+
+    
+
     return (
         <>
             <div className="flex flex-col">
-                <div className='fixed w-full text-md bg-white h-14 p-3 z-50'>
+                <div className='fixed w-full text-md bg-white h-14 p-3 z-10'>
                     <div className="flex gap-10 items-center">
                         <div className="w-40">
                             <Dropdown
                                 data={accountTypes}
                                 setSelectedOption={setAccountType}
                                 selectedOption={accountType}
-                            
+
                             />
                         </div>
                         <button
@@ -198,7 +205,7 @@ function TaiKhoan({ site }) {
                                     setSelectedOption={selectNhomnv}
                                     optionALL
                                     chooseIndex={1}
-                                    
+
                                 />
                             </div>
                             <button
@@ -212,7 +219,7 @@ function TaiKhoan({ site }) {
 
                 <div className=" px-3 mt-14 overflow-y-auto h-[750px] w-full flex flex-col justify-between">
                     <table className="table-auto w-full">
-                        <thead className="sticky top-0 bg-white z-30 ">
+                        <thead className="sticky top-0 bg-white ">
                             <tr className="">
                                 <th className="py-1 text-center w-10">STT</th>
                                 <th className="w-24">ID</th>
@@ -225,12 +232,13 @@ function TaiKhoan({ site }) {
                                 <th className="text-left">Chứng thư số</th>
                                 <th className="text-left">Pin</th>
                                 <th className="text-left hidden">Khoa/Phong</th>
+                                <th>Khoa/Phòng</th>
                             </tr>
                         </thead>
                         <tbody>
                             {dataInPage.map((item, index) => (
                                 <tr key={index}>
-                                    <td className="py-1 text-center">{(currentPage-1)*20 + (index + 1)}</td>
+                                    <td className="py-1 text-center">{(currentPage - 1) * 20 + (index + 1)}</td>
                                     <td className="w-24">{item.id}</td>
                                     <td className="text-left">{item.userid}</td>
                                     <td className="text-left">{item.password_}</td>
@@ -245,6 +253,13 @@ function TaiKhoan({ site }) {
                                     <td>{item.chungthuso}</td>
                                     <td>{item.pin}</td>
                                     <td className="hidden">{item.makp}</td>
+                                    <td>
+                                       
+                                            <button onClick={() => setKpModal({show: true, data: item.makp})}>
+                                                <FaGrip />
+
+                                            </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -262,6 +277,12 @@ function TaiKhoan({ site }) {
 
 
             </div>
+
+            {kpModal.show && <TaiKhoaKpModal
+                kpModal={kpModal}
+                setKpModal={setKpModal}
+                site={site}
+            />}
 
         </>
     )
