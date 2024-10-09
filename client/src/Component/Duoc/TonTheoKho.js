@@ -18,7 +18,6 @@ function TonTheoKho({ site }) {
     const [timeoutId, setTimeoutId] = useState(null);
 
     const [khoList, setKhoList] = useState([]);
-    const [selectedKho, setSelectedKho] = useState({ id: 0, name: '' });
     const [selectedKhoId, setSelectedKhoId] = useState(0);
 
     const [pharmars, setPharmars] = useState([]);
@@ -33,13 +32,13 @@ function TonTheoKho({ site }) {
         { id: 'bhyt', name: 'BHYT', value: false },
         { id: 'khangsinh', name: 'Kháng sinh', value: false },
         { id: 'adr', name: 'ADR', value: false },
-        { id: 'sldvsd', name: 'Sl DVSD', value: false }
+        { id: 'sldvsd', name: 'Sl DVSD', value: false },
+        { id: 'hoichan', name: 'Hội chẩn', value: false },
+        { id: 'luuy', name: 'Lưu ý', value: false }
     ])
     const [tyleBH, setTyleBH] = useState({ id: '100', name: '100' });
 
-    const handleSetSelectedKho = useCallback((newValue) => {
-        setSelectedKho(newValue);
-    }, []);
+
 
     useEffect(() => {
         if (!site) return; // Skip fetch if `site` is not valid or undefined
@@ -58,6 +57,10 @@ function TonTheoKho({ site }) {
                 }
                 const data = await response.json();
                 setKhoList(data);
+                if (data.length > 0) {
+                    setSelectedKhoId(data[0].id);
+                }
+
             } catch (error) {
                 if (error.name === 'AbortError') {
                     console.log('Fetch aborted');
@@ -103,6 +106,12 @@ function TonTheoKho({ site }) {
                 }
                 if (filter.id === 'sldvsd' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.sluongdvbsd > 0;
+                }
+                if (filter.id === 'luuy' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.luuy !== null;
+                }
+                if (filter.id === 'hoichan' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.bienban === 1;
                 }
             });
 
@@ -225,7 +234,7 @@ function TonTheoKho({ site }) {
                 </div>
                 <div className="w-96">
                     <Filter3
-                        idkho={selectedKho.id}
+                        idkho={selectedKhoId}
                         site={site}
                         filters={filterList}
                         setFilters={setFilterList}

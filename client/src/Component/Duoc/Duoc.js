@@ -12,7 +12,7 @@ import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
 
 function Duoc() {
-    // const [site, setSite] = useState(localStorage.getItem('site'));
+    
     console.count('fetching Dược')
 
     const { site, setSite } = useAppContext();

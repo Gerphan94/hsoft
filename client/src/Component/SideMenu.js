@@ -14,6 +14,28 @@ import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 
 function SideMenu({ site, setSite, selectedMenu = '' }) {
 
+    const Tooltip = ({ text, children, shortMenu }) => {
+        const [showTooltip, setShowTooltip] = useState(false);
+      
+        return (
+          <div className="relative flex items-center">
+            <div
+              className="cursor-pointer"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              {children}
+            </div>
+      
+            {showTooltip && shortMenu &&(
+              <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-1 px-3 py-2 bg-gray-800 text-white rounded text-sm z-50">
+                {text}
+              </div>
+            )}
+          </div>
+        );
+      };
+
     console.log(selectedMenu)
 
     const [showChooseSite, setShowChooseSite] = useState(false);
@@ -35,7 +57,6 @@ function SideMenu({ site, setSite, selectedMenu = '' }) {
         { id: 'document', name: 'Documents', icon: FaBook, path: '/document' }
     ];
 
-
     return (
         <>
             {site &&
@@ -45,8 +66,6 @@ function SideMenu({ site, setSite, selectedMenu = '' }) {
                         onClick={() => setShortMenu(!shortMenu)}
                     >
                         {shortMenu ? <FaAngleRight /> : <FaAngleLeft />}
-
-
                     </div>
                     <div className="text-left p-2">
                         {shortMenu ?
@@ -61,6 +80,7 @@ function SideMenu({ site, setSite, selectedMenu = '' }) {
 
                     </div>
                     {funcs.map((func, index) => (
+                        <Tooltip text={func.name} key={index} shortMenu={shortMenu}>
                         <Link
                             key={index}
                             to={`${func.path}`}
@@ -70,6 +90,7 @@ function SideMenu({ site, setSite, selectedMenu = '' }) {
 
                             {!shortMenu && func.name}
                         </Link>
+                        </Tooltip>
                     ))}
                 </div>
             }

@@ -5,6 +5,8 @@ import { FiFilter } from "react-icons/fi";
 const Filter3 = memo(({ filters, setFilters, onClick }) => {
     console.log('filters', filters)
 
+    const numberView = 4;
+
     console.log('render dropdown', filters)
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
@@ -42,14 +44,20 @@ const Filter3 = memo(({ filters, setFilters, onClick }) => {
     const countFilter = (data) => setFilterCount(data?.filter(filter => filter.value).length || 0);
     const handleFilterText = (data) => {
         let result = [];
+        let countMore = 0;
         data.forEach(filter => {
             if (filter.value) {
-                result.push(filter.name);
+                if (result.length < numberView) {
+                    result.push(filter.name);
+                } else {
+                    countMore++;
+                }
             }
         })
-
+        if (countMore > 0) {
+            result.push(`+${countMore} more`);
+        }
         setFilterText(result);
-        console.log('result', result)
 
     }
 
@@ -83,25 +91,22 @@ const Filter3 = memo(({ filters, setFilters, onClick }) => {
                             No Filter
                         </div>
                         :
-                        <div 
-                        onClick={toggleDropdown}
-                        
-                        className='border flex items-center text-sm gap-1 select-none outline-none h-8 w-full p-1  text-[#0C1844] group-hover:border-blue-200 '>
+                        <div
+                            onClick={toggleDropdown}
+
+                            className='border flex items-center text-sm gap-1 select-none outline-none h-8 w-full p-1  text-[#0C1844] group-hover:border-blue-200 '>
                             {filtertext.map((item, index) => (
                                 <div
                                     key={index}
                                     className={`border px-1 py-0.5`}
                                     style={{ borderColor: color[index] }}
-                                    >
+                                >
                                     {item}
                                 </div>
                             ))}
 
                         </div>
-
                     }
-
-
                     <button
                         onClick={onClick}
                         className='bg-blue-400 size-8 flex items-center justify-center'>
@@ -112,8 +117,8 @@ const Filter3 = memo(({ filters, setFilters, onClick }) => {
 
                 </div>
                 {isDropdownOpen && (
-                    <div className="origin-top-right absolute left-0 mt-2  max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 text-sm">
-                        <div className='p-2 space-y-2 w-full'>
+                    <div className="origin-top-right absolute  left-0 mt-2  max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 text-sm">
+                        <div className='p-2 w-full grid grid-cols-2 gap-2 mb-4'>
                             {filters.map((item) => (
                                 <div key={item.id}>
                                     <button
