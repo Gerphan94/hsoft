@@ -14,10 +14,15 @@ import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
 import TuTrucModal from "./TuTruc/TuTrucModal";
 
+import { FaAngleDown } from "react-icons/fa6";
+
 function NoiTru() {
 
     const apiURL = process.env.REACT_APP_API_URL;
-    const [site, setSite ] = useState(localStorage.getItem('site'));
+    // const [site, setSite ] = useState(localStorage.getItem('site'));
+    console.log('render noi tru');
+
+    const { site, setSelectedSideBar } = useAppContext();
 
     const [selectedBTN, setSelectedBNT] = useState(1);
 
@@ -36,8 +41,10 @@ function NoiTru() {
 
     const [showTuTrucModal, setShowTuTrucModal] = useState(false);
 
-
     useEffect(() => {
+        if (!site) {
+            return
+        }
         const fetchDanhsachKhoa = async () => {
             try {
                 const fecthURL = apiURL + "/noitru/dskhoa/" + site;
@@ -48,8 +55,12 @@ function NoiTru() {
                 console.error('Error fetching data:', error);
             }
         }
-        fetchDanhsachKhoa();
-        
+        setSelectedSideBar('noitru');
+        if (site) {
+            fetchDanhsachKhoa();
+        }
+
+
     }, [site]);
 
     const gethiendien = async () => {
@@ -67,10 +78,10 @@ function NoiTru() {
 
     return (
         <>
-            <div className="flex">
-                <SideMenu site={site} setSite={setSite} selectedMenu="noitru" />
+            <div className="w-full">
+                {/* <SideMenu site={site} setSite={setSite} selectedMenu="noitru" /> */}
                 <div className="w-full">
-                    <h0>Nội trú</h0>
+                    <div className="px-4 py-2 text-left flex gap-4 border-b shadow-md">Nội trú</div>
                     <div className="flex items-center px-4 justify-between">
                         <div className="flex p-2 gap-2 items-center">
 
@@ -79,18 +90,25 @@ function NoiTru() {
                                 <Dropdown data={khoas} selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
                             </div>
                             <div className="h-full">
-                                <ViewButton onClick={gethiendien} />
+                                <button
+                                    type="button"
+                                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded"
+                                    onClick={gethiendien}
+                                >
+                                    Xem
+                                </button>
+
                             </div>
-                            <TouchSwitch />
+                            {/* <TouchSwitch /> */}
                             <div>
                                 <input type="text" className="border px-2 py-1 outline-none h-8 " />
                             </div>
                         </div>
                         <div>
-                            <button 
-                            className="border px-2 py-1"
-                            onClick={() => setShowTuTrucModal(true)}
-                            
+                            <button
+                                className="border px-2 py-1"
+                                onClick={() => setShowTuTrucModal(true)}
+
                             >Tồn tủ trực</button>
                         </div>
                     </div>
@@ -132,16 +150,19 @@ function NoiTru() {
                                 onClick={() => setShowTodieuTriModal(true)}
                             >TĐT
                             </button>
+                           
                             <div>
                             </div>
                         </div>
                     </div>
+
                     <Hiendien
                         site={site}
                         data={viewData}
                         selected={selected}
                         setSelected={setSelected}
                     />
+
                 </div>
             </div>
 

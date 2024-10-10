@@ -20,6 +20,7 @@ import NoiTru from './Component/NoiTru/NoiTru';
 import ToDieuTri from './Component/ToDieuTri/ToDieuTri';
 import ChooseSiteModal from './Component/Site/ChooseSite';
 import { useEffect } from 'react';
+import SideBar from './Component/SideBar';
 
 function App() {
 
@@ -45,23 +46,27 @@ function App() {
   return (
     <div className="App">
       <HelmetProvider>
-        <Routes >
-          {Pages.map((page) => (
-            <Route key={page.id} path={page.path}
-              element={
-                <>
-                  <Helmet>
-                    <title>{page.title}</title>
-                  </Helmet>
-                  {page.component}
-                </>
-              } />
-          ))}
-        </Routes>
+        <div className='flex min-h-screen'>
+          <SideBar />
+          <Routes >
+            {Pages.map((page) => (
+              <Route key={page.id} path={page.path}
+                element={
+                  <>
+                    <Helmet>
+                      <title>{page.title}</title>
+                    </Helmet>
+                    {page.component}
+                  </>
+                } />
+            ))}
+          </Routes>
+          </div>
       </HelmetProvider>
+    
 
 
-    </div>
+    </div >
   );
 }
 

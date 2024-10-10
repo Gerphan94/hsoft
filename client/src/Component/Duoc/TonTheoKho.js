@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Dropdown from "../Common/Dropdown";
 import PharmarDetailModal from "./PharmarDetailModal";
-import Filter from "./Filter";
+// import Filter from "./Filter";
 import Filter3 from "./Filter3";
 import Table from "./Table";
+import TableDetail from "./TableDetail";
 import styles from "../styles.module.css";
 import SearchBar from "../Common/SearchBar";
-import Pagination from "../Common/Pagination";
+import Toggle from "../Common/ToggleSwitch";
 
 import { useAppContext } from "../Store/AppContext";
 
@@ -25,6 +25,8 @@ function TonTheoKho({ site }) {
     const [isShowModal, setIsShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [viewDatas, setViewDatas] = useState([]);
+
+    const [isDetail, setIsDetail] = useState(false);
 
     // FILTER
     const [filterList, setFilterList] = useState([
@@ -138,13 +140,30 @@ function TonTheoKho({ site }) {
                 const data = await response.json();
                 setPharmars(data);
                 setViewDatas(data);
-                
+
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        const fetchTonKhoChiTiet = async () => {
+            try {
+                const fecthURL = apiURL + "duoc/tonkho/theokho-chitiet/" + site + "/" + selectedKhoId;
+                const response = await fetch(fecthURL);
+                const data = await response.json();
+                setPharmars(data);
+                setViewDatas(data);
+
 
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
-        fetchTonKho();
+        if (isDetail) {
+            fetchTonKhoChiTiet();
+        } else {
+            fetchTonKho();
+        }
     }
 
     // useEffect(() => {
@@ -166,7 +185,6 @@ function TonTheoKho({ site }) {
 
     // Search
     const handleSearch = () => {
-       
         if (timeoutId) {
             clearTimeout(timeoutId);
         }
@@ -194,18 +212,18 @@ function TonTheoKho({ site }) {
         };
     }, [timeoutId]);
 
+    useEffect(() => {
+        setViewDatas([]);
+        setPharmars([]);
+    }, [isDetail])
+
     return (
         <div className="">
             <div className="flex items-center gap-4 px-4">
                 <div className="flex items-center gap-2">
                     <label className="font-bold">Kho: </label>
                     <div className="w-96 px-4 py-2">
-                        {/* <Dropdown
-                            data={khoList}
-                            setSelectedOption={handleSetSelectedKho}
-                            selectedOption={selectedKho}
-                            chooseIndex={1}
-                        /> */}
+
                         <select
                             className="border px-2 py-1 w-full outline-none"
                             value={selectedKhoId}
@@ -217,12 +235,20 @@ function TonTheoKho({ site }) {
                         </select>
 
                     </div>
-                    <button className={`${styles.btn} ${styles.btnNew}`} onClick={onClick} >
+                    <button 
+                        type="button" 
+                        className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded"
+                        onClick={onClick}
+                        >
                         Xem
                     </button>
 
-                   
-                    
+                    {/* <button className={`${styles.btn} ${styles.btnNew}`} onClick={onClick} >
+                        Xem
+                    </button> */}
+
+
+
                 </div>
                 <div>
                     <SearchBar
@@ -230,8 +256,8 @@ function TonTheoKho({ site }) {
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
                         handleSearch={handleSearch}
-                        
-                         />
+
+                    />
                 </div>
                 <div className="w-96">
                     <Filter3
@@ -242,12 +268,28 @@ function TonTheoKho({ site }) {
                         onClick={handleFilter}
                     />
                 </div>
+                <div>
+                    <Toggle
+                        idname={'is-detail'}
+                        displayName="Tồn chi tiết"
+                        setEnabled={setIsDetail}
+                        enabled={isDetail}
+                    />
+                </div>
+                <div>{isDetail}</div>
             </div>
             <div className="p-4">
-                <Table
-                    data={viewDatas}
-                    setIsShowModal={setIsShowModal}
-                    setSelectedPharmarId={setSelectedPharmarId} />
+                {isDetail ?
+                    <TableDetail
+                        data={viewDatas}
+                        setIsShowModal={setIsShowModal}
+                        setSelectedPharmarId={setSelectedPharmarId} />
+                    :
+                    <Table
+                        data={viewDatas}
+                        setIsShowModal={setIsShowModal}
+                        setSelectedPharmarId={setSelectedPharmarId} />
+                }
 
             </div>
 

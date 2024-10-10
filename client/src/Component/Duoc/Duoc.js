@@ -29,8 +29,8 @@ function Duoc() {
 
     return (
         <>
-            <div className="min-h-screen flex overflow-hidden">
-                <SideMenu site={site} setSite={setSite} selectedMenu='duoc' />
+           
+                {/* <SideMenu site={site} setSite={setSite} selectedMenu='duoc' /> */}
                 <div className="w-full flex flex-col overflow-hidden">
                     <div className="px-4 py-2 text-left flex gap-4 border-b shadow-md">
                         <div className="text-xl font-medium">Dược</div>
@@ -55,7 +55,6 @@ function Duoc() {
                     </div>
 
                 </div>
-            </div>
         </>
     )
 }

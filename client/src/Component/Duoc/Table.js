@@ -31,7 +31,6 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
     }, [data]);
 
     useEffect(() => {
-        // setTotalPage(Math.ceil(data.length / itemsPerPage));
         setDataInPage(constDataInPage(currentPage, data));
     }, [currentPage]);
 
@@ -109,7 +108,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                     <td className="text-left">{item.dvd}</td>
                                     <td>
                                         <div className="w-28 text-left truncate ...">
-                                            {item.duongdung}
+                                            {item.dd_count} - {item.duongdung}
                                         </div>
                                     </td>
                                     <td className="text-center">

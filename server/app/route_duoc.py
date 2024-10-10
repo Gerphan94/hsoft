@@ -85,9 +85,9 @@ def duoc_tonkho_theokho_dskho(site):
 def duoc_tonkho_theokho(site, idkho):
     cursor =get_cursor(site)
     result = []
-    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr','adrcao', 'sluongdvbsd', 'bienban', 'luuy']
+    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr','adrcao', 'sluongdvbsd', 'bienban', 'luuy', 'duongdungmorong', 'dd_count']    
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR,D.ADRCAO, C.SOLUONGDVSD, C.BIENBAN, C.LUUY
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR,D.ADRCAO, C.SOLUONGDVSD, C.BIENBAN, C.LUUY, C.DUONGDUNGMORONG, NVL(REGEXP_COUNT(C.DUONGDUNGMORONG, ',') + 1,0) AS dd_count
         FROM {schema_now()}.D_TONKHOTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         LEFT JOIN D_DMBD_ATC D ON C.ID = D.ID
@@ -101,6 +101,49 @@ def duoc_tonkho_theokho(site, idkho):
             obj[col] = data[idx]
         result.append(obj)
     return jsonify(result), 200
+
+@duoc.route('/duoc/tonkho/theokho-chitiet/<site>/<idkho>', methods=['GET'])
+def duoc_tonkho_theokho_chitiet(site, idkho):
+    cursor =get_cursor(site)
+    result = []
+    cols = ['stt', 'idbd', 'mabd', 'tenbd', 'tenhc', 'dvt', 'dvd', 'duongdung', 'duongdungmorong','dd_count','bhyt', 'hsd', 'losx','tondau', 'slnhap', 'slxuat', 'toncuoi']
+    query = f'''
+        SELECT 
+            A.STT, 
+            A.MABD AS IDBD,
+            C.MA,
+            C.TEN || ' ' || C.HAMLUONG AS TENBD, 
+            C.TENHC,
+            C.DANG AS DVT,
+            C.DONVIDUNG AS DVD,
+            C.DUONGDUNG,
+            C.DUONGDUNGMORONG,
+            NVL(REGEXP_COUNT(C.DUONGDUNGMORONG, ',') + 1,0) AS dd_count,
+            C.BHYT,
+            B.HANDUNG,  
+            B.LOSX, 
+            A.TONDAU,
+            A.SLNHAP,
+            A.SLXUAT,
+            (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI
+        FROM {schema_now()}.D_TONKHOCT A
+        INNER JOIN {schema_now()}.D_THEODOI B
+            ON A.STT = B.ID
+        INNER JOIN D_DMBD C
+            ON A.MABD = C.ID
+        WHERE A.MAKHO = {idkho}
+        ORDER BY A.MABD ASC
+    '''
+    tonkhos = cursor.execute(query).fetchall()
+    for tonkho in tonkhos:
+        obj = {}
+        for idx, col in  enumerate(cols):
+            obj[col] = tonkho[idx]
+        result.append(obj)
+    return jsonify(result), 200
+    
+
+
 
 @duoc.route('/duoc/tonbhyt/<site>', methods=['GET'])
 def tonbhyt(site):

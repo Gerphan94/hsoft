@@ -1,21 +1,44 @@
 import React, { useEffect, useState } from "react";
 
 import { AiOutlineMan, AiOutlineWoman } from "react-icons/ai";
+import Pagination from "../Common/Pagination";
+import { TbSortAZ } from "react-icons/tb";
 
 
 
+function Hiendien({ data, selected, setSelected }) {
+    
+    console.log('rending hiendien table -------------------------------------')
+    console.log('data', data)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(20);
+    const [totalPage, setTotalPage] = useState(0);
+    const [dataInPage, setDataInPage] = useState([]);
 
-function Hiendien ({ data, selected, setSelected }) {
+    const constDataInPage = (iPage, iData) => {
+        const indexOfLastItem = iPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        return iData.slice(indexOfFirstItem, indexOfLastItem);
+    }
+
+    useEffect(() => {
+        setDataInPage(constDataInPage(1, data));
+        setTotalPage(Math.ceil(data.length / itemsPerPage));
+    }, [data]);
+
+    useEffect(() => {
+        // setTotalPage(Math.ceil(data.length / itemsPerPage));
+        setDataInPage(constDataInPage(currentPage, data));
+    }, [currentPage]);
 
     const onClickPid = (pid, name, idkhoa, maql) => {
-   
-        setSelected({'pid': pid, 'pname': name, 'idkhoa': idkhoa, 'maql': maql});
+        setSelected({ 'pid': pid, 'pname': name, 'idkhoa': idkhoa, 'maql': maql });
     };
 
     return (
         <>
-            <div className="h-[750px]">
-                <div className="mt-2 px-4 flex-grow w-full h-full overflow-y-auto" >
+            <div className=" flex flex-col">
+                <div className="mt-2 px-4 flex-grow w-full h-full overflow-y-auto text-md" >
                     <table className="w-full">
                         <thead>
                             <tr>
@@ -26,22 +49,22 @@ function Hiendien ({ data, selected, setSelected }) {
                                 <th><div className="text-center">Ngày VV</div></th>
                                 <th><div className="text-center">Ngày VK</div></th>
                                 <th><div>Đối tượng</div></th>
-                                <th><div className="text-center">BHYT</div></th>
+                                <th><div className="text-center ">BHYT</div></th>
                                 <th><div className="text-center">Nhóm máu</div></th>
                                 <th><div className="text-center">Số ngày ĐT</div></th>
                                 <th><div className="text-center w-32">...</div></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((ele, index) => (
+                            {dataInPage.map((ele, index) => (
                                 <tr
                                     key={ele.id}
-                                    className={`${selected.pid === ele.mabn ? '!bg-[#96C9F4]' : ''}`}                       
+                                    className={`${selected.pid === ele.mabn ? '!bg-[#96C9F4]' : ''}`}
                                     onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString(), ele.maql.toString())}
                                     data-idkhoa={ele.id}
                                     data-maql={ele.maql}
                                 >
-                                    <td className="text-center"><div className=" py-1 text-center">{index + 1}</div></td>                                
+                                    <td className="text-center"><div className=" py-1 text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</div></td>
                                     <td><div className="text-right pr-2 hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn}</div></td>
                                     <td><div className="flex gap-2 items-center">
                                         {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}
@@ -59,7 +82,11 @@ function Hiendien ({ data, selected, setSelected }) {
                         </tbody>
                     </table>
                 </div>
-
+                <Pagination
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    totalPage={totalPage}
+                />
             </div>
 
 

@@ -80,6 +80,11 @@ const Filter3 = memo(({ filters, setFilters, onClick }) => {
         handleFilterText([])
     }
 
+    const handleClickFilter = () => {
+        onClick();
+        setIsDropdownOpen(false);
+    }
+
     return (
         <div className='w-full h-full inline-block text-left' ref={dropdownRef}>
             <div className="relative inline-block w-full">
@@ -108,7 +113,7 @@ const Filter3 = memo(({ filters, setFilters, onClick }) => {
                         </div>
                     }
                     <button
-                        onClick={onClick}
+                        onClick={handleClickFilter}
                         className='bg-blue-400 size-8 flex items-center justify-center'>
                         <FiFilter className="h-5 w-5 text-white font-bold" />
 

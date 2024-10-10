@@ -5,6 +5,9 @@ export const useAppContext = () => useContext(AppContext);
 export const AppProvider = ({ children }) => {
 
   const [site, setSite] = useState('');
+  
+  const [selectedSideBar, setSelectedSideBar] = useState('');
+  console.log('site', site, selectedSideBar)
 
   useEffect(() => {
     const tmp_site = sessionStorage.getItem('site');
@@ -21,7 +24,8 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
-      site, setSite
+      site, setSite,
+      selectedSideBar, setSelectedSideBar
     }}>
       {children}
     </AppContext.Provider>
