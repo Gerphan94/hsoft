@@ -152,7 +152,7 @@ def noitru_phieu_info(site,type, id, ngay):
 def noitru_dutru_ct(site,type, id):
     cursor = get_cursor(site)
     result = []
-    col_names = ['stt_index', 'tt', 'doituong','idbd', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi', 'giobd', 'giodung ','lieudungthuoc', 'tocdo', 'cachdung','dalieu', 'ghichu', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6']
+    col_names = ['stt_index', 'tt', 'doituong','idbd', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi', 'giobd', 'giodung ','lieudungthuoc', 'tocdo', 'cachdung','dalieu', 'ghichu', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'dalieu', 'usingdvsd']
     d_table = ''
     print("type is" , type)
     if type == '2':
@@ -162,14 +162,13 @@ def noitru_dutru_ct(site,type, id):
     stm = f'''
         SELECT A.STT AS STT_INDEX, A.TT, B.DOITUONG, A.MABD AS IDBD, C.MA AS MABD, (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG, C.DANG, C.DONVIDUNG, A.DUONGDUNG,
         A.SOLAN , A.LAN ,  A.SLYEUCAU AS SOLUONG,
-        A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI, A.GIOBD, A.GIODUNG, A.LIEUDUNGTHUOC, A.TOCDO, A.CACHDUNG, A.DALIEU, A.GHICHU, A.L1, A.L2, A.L3, A.L4, A.L5, A.L6
+        A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI, A.GIOBD, A.GIODUNG, A.LIEUDUNGTHUOC, A.TOCDO, A.CACHDUNG, A.DALIEU, A.GHICHU, A.L1, A.L2, A.L3, A.L4, A.L5, A.L6, A.DALIEU, A.DVSD AS USINGDVSD
         FROM {schema_now()}.{d_table} A
         INNER JOIN D_DOITUONG B ON B.MADOITUONG = A.MADOITUONG
         INNER JOIN D_DMBD C ON C.ID = A.MABD 
         WHERE A.ID = '{id}'
         ORDER BY A.TT ASC
     '''
-    print(stm)
     dutruct = cursor.execute(stm).fetchall()
     for dutru in dutruct:
         result.append(dict(zip(col_names, dutru)))

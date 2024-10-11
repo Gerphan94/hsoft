@@ -12,10 +12,10 @@ const SearchBar = memo(({placeholder='', searchTerm, setSearchTerm, handleSearch
     }
     return (
         <>
-            <div className="flex">
+            <div className="flex w-full">
                 <input
                     type="text"
-                    className="border px-2 py-1 outline-none h-8 "
+                    className="border px-2 py-1 outline-none h-8 w-full "
                     placeholder={placeholder}
                     value={searchTerm}
                     onChange={onChange}

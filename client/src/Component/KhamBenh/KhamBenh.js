@@ -107,90 +107,89 @@ function KhamBenh() {
             {noticeshow &&
                 <Notice message={noticeMessage} setModalshow={setNoticeShow} type={noticeType} />
             }
-            <div className="min-h-screen flex">
-                <SideMenu site={site} selectedMenu="khambenh" />
-                <div className="w-full">
-                    <div className="flex items-center gap-10 w-full h-12 border-b p-2">
-                        <div className="size-6">
-                            <ButtonMenu />
-                        </div>
 
-                        <div className="font-bold text-xl">DANH SÁCH KHÁM BỆNH</div>
-                        <div>
-                            <label>Ngày: </label>
-                            <DatePicker
-                                selected={viewDate}
-                                onChange={(date) => setViewDate(date)}
-                                dateFormat="P"
-                                className="border px-2 py-1 outline-none w-32"
-                            />
-                        </div>
-                        <div>
-                            <ViewButton onClick={handleView} />
 
-                        </div>
-                        <div className="flex gap-4">
-                            <input
-                                className="w-80 border px-2 py-1 outline-none"
-                                value={searchTerm}
-                                onChange={handleSearch}
-                                placeholder="Nhập PID, Họ tên"
-
-                            />
-
-                        </div>
-
-                    </div>
-                    <div className=" h-12 px-4 py-2 flex">
+            <div className="w-full">
+                <div className="flex items-center gap-10 w-full h-12 border-b p-2">
+                    <div className="size-6">
+                        <ButtonMenu />
                     </div>
 
-                    {/* TABLE */}
-                    <div className="mt-0 px-4 w-full h-[740px] overflow-y-auto text-sm flex flex-col justify-between" >
-                        <table>
-                            <thead className="sticky top-0">
-                                <tr>
-                                    <th className="w-10 py-1"></th>
-                                    <th className="w-10 py-1">STT</th>
-                                    <th className="w-20">PID</th>
-                                    <th className="w-80">Họ tên</th>
-                                    <th className="w-20">Giới tính</th>
-                                    <th className="w-24">Ngày sinh</th>
-                                    <th className="w-64">Phòng khám</th>
-                                    <th className="w-32">Đối tượng</th>
-                                    <th className="w-40">Ngày tiếp đón</th>
-                                    <th className="w-40">Ngày khám</th>
-                                    <th className="">Done</th>
-                                </tr>
-                            </thead>
-                            <tbody className="">
-                                {dataInPage.map((data, index) =>
-                                    <tr
-                                        className={` ${data.maqlkb === null ? "opacity-50 cursor-not-allowed " : curMAQL === data.maqlkb ? "bg-blue-300" : "hover:bg-blue-300 cursor-pointer"}`}
-                                        onClick={() => handleClick(data.maqlkb)}
-                                    >
-                                        <td><div className="flex justify-center px-2">
-                                            <span className={`${data.maqlkb === null ? "" : "bg-blue-400"} w-4 h-4 rounded-full`}  ></span>
-                                        </div></td>
-                                        <td>{index + 1}</td>
-                                        <td><div className="text-left px-2" onClick={() => handleClickPID(data.mabn)}>{data.mabn}</div></td>
-                                        <td className=""><div className="text-left px-4 py-1">{data.hoten}</div></td>
-                                        <td><div>{data.phai}</div></td>
-                                        <td>{data.ngaysinh}</td>
-                                        <td><div className="text-left px-2">{data.tenkp}</div></td>
-                                        <td><div className="text-left px-2">{data.doituong}</div></td>
-                                        <td><div className="text-left px-2">{data.ngaytn}</div></td>
-                                        <td><div className="text-left px-2">{data.ngaykb}</div></td>
-                                        <td><div className="text-left px-2">{data.done}</div></td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                        <Pagination
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            totalPage={totalPage}
+                    <div className="font-bold text-xl">DANH SÁCH KHÁM BỆNH</div>
+                    <div>
+                        <label>Ngày: </label>
+                        <DatePicker
+                            selected={viewDate}
+                            onChange={(date) => setViewDate(date)}
+                            dateFormat="P"
+                            className="border px-2 py-1 outline-none w-32"
                         />
                     </div>
+                    <div>
+                        <ViewButton onClick={handleView} />
+
+                    </div>
+                    <div className="flex gap-4">
+                        <input
+                            className="w-80 border px-2 py-1 outline-none"
+                            value={searchTerm}
+                            onChange={handleSearch}
+                            placeholder="Nhập PID, Họ tên"
+
+                        />
+
+                    </div>
+
+                </div>
+                <div className=" h-12 px-4 py-2 flex">
+                </div>
+
+                {/* TABLE */}
+                <div className="mt-0 px-4 w-full h-[740px] overflow-y-auto text-sm flex flex-col justify-between" >
+                    <table>
+                        <thead className="sticky top-0">
+                            <tr>
+                                <th className="w-10 py-1"></th>
+                                <th className="w-10 py-1">STT</th>
+                                <th className="w-20">PID</th>
+                                <th className="w-80">Họ tên</th>
+                                <th className="w-20">Giới tính</th>
+                                <th className="w-24">Ngày sinh</th>
+                                <th className="w-64">Phòng khám</th>
+                                <th className="w-32">Đối tượng</th>
+                                <th className="w-40">Ngày tiếp đón</th>
+                                <th className="w-40">Ngày khám</th>
+                                <th className="">Done</th>
+                            </tr>
+                        </thead>
+                        <tbody className="">
+                            {dataInPage.map((data, index) =>
+                                <tr
+                                    className={` ${data.maqlkb === null ? "opacity-50 cursor-not-allowed " : curMAQL === data.maqlkb ? "bg-blue-300" : "hover:bg-blue-300 cursor-pointer"}`}
+                                    onClick={() => handleClick(data.maqlkb)}
+                                >
+                                    <td><div className="flex justify-center px-2">
+                                        <span className={`${data.maqlkb === null ? "" : "bg-blue-400"} w-4 h-4 rounded-full`}  ></span>
+                                    </div></td>
+                                    <td>{index + 1}</td>
+                                    <td><div className="text-left px-2" onClick={() => handleClickPID(data.mabn)}>{data.mabn}</div></td>
+                                    <td className=""><div className="text-left px-4 py-1">{data.hoten}</div></td>
+                                    <td><div>{data.phai}</div></td>
+                                    <td>{data.ngaysinh}</td>
+                                    <td><div className="text-left px-2">{data.tenkp}</div></td>
+                                    <td><div className="text-left px-2">{data.doituong}</div></td>
+                                    <td><div className="text-left px-2">{data.ngaytn}</div></td>
+                                    <td><div className="text-left px-2">{data.ngaykb}</div></td>
+                                    <td><div className="text-left px-2">{data.done}</div></td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                    <Pagination
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        totalPage={totalPage}
+                    />
                 </div>
             </div>
             {dichvuShow &&

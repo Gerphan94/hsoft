@@ -47,7 +47,7 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                         <Dausinhton />
                     </div>
                 </div>
-              
+
                 <div className="flex gap-2 border rounded-md p-2 mt-4 bg-[#F7FBFF]">
                     <div className="w-24 space-y-2">
                         <label className="w-24 text-left inline-block">ICD:</label>
@@ -59,7 +59,7 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                             type="text"
                             className="w-full h-24 border outline-none px-2 py-0.5"
                             readOnly={true}
-                           
+
                             value={detail && mutileLineChandoan(detail.chandoan)}
                         />
                     </div>
@@ -83,7 +83,32 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                                 <div className="font-bold">{item.soluong}</div>
                                 <div>{item.dang}</div>
                             </div>
-                            <div className="border rounded-2xl px-2 py-0.5 bg-white select-none">{item.duongdung}</div>
+                            <div className="flex gap-4 items-center">
+                                <div className="px-2 py-0.5 select-none font-medium italic">{item.duongdung}</div>
+
+                                <div className="flex gap-1 items-center">
+                                    <input
+                                        id={"isdalieu-" + item.stt_index}
+                                        name={"isdalieu-" + item.stt_index}
+                                        type="checkbox"
+                                        readOnly={true}
+                                        checked={item.dalieu === 1 ? true : false}
+                                        value='Đa liều'
+                                    />
+                                    <label htmlFor={"isdalieu-" + item.stt_index}>Đa liều</label>
+                                </div>
+                                <div className="flex gap-1 items-center">
+                                    <input
+                                        id="isdvsd"
+                                        name='isdvsd'
+                                        type="checkbox"
+                                        readOnly={true}
+                                        checked={item.usingdvsd === 1 ? true : false}
+                                        value='Đa liều'
+                                    />
+                                    <label htmlFor="isdvsd">isDVSD</label>
+                                </div>
+                            </div>
                             <div className={`text-sm rounded-xl px-2 py-0.5 text-white select-none ${item.doituong === 'BHYT' ? 'bg-[#4535C1]' : item.doituong === 'Thu phí' ? 'bg-[#E76F51]' : 'bg-[#379777]'} `}>
                                 {item.doituong}
                             </div>

@@ -15,7 +15,7 @@ function TableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 25;
-    const [totalPage, setTotalPage] = useState(0);
+    const [totalPage, setTotalPage] = useState(1);
     const [dataInPage, setDataInPage] = useState([]);
 
     const constDataInPage = (iPage, iData) => {
@@ -25,16 +25,18 @@ function TableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
     }
 
     useEffect(() => {
+        console.log('rending when change data')
         setDataInPage(constDataInPage(1, data));
         setTotalPage(Math.ceil(data.length / itemsPerPage));
     }, [data]);
 
     useEffect(() => {
+        console.log('rending when change page')
+
         // setTotalPage(Math.ceil(data.length / itemsPerPage));
         setDataInPage(constDataInPage(currentPage, data));
 
     }, [currentPage]);
-
 
     const onClickPharmar = (pharmarid) => {
         setSelectedPharmarId(pharmarid);
@@ -57,8 +59,6 @@ function TableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
                                 <th><div className="w-18">BHYT</div></th>
                                 <th><div className="w-28">Lô</div></th>
                                 <th><div className="text-right w-20">Hạn dùng</div></th>
-
-                                
                                 <th><div className="text-right w-20">Tồn đầu</div></th>
                                 <th><div className="text-right w-20">Nhập</div></th>
                                 <th><div className="text-right w-20">Xuất</div></th>
@@ -122,6 +122,7 @@ function TableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
                                         }
 
                                     </td>
+                                    <td>{item.bhyt}</td>
                                     <td>{item.losx}</td>
                                     <td className="text-right px-1">{Number(item.tondau).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>

@@ -81,6 +81,7 @@ def duoc_tonkho_theokho_dskho(site):
     return jsonify(result)
 
 
+
 @duoc.route('/duoc/tonkho/theokho/<site>/<idkho>', methods=['GET'])
 def duoc_tonkho_theokho(site, idkho):
     cursor =get_cursor(site)

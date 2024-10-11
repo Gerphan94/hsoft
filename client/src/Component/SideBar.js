@@ -85,7 +85,7 @@ function SideBar() {
                         <Link
                             key={index}
                             to={`${func.path}`}
-                            className={`px-2 py-2 flex gap-3 text-white text-lg items-center hover:opacity-100 ${selectedSideBar === func.id ? 'opacity-100' : 'opacity-60'} `}
+                            className={`px-2 py-2 flex gap-3 text-white text-lg items-center hover:opacity-100  ${selectedSideBar === func.id ? 'opacity-100' : 'opacity-60'} `}
                         >
                             <func.icon className={`${shortMenu ? 'size-8' : 'size-5'} `} />
 

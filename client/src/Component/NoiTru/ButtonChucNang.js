@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RiSearch2Line, RiAlignJustify } from "react-icons/ri";
 
-const ButtonList = ({ data, setSelectedOption }) => {
+const ButtonChucNang = ({ data, setSelectedOption }) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -68,4 +68,4 @@ const ButtonList = ({ data, setSelectedOption }) => {
     )
 }
 
-export default ButtonList;
+export default ButtonChucNang;

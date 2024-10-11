@@ -30,9 +30,7 @@ function DashBoard() {
 
     return (
         <div className="App">
-            <div className="min-h-screen flex">
-                <SideMenu site={site} />
-
+            <div className="w-full">
                 <div className="">
                     <h1>Welcome</h1>
                 </div>
