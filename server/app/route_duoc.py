@@ -86,7 +86,7 @@ def duoc_tonkho_theokho_dskho(site):
 def duoc_tonkho_theokho(site, idkho):
     cursor =get_cursor(site)
     result = []
-    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr','adrcao', 'sluongdvbsd', 'bienban', 'luuy', 'duongdungmorong', 'dd_count']    
+    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr','adrcao', 'soluongdvsd', 'bienban', 'luuy', 'duongdungmorong', 'dd_count']    
     stm = f'''
         SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR,D.ADRCAO, C.SOLUONGDVSD, C.BIENBAN, C.LUUY, C.DUONGDUNGMORONG, NVL(REGEXP_COUNT(C.DUONGDUNGMORONG, ',') + 1,0) AS dd_count
         FROM {schema_now()}.D_TONKHOTH A 
@@ -121,7 +121,7 @@ def duoc_tonkho_theokho_chitiet(site, idkho):
             C.DUONGDUNGMORONG,
             NVL(REGEXP_COUNT(C.DUONGDUNGMORONG, ',') + 1,0) AS dd_count,
             C.BHYT,
-            B.HANDUNG,  
+            B.HANDUNG,
             B.LOSX, 
             A.TONDAU,
             A.SLNHAP,
@@ -143,9 +143,6 @@ def duoc_tonkho_theokho_chitiet(site, idkho):
         result.append(obj)
     return jsonify(result), 200
     
-
-
-
 @duoc.route('/duoc/tonbhyt/<site>', methods=['GET'])
 def tonbhyt(site):
     cursor =get_cursor(site)
@@ -195,46 +192,72 @@ def get_tutrucs(site, makp):
 @duoc.route('/duoc/tutruc/tontutruc/<site>/<idtutruc>', methods=['GET'])
 def get_tutruc_tonkho(site, idtutruc):
     """
-    Get tonkho of a tutruc
+    Get Tồn tủ trực
+    ---
+    tags:
+      - Dược
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: Site (HCM_DEV, HN_DEV,...)
+        default: HCM_DEV
+      - name: idtutruc
+        in: path
+        type: integer
+        required: true
+        description:
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
     """
     cursor = get_cursor(site)
     result = []
     stm = f'''
-        SELECT  a.mabd AS id, c.ma AS mabd,  c.ten || ' ' || c.hamluong AS ten_hamluong, c.dang AS dvt, c.donvidung AS dvd, c.duongdung, c.bhyt, a.tondau, a.slnhap, a.slxuat, (a.tondau + a.slnhap - a.slxuat) AS toncuoi, a.slyeucau , (a.tondau + a.slnhap - a.slxuat - a.slyeucau) AS tonkhadung, d.dalieu, c.nhombo, c.maatc, c.adr, d.adrcao, c.luuy
+        SELECT
+            a.mabd AS id,
+            c.ma AS mabd,
+            c.ten || ' ' || c.hamluong AS ten_hamluong,
+            c.tenhc,
+            c.dang AS dvt,
+            c.donvidung AS dvd,
+            c.duongdung,
+            c.soluongdvsd,
+            C.duongdungmorong,
+            NVL(REGEXP_COUNT(C.duongdungmorong, ',') + 1,0) AS dd_count,
+            c.bhyt,
+            a.tondau,
+            a.slnhap,
+            a.slxuat,
+            (a.tondau + a.slnhap - a.slxuat) AS toncuoi,
+            d.dalieu,
+            c.nhombo,
+            c.maatc,
+            c.adr,
+            d.adrcao,
+            c.luuy
         FROM {schema_now()}.d_tutructh a 
         INNER JOIN d_dmbd c ON a.mabd = c.id
         INNER JOIN d_dmbd_atc d ON c.id = d.id
         WHERE a.makp = :idtutruc
     '''
-
     col_names = [
-        'id',
-        'mabd',
-        'tenbd',
-        'dvt',
-        'dvd',
-        'duongdung',
-        'bhyt',
-        'tondau',
-        'slnhap',
-        'slxuat',
-        'toncuoi',
-        'slyeucau',
-        'tonkhadung',
-        'dalieu',
-        'duocbvid',
-        'maatc',
-        'adr',
-        'adrcao',
-        'luuy'
+        'id', 'mabd', 'tenbd', 'tenhc', 'dvt', 'dvd', 'duongdung', 'soluongdvsd', 'duongdungmorong', 'dd_count',
+        'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'dalieu',
+        'duocbvid', 'maatc', 'adr', 'adrcao', 'luuy'
     ]
-
+    
     datas = cursor.execute(stm, {'idtutruc': idtutruc}).fetchall()
-    for data in datas:
-        obj = {}
-        for idx, col in enumerate(col_names):
-            obj[col] = data[idx]
-        result.append(obj)
+    result = [dict(zip(col_names, data)) for data in datas]
     return jsonify(result), 200
 
 @duoc.route('/duoc/tutruc/tontutruc-chitiet/<site>/<idtutruc>', methods=['GET'])

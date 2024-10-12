@@ -107,7 +107,7 @@ function TonTheoKho({ site }) {
                     matchesAllFilters = matchesAllFilters && item.adr === 1;
                 }
                 if (filter.id === 'sldvsd' && filter.value === true) {
-                    matchesAllFilters = matchesAllFilters && item.sluongdvbsd > 0;
+                    matchesAllFilters = matchesAllFilters && item.soluongdvsd > 0;
                 }
                 if (filter.id === 'luuy' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.luuy !== null;
@@ -235,6 +235,14 @@ function TonTheoKho({ site }) {
                         </select>
 
                     </div>
+                    <div>
+                    <Toggle
+                        idname={'is-detail'}
+                        displayName="Tồn chi tiết"
+                        setEnabled={setIsDetail}
+                        enabled={isDetail}
+                    />
+                </div>
                     <button 
                         type="button" 
                         className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded"
@@ -242,13 +250,6 @@ function TonTheoKho({ site }) {
                         >
                         Xem
                     </button>
-
-                    {/* <button className={`${styles.btn} ${styles.btnNew}`} onClick={onClick} >
-                        Xem
-                    </button> */}
-
-
-
                 </div>
                 <div>
                     <SearchBar
@@ -256,7 +257,6 @@ function TonTheoKho({ site }) {
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
                         handleSearch={handleSearch}
-
                     />
                 </div>
                 <div className="w-96">
@@ -268,15 +268,8 @@ function TonTheoKho({ site }) {
                         onClick={handleFilter}
                     />
                 </div>
-                <div>
-                    <Toggle
-                        idname={'is-detail'}
-                        displayName="Tồn chi tiết"
-                        setEnabled={setIsDetail}
-                        enabled={isDetail}
-                    />
-                </div>
-                <div>{isDetail}</div>
+                
+            
             </div>
             <div className="p-4">
                 {isDetail ?

@@ -16,6 +16,7 @@ import Duoc from './Component/Duoc/Duoc';
 import SQLColection from './Component/SQL/SQLCollection';
 import ChooseSite from './Component/Site/ChooseSite';
 import { useAppContext } from './Component/Store/AppContext';
+import VienPhi from './Component/VienPhi/VienPhi';
 import NoiTru from './Component/NoiTru/NoiTru';
 import ToDieuTri from './Component/ToDieuTri/ToDieuTri';
 import ChooseSiteModal from './Component/Site/ChooseSite';
@@ -36,6 +37,8 @@ function App() {
 
     { id: "danhmuc", path: "/danh-muc", title: 'Danh mục', component: <DanhMuc /> },
     { id: "duoc", path: "/duoc", title: 'Dược', component: <Duoc /> },
+
+    { id: "vienphi", path: "/vien-phi", title: 'Viện phí', component: <VienPhi /> },
 
     { id: "todieutri", path: "/to-dieu-tri", title: 'Tờ điều trị', component: <ToDieuTri /> },
     { id: "sql", path: "/sql", title: 'SQL', component: <SQLColection /> },

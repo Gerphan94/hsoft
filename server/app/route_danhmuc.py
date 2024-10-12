@@ -7,6 +7,26 @@ from .db import get_cursor
 
 dm = Blueprint('dm', __name__)
 
+@dm.route('/danhmuc', methods=['GET'])
+def get_danhmuc():
+    """
+    Get Danh Muc data
+    ---
+    tags:
+      - Danh mục
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    return jsonify({"message": "ok"}), 200
 
 # stm = '''
 #         SELECT ID, TEN
@@ -16,6 +36,34 @@ dm = Blueprint('dm', __name__)
 
 @dm.route('/danhmuc/danhmuc-khoaphong-in/<site>/<khoaphong_string>', methods=['GET'])
 def danhmuc_khoaphong_in(site, khoaphong_string):
+    """
+    Get Danh mục Khoa Phòng
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+      - name: khoaphong_string
+        in: path
+        type: string
+        required: true
+        description: The Khoa Phong string
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
     cursor = get_cursor(site)
     query = f"""
         SELECT MAKP, TENKP
@@ -43,8 +91,31 @@ def get_nhom_nhanvien(site):
 
 @dm.route('/danhmuc/taikhoan-hsoft/<site>', methods=['GET'])
 def danhmuc_taikhoan(site):
+    """
+    Get Tài khoản Hsoft
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: Site (HCM_DEV, HN_DEV,...)
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
     cursor = get_cursor(site)
-    
     result = []
     col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhomtk', 'makp', 'mabs', 'hoten', 'manhomnv','tennhom', 'viettat', 'duyetkhambhyt', 'sochungchi', 'chungthuso', 'pin' ]
     

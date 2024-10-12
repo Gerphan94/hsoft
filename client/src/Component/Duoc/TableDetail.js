@@ -7,16 +7,26 @@ import { GiPoisonBottle } from "react-icons/gi";
 import { GoReport } from "react-icons/go";
 import { IoMdWarning } from "react-icons/io";
 
-
 import Pagination from "../Common/Pagination";
-
 import ItemComponent from "./TableIconComponent";
+
 function TableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 25;
     const [totalPage, setTotalPage] = useState(1);
     const [dataInPage, setDataInPage] = useState([]);
+
+    const formatDateString = (dateString) => {
+        if (!dateString || dateString.length !== 6) {
+          return dateString;
+        }
+        const day = dateString.slice(0, 2);   
+        const month = dateString.slice(2, 4);  
+        const year = '20' + dateString.slice(4, 6); 
+      
+        return `${day}/${month}/${year}`;
+      };
 
     const constDataInPage = (iPage, iData) => {
         const indexOfLastItem = iPage * itemsPerPage;
@@ -31,9 +41,7 @@ function TableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
     }, [data]);
 
     useEffect(() => {
-        console.log('rending when change page')
-
-        // setTotalPage(Math.ceil(data.length / itemsPerPage));
+        console.log('rending when change page', currentPage)
         setDataInPage(constDataInPage(currentPage, data));
 
     }, [currentPage]);
@@ -72,7 +80,7 @@ function TableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
                             {data.length === 0 && <tr><td colSpan={15} className="text-center bg-gray-200 py-1">Không có kết quả</td></tr>}
 
                             {dataInPage.map((item, index) => (
-                                <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200 text-sm" >
+                                <tr key={item.stt} className="even:bg-gray-100 hover:bg-blue-200 text-sm" >
                                     <td>
                                         <div className="flex items-center gap-0.5 px-1 py-1">
                                             {item.dalieu === 1 && <FaBottleDroplet className="text-green-700" />}
@@ -110,26 +118,17 @@ function TableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
                                     <td className="text-left">{item.dvd}</td>
                                     <td>
                                         <div className="w-28 text-left truncate ...">
-                                            {item.duongdung}
+                                            {item.dd_count} - {item.duongdung}
                                         </div>
                                     </td>
-                                    <td className="text-center">
-                                        {item.maatc !== null && item.maatc !== undefined && item.maatc.trim() !== '' ?
-                                            <div className={`${item.maatc.trim() !== item.maatc ? 'text-red-500' : ''}`}>
-                                                {item.maatc}
-                                            </div>
-                                            : ''
-                                        }
-
-                                    </td>
+                                   
                                     <td>{item.bhyt}</td>
-                                    <td>{item.losx}</td>
+                                    <td className="text-right">{item.losx}</td>
+                                    <td className="text-center">{formatDateString(item.hsd)}</td>
                                     <td className="text-right px-1">{Number(item.tondau).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
                                     <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
-                                    <td className="text-right px-1">{Number(item.slyeucau).toLocaleString('en-US')}</td>
-                                    <td className="text-right px-1 pr-4">{Number(item.tonkhadung).toLocaleString('en-US')}</td>
 
                                 </tr>
                             ))}

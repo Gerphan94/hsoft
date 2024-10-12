@@ -17,6 +17,7 @@ CONN_INFO = {
 
 def conn_info(env):
     env = env.upper()
+    
     return CONN_INFO[env]
 
 def get_db_connection(site):

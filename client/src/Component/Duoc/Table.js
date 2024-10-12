@@ -13,7 +13,6 @@ import Pagination from "../Common/Pagination";
 import ItemComponent from "./TableIconComponent";
 function Table({ data, setIsShowModal, setSelectedPharmarId }) {
 
-
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(25);
     const [totalPage, setTotalPage] = useState(0);
@@ -95,7 +94,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                                 onClick={() => onClickPharmar(item.id)}
 
                                             > {item.tenbd}
-                                                {item.sluongdvbsd > 0 ? <span className="italic text-zinc-500"> ({item.sluongdvbsd} {item.dvd})</span> : ''}
+                                                {item.soluongdvsd > 0 ? <span className="italic text-zinc-500"> ({item.soluongdvsd} {item.dvd})</span> : ''}
                                             </div>
                                             {/* <span className="italic text-zinc-500">{item.tenhc}</span> */}
                                         </div>

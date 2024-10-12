@@ -6,15 +6,20 @@ import { PiFileSqlDuotone } from "react-icons/pi";
 import { IoFileTrayFullSharp, IoNewspaperOutline } from "react-icons/io5";
 import { FaBook, FaBed } from "react-icons/fa";
 import { MdAttachMoney, MdBackpack, MdLocalHospital } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAppContext } from "./Store/AppContext";
 import ChooseSiteModal from "./Site/ChooseSiteModal";
 import { SiSitepoint } from "react-icons/si";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
+import { useLocation } from 'react-router-dom';
 
 function SideBar() {
 
     const { site, setSite, selectedSideBar } = useAppContext();
+
+    const location = useLocation();
+    const pathName = location.pathname;
+    console.log('pathName', pathName)
 
     const Tooltip = ({ text, children, shortMenu }) => {
         const [showTooltip, setShowTooltip] = useState(false);
@@ -85,7 +90,7 @@ function SideBar() {
                         <Link
                             key={index}
                             to={`${func.path}`}
-                            className={`px-2 py-2 flex gap-3 text-white text-lg items-center hover:opacity-100  ${selectedSideBar === func.id ? 'opacity-100' : 'opacity-60'} `}
+                            className={`px-2 py-2 flex gap-3 text-white text-lg items-center hover:opacity-100  ${pathName === func.path ? 'opacity-100' : 'opacity-60'} `}
                         >
                             <func.icon className={`${shortMenu ? 'size-8' : 'size-5'} `} />
 
