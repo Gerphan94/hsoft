@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Dausinhton from "./Dausinhton";
 import moment from "moment";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 
 
 
@@ -12,6 +13,8 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
     const TITLE = title_ar[selectedCoupon.type - 1];
 
     const [detail, setDetail] = useState({});
+
+    const [showChandoan, setShowChandoan] = useState(false);
 
     useEffect(() => {
         const fetchURL = apiURL + "noitru/thuoc-dutrull-thongtin/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id + "/" + selectedCoupon.ngay;
@@ -40,33 +43,68 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
         <>
             <div>
                 <div className="flex items-center w-full bg-gray-100">
-                    <div className="font-bold px-2">{TITLE}</div>
+                    <div className="font-bold px-0.5">{TITLE}</div>
                     <div className="flex-1 text-left">{detail && detail.ten}</div>
-                    <input type="text" className="w-48 text-center border outline-none px-2 py-0.5" value={selectedCoupon.id} />
-                    <div>
-                        <Dausinhton />
-                    </div>
+                    <input type="text" className="w-48 text-center border outline-none px-0.5 py-0.5" value={selectedCoupon.id} />
+
                 </div>
+                <div className=" mt-2 border rounded-md text-sm">
+                    <div className="flex justify-between text-left bg-slate-300 px-2 py-1">
+                        <div className="w-full ">
+                            <label className="w-24 text-left inline-block">ICD:</label>
+                            <input type="text" className="w-1/3 border outline-none px-0.5 py-0.5" readOnly={true} value={detail && detail.maicd} />
+                        </div>
+                        <span className="flex items-center w-10">
+                            {showChandoan ?
+                                <FaAngleUp className="size-5" onClick={() => setShowChandoan(false)} />
+                                :
+                                <FaAngleDown className="size-5" onClick={() => setShowChandoan(true)} />}
 
-                <div className="flex gap-2 border rounded-md p-2 mt-4 bg-[#F7FBFF]">
-                    <div className="w-24 space-y-2">
-                        <label className="w-24 text-left inline-block">ICD:</label>
-                        <label className="w-24 text-left inline-block">Chẩn đoán:</label>
+                        </span>
                     </div>
-                    <div className="w-full text-left space-y-2">
-                        <input type="text" className="w-1/3 border outline-none px-2 py-0.5" readOnly={true} value={detail && detail.maicd} />
-                        <textarea
-                            type="text"
-                            className="w-full h-24 border outline-none px-2 py-0.5"
-                            readOnly={true}
 
-                            value={detail && mutileLineChandoan(detail.chandoan)}
-                        />
-                    </div>
+                    {showChandoan &&
+                        <div className={`w-full flex gap-2 border bg-[#F7FBFF] p-2 transform transition-all duration-300 ease-in-out 
+                            ${showChandoan ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+                            <label className="w-32 text-left inline-block select-none">Chẩn đoán:</label>
+                            <textarea
+                                type="text"
+                                className="w-full h-24 border outline-none p-1"
+                                readOnly={true}
+                                value={detail && mutileLineChandoan(detail.chandoan)}
+                            />
+                            <div className='w-[450px]  p-2 text-left border rounded-md '>
+                                <div className="table w-full">
+                                    <div className="table-row">
+                                        <div className="table-cell w-20">Mạch: </div>
+                                        <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.mach} />
+                                        <div className="table-cell w-20 pl-2">Nhịp thở: </div>
+                                        <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.nhiptho} />
+
+                                    </div>
+                                    <div className="table-row">
+                                        <div className="table-cell">Nhiệt độ: </div>
+                                        <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.nhietdo} />
+
+                                        <div className="table-cell pl-2">Cân nặng: </div>
+                                        <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.cannang} />
+
+                                    </div>
+                                    <div className="table-row">
+                                        <div className="table-cell">Huyết áp: </div>
+                                        <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.huyetap} />
+
+                                        <div className="table-cell pl-2">Chiều cao: </div>
+                                        <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.chieucao} />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
 
                 </div>
             </div>
-
             <div className="border rounded-md p-2 mt-4 bg-[#F7FBFF]">
                 {data.map((item) => (
                     // <div className="pt-2 text-sm border rounded-md p-2 mt-4">
@@ -74,7 +112,7 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                         <span className="absolute top-0 text-[10px] text-center right-0 w-10 rounded-md bg-slate-300">{item.stt_index}</span>
                         <div className="flex justify-between">
                             <div className="flex gap-2 items-center">
-                                <span className="size-6 rounded-full bg-[#379777] border text-center">
+                                <span className="size-6 rounded-full bg-[#379777] border text-sm flex items-center justify-center">
                                     {item.tt}
                                 </span>
                                 <div><strong>{item.mabd} | </strong></div>
@@ -84,7 +122,7 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                                 <div>{item.dang}</div>
                             </div>
                             <div className="flex gap-4 items-center">
-                                <div className="px-2 py-0.5 select-none font-medium italic">{item.duongdung}</div>
+                                <div className="px-0.5 py-0.5 select-none font-medium italic">{item.duongdung}</div>
 
                                 <div className="flex gap-1 items-center">
                                     <input
@@ -109,7 +147,7 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                                     <label htmlFor="isdvsd">isDVSD</label>
                                 </div>
                             </div>
-                            <div className={`text-sm rounded-xl px-2 py-0.5 text-white select-none ${item.doituong === 'BHYT' ? 'bg-[#4535C1]' : item.doituong === 'Thu phí' ? 'bg-[#E76F51]' : 'bg-[#379777]'} `}>
+                            <div className={`text-sm rounded-xl px-0.5 py-0.5 text-white select-none ${item.doituong === 'BHYT' ? 'bg-[#4535C1]' : item.doituong === 'Thu phí' ? 'bg-[#E76F51]' : 'bg-[#379777]'} `}>
                                 {item.doituong}
                             </div>
                         </div>
@@ -143,9 +181,6 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                             {item.l5 && <div><strong>L5:</strong> {moment.utc(item.l5).format('DD/MM/YYYY HH:mm:ss')}</div>}
                             {item.l6 && <div><strong>L6:</strong> {moment.utc(item.l6).format('DD/MM/YYYY HH:mm:ss')}</div>}
                         </div>
-
-
-
                     </div>
                     // </div>
                 ))}

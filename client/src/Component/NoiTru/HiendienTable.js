@@ -7,7 +7,7 @@ import { TbSortAZ } from "react-icons/tb";
 
 
 function Hiendien({ data, selected, setSelected }) {
-    
+
     console.log('rending hiendien table -------------------------------------')
     console.log('data', data)
     const [currentPage, setCurrentPage] = useState(1);
@@ -59,16 +59,19 @@ function Hiendien({ data, selected, setSelected }) {
                             {dataInPage.map((ele, index) => (
                                 <tr
                                     key={ele.id}
-                                    className={`${selected.pid === ele.mabn ? '!bg-[#96C9F4]' : ''}`}
+                                    className={`${selected.pid === ele.mabn ? '!bg-[#96C9F4] font-medium' : ''}`}
                                     onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString(), ele.maql.toString())}
                                     data-idkhoa={ele.id}
                                     data-maql={ele.maql}
                                 >
                                     <td className="text-center"><div className=" py-1 text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</div></td>
                                     <td><div className="text-right pr-2 hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn}</div></td>
-                                    <td><div className="flex gap-2 items-center">
-                                        {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}
-                                        {ele.hoten}</div></td>
+                                    <td>
+                                        <div className="flex gap-2 items-center">
+                                            {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}
+                                            {ele.hoten}
+                                        </div>
+                                    </td>
                                     <td><div className="text-center">{ele.namsinh}</div></td>
                                     <td><div className="text-right">{ele.ngayvv}</div></td>
                                     <td><div className="text-right">{ele.ngayvk}</div></td>

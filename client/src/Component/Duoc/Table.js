@@ -11,7 +11,7 @@ import { IoMdWarning } from "react-icons/io";
 import Pagination from "../Common/Pagination";
 
 import ItemComponent from "./TableIconComponent";
-function Table({ data, setIsShowModal, setSelectedPharmarId }) {
+function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(25);
@@ -58,10 +58,12 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                 <th><div className="text-right w-20">Nhập</div></th>
                                 <th><div className="text-right w-20">Xuất</div></th>
                                 <th><div className="text-right w-20">Tồn cuối</div></th>
-                                <th><div className="text-right w-20">SLYC</div></th>
-                                <th><div className="text-right w-20 pr-4">SLKD</div></th>
-
-                                {/* <th><div className="text-center w-20">TồnBH</div></th> */}
+                                {isTonAo &&
+                                    <>
+                                        <th><div className="text-right w-20">SLYC</div></th>
+                                        <th><div className="text-right w-20 pr-4">SLKD</div></th>
+                                    </>
+                                }
                             </tr>
                         </thead>
 
@@ -117,16 +119,18 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                             </div>
                                             : ''
                                         }
-
                                     </td>
                                     <td>{item.bhyt}</td>
                                     <td className="text-right px-1">{Number(item.tondau).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
                                     <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
-                                    <td className="text-right px-1">{Number(item.slyeucau).toLocaleString('en-US')}</td>
-                                    <td className="text-right px-1 pr-4">{Number(item.tonkhadung).toLocaleString('en-US')}</td>
-
+                                    {isTonAo &&
+                                        <>
+                                            <td className="text-right px-1">{Number(item.slyeucau).toLocaleString('en-US')}</td>
+                                            <td className="text-right px-1 pr-4">{Number(item.tonkhadung).toLocaleString('en-US')}</td>
+                                        </>
+                                    }
                                 </tr>
                             ))}
                         </tbody>

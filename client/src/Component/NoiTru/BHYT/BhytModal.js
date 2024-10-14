@@ -189,11 +189,7 @@ function BHYTModal({ site, setModalShow, selected }) {
                                     className="border w-full px-2 py-1 outline-none"
                                     value={formData.sothe}
                                 />
-                                <input
-                                    className="border w-full px-2 py-1 outline-none"
-                                    name='sothe-l'
-                                    type="text"
-                                />
+                                
                             </div>
                             <div className="flex gap-2">
                                 <div className="text-left p-2">
