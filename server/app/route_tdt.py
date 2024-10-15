@@ -26,5 +26,10 @@ def get_tdt(site, pid, idkhoa):
                   type: string
                   example: ok
     """
-   print("Call API tdt")
+   cursor = get_cursor(site)
+   query = f'''
+      
+   '''
+    
+   
    return jsonify({"message": "ok"}), 200

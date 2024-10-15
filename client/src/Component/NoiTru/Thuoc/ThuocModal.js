@@ -95,7 +95,6 @@ function ThuocModal({ site, selected, setModalShow }) {
                                         data={medicineDetail}
                                         couponId={selectedCoupon.id}
                                         selectedCoupon={selectedCoupon}
-                                        
                                         />
                                     }
                                 </div>
@@ -119,9 +118,6 @@ function ThuocModal({ site, selected, setModalShow }) {
                             </button>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
             <div className="opacity-75 fixed inset-0 z-40 bg-black"></div>

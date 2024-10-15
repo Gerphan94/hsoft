@@ -67,12 +67,12 @@ function SideBar() {
         <>
             {site &&
                 <div className={`relative ${shortMenu ? 'w-18' : 'w-56'} border-r-2 bg-[#031C30]`}>
-                    <div
+                    <span
                         className="absolute flex items-center justify-center bg-[#031C30] rounded-full text-white size-6 right-0 top-6 transform -translate-y-1/2 translate-x-1/2 cursor-pointer"
                         onClick={() => setShortMenu(!shortMenu)}
                     >
                         {shortMenu ? <FaAngleRight /> : <FaAngleLeft />}
-                    </div>
+                    </span>
                     <div className="w-full text-left p-2">
                         {shortMenu ?
                             <button className="text-white text-left font-bold text-2xl px-2 py-1 w-full  rounded-lg opacity-70 hover:opacity-100"><SiSitepoint /></button> :
