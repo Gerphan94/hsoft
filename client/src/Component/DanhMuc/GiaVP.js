@@ -25,7 +25,7 @@ function GiaVP({ site }) {
     const [disabledLoaiVP, setDisabledLoaiVP] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(20);
+    const itemsPerPage = 25;
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
 
@@ -182,14 +182,10 @@ function GiaVP({ site }) {
         setViewDatas(filterData);
     };
 
-
     // END FILTER ############################################################
-
-
-
     return (
         <>
-            <div className="flex flex-col">
+            <div className="flex flex-col text-sm">
                 <div className="flex gap-2 px-4 py-2">
                     <div className="w-40">
                         <Dropdown
@@ -213,8 +209,6 @@ function GiaVP({ site }) {
                             spellCheck="false"
                             onChange={handleSearch}
                         />
-
-
                     </div>
                 </div>
                 <div className="flex gap-4 px-4 py-2">
@@ -253,7 +247,7 @@ function GiaVP({ site }) {
                 </div>
 
                 <div className="px-4 w-full h-[750px] overflow-y-auto flex flex-col justify-between">
-                    <table className=" w-full">
+                    <table className=" w-full text-sm">
                         <thead className="sticky top-0 z-80">
                             <tr>
                                 <th className="text-center py-1">STT</th>
@@ -264,13 +258,10 @@ function GiaVP({ site }) {
                                 <th className="text-right w-24 px-2">BHYT</th>
                                 <th className="text-right w-24 px-2">Dịch vụ</th>
                             </tr>
-
                         </thead>
-
                         <tbody>
                             {dataInPage.map((giavp, index) => (
                                 <tr key={index} className="even:bg-gray-200">
-
                                     <td className="text-center  py-1">{index + 1}</td>
                                     <td className="text-left px-2 w-full max-w-xs truncate">{giavp.ten} </td>
                                     <td className="text-center">{giavp.dvt}</td>

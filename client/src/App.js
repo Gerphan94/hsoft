@@ -8,19 +8,15 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // import Navbar from './Component/navBar';
 
 import DashBoard from './Component/DashBoard';
-import MainPage from './Component/MainPage';
 import NotFound from './Page/404';
 import KhamBenh from './Component/KhamBenh/KhamBenh';
 import DanhMuc from './Component/DanhMuc/DanhMuc';
 import Duoc from './Component/Duoc/Duoc';
 import SQLColection from './Component/SQL/SQLCollection';
-import ChooseSite from './Component/Site/ChooseSite';
 import { useAppContext } from './Component/Store/AppContext';
 import VienPhi from './Component/VienPhi/VienPhi';
 import NoiTru from './Component/NoiTru/NoiTru';
 import ToDieuTri from './Component/ToDieuTri/ToDieuTri';
-import ChooseSiteModal from './Component/Site/ChooseSite';
-import { useEffect } from 'react';
 import SideBar from './Component/SideBar';
 
 function App() {
@@ -49,24 +45,27 @@ function App() {
   return (
     <div className="App">
       <HelmetProvider>
-        <div className='flex min-h-screen'>
+        <div className='flex h-screen overflow-y-hidden'>
           <SideBar />
-          <Routes >
-            {Pages.map((page) => (
-              <Route key={page.id} path={page.path}
-                element={
-                  <>
-                    <Helmet>
-                      <title>{page.title}</title>
-                    </Helmet>
-                    {page.component}
-                  </>
-                } />
-            ))}
-          </Routes>
+          <div className='overflow-y-auto w-full z-40'>
+            <Routes >
+              {Pages.map((page) => (
+                <Route key={page.id} path={page.path}
+                  element={
+                    <>
+                      <Helmet>
+                        <title>{page.title}</title>
+                      </Helmet>
+                      {page.component}
+                    </>
+                  } />
+              ))}
+            </Routes>
           </div>
+
+        </div>
       </HelmetProvider>
-    
+
 
 
     </div >

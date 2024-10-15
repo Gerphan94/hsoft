@@ -3,14 +3,11 @@ import styles from "../../styles.module.css"
 
 import moment from "moment";
 
+function TreatmentSheetModal({ site, selected, setModalShow }) {
 
-function ToDieuTriModal({ site, selected, setModalShow }) {
-
-    const title = 'DANH SÁCH DIỄN BIẾN EMPTY' + selected.idkhoa;
+    const title = 'DIỄN BIẾN';
 
     const apiURL = process.env.REACT_APP_API_URL
-
-    
 
     return (
         <>
@@ -19,10 +16,16 @@ function ToDieuTriModal({ site, selected, setModalShow }) {
                     <div className="h-full flex flex-col justify-between">
                         {/* HEADER */}
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
-                            {title}
+                            {title} | {selected.pid} | {selected.pname}
                         </div>
                         {/* BODY */}
-                        <div className="flex h-full p-4 overflow-hidden ">
+                        <div className="table h-full p-4">
+                            
+
+                           
+
+
+
                             
                             
                         </div>
@@ -54,5 +57,5 @@ function ToDieuTriModal({ site, selected, setModalShow }) {
     )
 }
 
-export default ToDieuTriModal;
+export default TreatmentSheetModal;
 

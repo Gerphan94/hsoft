@@ -28,13 +28,11 @@ function TuTrucTable({ data }) {
     return (
         <>
 
-            <div className="w-full h-full flex flex-col justify-between space-y-2 py-2" >
+            <div className="w-full h-full flex flex-col space-y-2 overflow-y-auto text-md" >
                 <table className="w-full">
                     <thead className="sticky top-0 z-100">
                         <tr>
-
                             <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
-
                             <th className="w-24"><div className="">Mã BD</div></th>
                             <th className="w-[400px] text-left px-2"><div>Tên BD</div></th>
                             <th><div className="w-36">Hoạt chất</div></th>
@@ -51,7 +49,7 @@ function TuTrucTable({ data }) {
                     </thead>
                     <tbody>
                         {dataInPage.map((item, index) => (
-                            <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200 text-md" >
+                            <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200" >
                                 <td className="text-center">{(currentPage - 1) * 20 + (index + 1)}</td>
                                 <td className="text-left">{item.mabd}</td>
                                 <td className="text-left hover:underline hover:text-blue-600">
@@ -62,7 +60,7 @@ function TuTrucTable({ data }) {
                                         <div className="w-full truncate ..."> {item.tenbd}
                                             {item.sluongdvbsd > 0 ? <span className="italic text-zinc-500"> ({item.sluongdvbsd} {item.dvd})</span> : ''}
                                         </div>
-                                        <span className="italic text-zinc-500">{item.tenhc}</span>
+                                        {/* <span className="italic text-zinc-500">{item.tenhc}</span> */}
                                     </div>
                                 </td>
                                 <td>

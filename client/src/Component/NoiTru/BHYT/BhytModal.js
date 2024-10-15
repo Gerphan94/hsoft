@@ -225,17 +225,13 @@ function BHYTModal({ site, setModalShow, selected }) {
                         </div>
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
-                            {selectedDT.id === 2 &&
-
                                 <button
                                     className={`${styles.btn} ${styles.btnOk}`}
                                     type="submit"
+                                    disabled={selectedDT === 2 ? true : false}
                                 >
-
                                     Cấp BHYT
                                 </button>
-                            }
-
                             <button
                                 className={`${styles.btn} ${styles.btnClose}`}
                                 type="button"

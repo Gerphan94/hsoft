@@ -14,7 +14,6 @@ import { GoReport } from "react-icons/go";
 
 import TuTrucTable from "./TuTrucTable";
 
-
 function TuTrucModal({ site, setShowModal, khoa }) {
 
     const apiURL = process.env.REACT_APP_API_URL
@@ -55,13 +54,13 @@ function TuTrucModal({ site, setShowModal, khoa }) {
 
     return (
         <>
-            <div className=" fixed inset-0 z-50 outline-none focus:outline-none p-10 w-screen h-screen ">
-                <div className="relative w-full h-[90%] mx-auto bg-white">
-                    <div className="size-full flex flex-col justify-between">
+            <div className=" fixed inset-0 z-50 outline-none focus:outline-none p-10 pb-20 w-screen h-screen">
+                <div className="relative w-full h-full mx-auto bg-white">
+                    <div className="h-full flex flex-col justify-between">
                         <div className="w-full text-left text-lg font-bold border-b-black px-4 py-1 bg-[#9BB0C1]">
                             Tồn tủ trực | {khoa && khoa.name}
                         </div>
-                        <div className="size-full p-4 flex flex-col justify-between flex-grow">
+                        <div className="h-full flex flex-col justify-between p-4">
                             <div className="w-[500px] text-left flex gap-2 items-center">
                                 <label className="w-20">Tủ trực</label>
 
@@ -79,7 +78,7 @@ function TuTrucModal({ site, setShowModal, khoa }) {
                                     onClick={handleView}
                                 >Xem</button>
                             </div>
-                            <div className="h-full">
+                            <div className="h-full overflow-auto">
                                 <TuTrucTable data={tonkho} />
                             </div>
 

@@ -4,7 +4,14 @@ import { FaAngleDown } from "react-icons/fa6";
 import { GiTestTubes, GiMedicines } from "react-icons/gi";
 import { BiSolidShieldPlus } from "react-icons/bi";
 
-const ButtonChucNang = ({selectedPatient, setShowHealthInsurance, setShowServiceModal, setShowBloodModal, setShowMedicineModal }) => {
+const ButtonChucNang = ({
+    selectedPatient, 
+    setShowHealthInsurance, 
+    setShowServiceModal, 
+    setShowBloodModal, 
+    setShowMedicineModal,
+    setShowTreatmentSheet
+}) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -77,6 +84,16 @@ const ButtonChucNang = ({selectedPatient, setShowHealthInsurance, setShowService
                                 >
                                     <GiMedicines className='text-red-500' />
                                     Thuốc
+                                </button>
+                                <button
+                                    className="w-full text-left flex gap-1 items-center px-4 py-2  hover:bg-gray-300 select-none"
+                                    onClick={() => {
+                                        setShowTreatmentSheet(true);
+                                        setIsDropdownOpen(!isDropdownOpen);
+                                    }}
+                                >
+                                    <GiMedicines className='text-red-500' />
+                                    Tờ điều trị
                                 </button>
                             </li>
 

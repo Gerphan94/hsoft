@@ -7,8 +7,8 @@ import DichVuModal from "./DichVu/DichVuModal";
 import MauModal from "./Mau/MauModal";
 import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
+import TreatmentSheetModal from "./ToDieuTri/ToDieuTrIModal";
 
-import ToDieuTriModal from "./ToDieuTri/ToDieuTrIModal";
 import { useAppContext } from "../Store/AppContext";
 import TuTrucModal from "./TuTruc/TuTrucModal";
 import SearchBar from "../Common/SearchBar";
@@ -47,6 +47,7 @@ function NoiTru() {
     const [showServiceModal, setShowServiceModal] = useState(false);
     const [showBloodModal, setShowBloodModal] = useState(false);
     const [showHealthInsurance, setShowHealthInsurance] = useState(false);
+    const [showTreatmentSheet, setShowTreatmentSheet] = useState(false);
 
     const [showCabinetModal, setShowCabinetModal] = useState(false);
 
@@ -70,6 +71,8 @@ function NoiTru() {
         setSelectedSideBar('noitru');
         if (site) {
             fetchDanhsachKhoa();
+            setSelectedKhoa({ id: null, name: '' });
+            
         }
     }, [site]);
 
@@ -183,6 +186,7 @@ function NoiTru() {
                             setShowServiceModal={setShowServiceModal}
                             setShowBloodModal={setShowBloodModal}
                             setShowMedicineModal={setShowMedicineModal}
+                            setShowTreatmentSheet={setShowTreatmentSheet}
                         />
                         <ButtonTienIch
                             setShowCabinetModal={setShowCabinetModal}
@@ -229,6 +233,13 @@ function NoiTru() {
                     site={site}
                     selected={selected}
                     setModalShow={setShowHealthInsurance}
+                />}
+
+            {showTreatmentSheet &&
+                <TreatmentSheetModal
+                    site={site}
+                    selected={selected}
+                    setModalShow={setShowTreatmentSheet}
                 />}
 
 

@@ -14,7 +14,6 @@ import PhongLuu from "./NoiTru/PhongLuu";
 import MainPageHeader from "./MainPageHeader";
 
 import SideMenu from "./SideMenu";
-import ChooseSite from "./Site/ChooseSite";
 
 import { GiHospitalCross } from "react-icons/gi";
 
@@ -90,15 +89,7 @@ function MainPage() {
                 </div>
                 
             </div>
-            {isChooseSite &&
-                <ChooseSite
-                    sites={sites}
-                    setSite={setSite}
-                    setModalShow={setIsChooseSite}
-                    setSelectedFunc={setSelectedFunc}
-                    setPageTitle={setPageTitle}
-
-                />}
+           
         </>
 
     )

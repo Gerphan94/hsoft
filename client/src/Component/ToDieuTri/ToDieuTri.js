@@ -33,7 +33,8 @@ function ToDieuTri({ site }) {
 
     return (
         <>
-            <div className="flex items-center">
+        <div className="w-full">
+        <div className="flex items-center">
                 {/* <div className="w-8">
                     <ButtonMenu data={menuData} setSelectedOption={setSelectedOption} />
 
@@ -44,6 +45,8 @@ function ToDieuTri({ site }) {
                 {selectedOption.id === 'toamau' && <ToaMau site={site} />}
 
             </div>
+        </div>
+           
         </>
     )
 }

@@ -7,7 +7,24 @@ from .db import get_cursor
 
 tdt = Blueprint('tdt', __name__)
 
-@tdt.route('/tdt', methods=['GET'])
-def get_tdt():
+@tdt.route('/tdt/dien-bien/<site>/<pid>/<idkhoa>', methods=['GET'])
+def get_tdt(site, pid, idkhoa):
+   """
+   Diễn biến bệnh
+   ---
+   tags:
+      - Tờ điều trị
+   responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+               type: object
+               properties:
+                  message:
+                  type: string
+                  example: ok
+    """
    print("Call API tdt")
    return jsonify({"message": "ok"}), 200

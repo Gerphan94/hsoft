@@ -1,10 +1,5 @@
-import getpass
-import oracledb
 from flask import Flask, jsonify, request, Blueprint
-from flask_cors import CORS
-from datetime import datetime, timedelta
 from .db import get_cursor
-
 dm = Blueprint('dm', __name__)
 
 @dm.route('/danhmuc', methods=['GET'])
@@ -184,6 +179,31 @@ def vienphi_dmloaivp(site, idnhom):
 
 @dm.route('/danhmuc-vienphi/gia-vp/<site>', methods=['GET'])
 def vienphi_giavp(site):
+    """
+    Danh mục Giá viện phí
+    ---
+    tags:
+      - Danh mục - viện phí
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: Site (HCM_DEV, HN_DEV,...)
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  
     cursor = get_cursor(site)
     result = []
     col_name = ['id', 'idloai', 'idnhom', 'idnhombhyt', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi', 'benhphamrangbuoc']
