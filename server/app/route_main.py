@@ -551,46 +551,7 @@ def noitru_updatedoituong(site):
         print(e)
         return jsonify({'message': str(e)}), 500
 
-@app.route('/noi-tru/insert-bhyt/<site>', methods=['POST'])
-def noitru_insertbhyt(site):
-    cn = conn_info(site)
-    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
-    connection.autocommit = True
-    cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
-    
-    if site != 'HCM_UAT' and site != 'HCM_DEV':
-        return jsonify({'error':'Site không có quyền'}), 500
-    data = request.get_json()
-    mabn = data['pid']
-    maql = data['maql']
-    sothe = data['sothe']
-    fromDate = datetime.strptime(data['fromDate'], '%d/%m/%Y')
-    toDate = datetime.strptime(data['toDate'], '%d/%m/%Y')
-    ngayud = datetime.now()
-    mabv = data['mabv']
-    madoituong = 1
-    
-    stm_check = f"SELECT COUNT(*) FROM BHYT WHERE MABN = '{mabn}' AND MAQL = '{maql}' AND SUDUNG = 1"
-    count = cursor.execute(stm_check).fetchone()[0]
-    if (count == 0):
-        stm = f'''
-            INSERT INTO BHYT
-            (MABN, MAQL, SOTHE, DENNGAY, MABV, MAPHU, TUNGAY, SUDUNG, TRAITUYEN, NGAYUD, KIEMTRA, MUCLUONG, CANBO, LOAIDT, MIENCHITRA, LOAIKV )
-            VALUES ('{mabn}','{maql}','{sothe}',TO_DATE('{toDate}', 'YYYY-MM-DD HH24:MI:SS') , {mabv}, 0, TO_DATE('{fromDate}', 'YYYY-MM-DD HH24:MI:SS'), 1, 0, TO_TIMESTAMP('{ngayud}', 'YYYY-MM-DD HH24:MI:SS.FF'), 1, 0, 0, 0, 0, 0)
-        '''
-        stm_update = f"UPDATE BENHANDT SET MADOITUONG = {madoituong} WHERE MABN = '{mabn}' AND MAQL = '{maql}'"
-     
-        try:
-            cursor.execute(stm)
-            cursor.execute(stm_update)
-            cursor.connection.commit()
-            return jsonify({'message': 'Thêm BHYT thành công'}), 200
-        except Exception as e:
-            
-            print(str(e))
-            return jsonify({'error':'Không thêm được BHYT'}), 500
-    else:
-        return jsonify({'error':'Bệnh nhân đã có thẻ'}), 500
+
             
         
 @app.route('/noi-tru/get-nhap-khoa-of-bn/<site>/<string:maql>', methods=['GET'])

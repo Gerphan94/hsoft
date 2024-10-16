@@ -10,7 +10,8 @@ const ButtonChucNang = ({
     setShowServiceModal, 
     setShowBloodModal, 
     setShowMedicineModal,
-    setShowTreatmentSheet
+    setShowTreatmentSheet,
+    setShowPublicNote
 }) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -94,6 +95,17 @@ const ButtonChucNang = ({
                                 >
                                     <GiMedicines className='text-red-500' />
                                     Tờ điều trị
+                                </button>
+
+                                <button
+                                    className="w-full text-left flex gap-1 items-center px-4 py-2  hover:bg-gray-300 select-none"
+                                    onClick={() => {
+                                        setShowPublicNote(true);
+                                        setIsDropdownOpen(!isDropdownOpen);
+                                    }}
+                                >
+                                    <GiMedicines className='text-red-500' />
+                                    PCK
                                 </button>
                             </li>
 

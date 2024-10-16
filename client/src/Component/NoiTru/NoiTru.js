@@ -8,6 +8,7 @@ import MauModal from "./Mau/MauModal";
 import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
 import TreatmentSheetModal from "./ToDieuTri/ToDieuTrIModal";
+import PublicNoteModal from "./Emr/PublicNoteModal";
 
 import { useAppContext } from "../Store/AppContext";
 import TuTrucModal from "./TuTruc/TuTrucModal";
@@ -49,6 +50,8 @@ function NoiTru() {
     const [showHealthInsurance, setShowHealthInsurance] = useState(false);
     const [showTreatmentSheet, setShowTreatmentSheet] = useState(false);
 
+    const [showPublicNote, setShowPublicNote] = useState(false);
+
     const [showCabinetModal, setShowCabinetModal] = useState(false);
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -72,7 +75,7 @@ function NoiTru() {
         if (site) {
             fetchDanhsachKhoa();
             setSelectedKhoa({ id: null, name: '' });
-            
+
         }
     }, [site]);
 
@@ -169,7 +172,7 @@ function NoiTru() {
 
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div className="px-4 py-1 flex flex-row justify-between">
@@ -187,6 +190,7 @@ function NoiTru() {
                             setShowBloodModal={setShowBloodModal}
                             setShowMedicineModal={setShowMedicineModal}
                             setShowTreatmentSheet={setShowTreatmentSheet}
+                            setShowPublicNote={setShowPublicNote}
                         />
                         <ButtonTienIch
                             setShowCabinetModal={setShowCabinetModal}
@@ -240,6 +244,13 @@ function NoiTru() {
                     site={site}
                     selected={selected}
                     setModalShow={setShowTreatmentSheet}
+                />}
+
+            {showPublicNote &&
+                <PublicNoteModal
+                    site={site}
+                    selected={selected}
+                    setModalShow={setShowPublicNote}
                 />}
 
 
