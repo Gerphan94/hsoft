@@ -280,3 +280,73 @@ def duoc_tontutruc_chitiet(site, idtutruc):
             obj[col] = data[idx]
         result.append(obj)
     return jsonify(result), 200
+
+
+# DƯỢC BỆNH NHÂN
+
+@duoc.route('/duoc/get-thucxuat-benhnhan-by-id/<site>/<id>', methods=['GET'])
+def noitru_get_thucxuat_by_id(site, id):
+    """
+    Get Thực xuất by ID
+    ---
+    tags:
+      - Dược
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+      - name: id
+        in: path
+        type: string
+        required: true
+        description: id
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    cursor = get_cursor(site)
+    result = []
+    col_names = ['ten_hamluong', 'madoituong', 'doituong', 'soluong', 'giaban1', 'iddienbien', 'sttt', 'losx', 'handung', 'giaban2', 'makho', 'tenkho']
+    stm = f'''
+        SELECT
+            B.TEN || ' ' || B.HAMLUONG AS TENHAMLUONG,
+            A.MADOITUONG,
+            E.DOITUONG,
+            A.SOLUONG,
+            A.GIABAN AS GIABAN1,
+            A.IDDIENBIEN,
+            A.STTT,
+            C.LOSX,
+            C.HANDUNG,
+            C.GIABAN AS GIABAN2,
+            A.MAKHO,
+            D.TEN AS TENKHO
+        FROM
+            HSOFTTAMANH1024.D_THUCXUAT A
+        INNER JOIN D_DMBD B ON
+            A.MABD = B.ID
+        LEFT JOIN HSOFTTAMANH1024.D_THEODOI C ON
+            A.STTT = C.ID
+        INNER JOIN D_DMKHO D ON A.MAKHO = D.ID
+        INNER JOIN D_DOITUONG E ON A.MADOITUONG = E.MADOITUONG 
+        WHERE
+            A.ID = :id
+    '''
+    thucxuats = cursor.execute(stm, {'id': id}).fetchall()
+    for thucxuat in thucxuats:
+        result.append(dict(zip(col_names, thucxuat)))
+    return jsonify(result), 200
+    
+    
+
+    

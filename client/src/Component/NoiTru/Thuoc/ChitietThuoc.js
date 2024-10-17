@@ -5,36 +5,9 @@ import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 
 
 
-function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
-
-    const apiURL = process.env.REACT_APP_API_URL;
-
-    const title_ar = ['DỰ TRÙ THƯỜNG QUY', 'XUẤT TỦ TRỰC', 'TOA THUỐC RA VIỆN']
-    const TITLE = title_ar[selectedCoupon.type - 1];
-
-    const [detail, setDetail] = useState({});
+function ChitietThuoc({ detail, data, couponType }) {
 
     const [showChandoan, setShowChandoan] = useState(false);
-    const [tabNumber, setTabNumber] = useState(1);
-
-
-    useEffect(() => {
-        const fetchChitietPhieu = async () => {
-            
-        }
-        const fetchURL = apiURL + "noitru/thuoc-dutrull-thongtin/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id + "/" + selectedCoupon.ngay;
-        const fetchDetail = async () => {
-            try {
-                const response = await fetch(fetchURL);
-                const data = await response.json();
-                setDetail(data);
-            }
-            catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-        fetchDetail();
-    }, [couponId, couponType, site, apiURL]);
 
     const mutileLineChandoan = (cd) => {
         if (!cd) {
@@ -47,26 +20,7 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
     return (
         <>
             <div>
-                <div className="flex items-center w-full bg-gray-100">
-                    <div className="flex border bg-white h-full">
-                        <button 
-                        className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 1 ? 'bg-blue-500 text-white' : ''}`}
-                        onClick={() => setTabNumber(1)}
-                        >Chi tiết</button>
-                        <button 
-                        className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 2 ? 'bg-blue-500 text-white' : ''}`}
-                        onClick={() => setTabNumber(2)}
-                        >Thông tin xuất</button>
-                    </div>
-                    <div className="flex px-2">
-                        <div className="font-bold px-0.5">{TITLE}</div>
-                        <div className="flex-1 text-left">{detail && detail.ten}</div>
-                    </div>
-                    <input type="text" className="w-48 text-center border outline-none px-0.5 py-0.5" value={selectedCoupon.id} />
-                </div>
-
-
-                <div className=" mt-2 border rounded-md text-sm">
+                <div className=" mt-2 border rounded-md text-sm ">
                     <div className="flex justify-between text-left bg-slate-300 px-2 py-1">
                         <div className="w-full ">
                             <label className="w-24 text-left inline-block">ICD:</label>
@@ -125,8 +79,10 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
             </div>
             <div className="border rounded-md p-2 mt-4 bg-[#F7FBFF]">
                 {data.map((item) => (
-                    // <div className="pt-2 text-sm border rounded-md p-2 mt-4">
-                    <div className="relative border-b rounded-md p-3 mb-3 text-left">
+                    <div
+                        key={item.stt_index}
+                        className="relative border-b rounded-md p-3 mb-3 text-left"
+                    >
                         <span className="absolute top-0 text-[10px] text-center right-0 w-10 rounded-md bg-slate-300">{item.stt_index}</span>
                         <div className="flex justify-between">
                             <div className="flex gap-2 items-center">
@@ -200,11 +156,10 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                             {item.l6 && <div><strong>L6:</strong> {moment.utc(item.l6).format('DD/MM/YYYY HH:mm:ss')}</div>}
                         </div>
                     </div>
-                    // </div>
                 ))}
             </div>
 
-            {/* PHA TIÊM */}
+         
 
 
 
@@ -212,4 +167,4 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
     )
 }
 
-export default ThuocDetail;
+export default ChitietThuoc;

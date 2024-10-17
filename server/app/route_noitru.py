@@ -212,4 +212,3 @@ def noitru_dutru_ct(site,type, id):
     for dutru in dutruct:
         result.append(dict(zip(col_names, dutru)))
     return jsonify(result), 200
-    

@@ -54,7 +54,7 @@ function CouponComponent({ item, selectedCoupon, setMedicineDetail, setSelectedC
     }
     return (
         <>
-            <div className="py-4">
+            <div key={item.id} className="py-4">
                 <div
                     className={`relative border rounded-md p-2 hover:bg-[#EEEDEB] cursor-pointer ${item.id === selectedCoupon.id ? color.border : ''} ${item.id === selectedCoupon.id ? 'bg-[#EEEDEB]' : ''}`}
                     onClick={() => onClick(item.id, item.loaiphieu, item.tenphieu, item.ngaytao)}

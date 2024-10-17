@@ -136,14 +136,14 @@ function BHYTModal({ site, setModalShow, selected }) {
         } catch (error) {
             console.error('Error:', error.message);
         }
-
     }
-
     return (
         <>
             <div className=" fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
                 <div className="relative w-1/4 h-2/3  mx-auto bg-white">
                     <form
+                        name='bhyt-form'
+                        id='bhyt-form'
                         className="w-full h-full flex flex-col justify-between"
                         onSubmit={(e) => onSubmit(e)}
                         spellCheck="false"

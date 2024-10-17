@@ -17,7 +17,8 @@ import { useAppContext } from './Component/Store/AppContext';
 import VienPhi from './Component/VienPhi/VienPhi';
 import NoiTru from './Component/NoiTru/NoiTru';
 import ToDieuTri from './Component/ToDieuTri/ToDieuTri';
-import SideBar from './Component/SideBar';
+// import SideBar from './Component/SideBar';
+import SideBar from './Component/SideBar/SideBar';
 
 function App() {
 

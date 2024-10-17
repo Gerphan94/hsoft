@@ -37,3 +37,34 @@ def create_app():
     app.register_blueprint(emr)
 
     return app
+
+
+
+"""
+    Get Danh mục Khoa Phòng
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+      - name: khoaphong_string
+        in: path
+        type: string
+        required: true
+        description: The Khoa Phong string
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
