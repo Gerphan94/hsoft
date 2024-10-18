@@ -264,14 +264,36 @@ def get_tutruc_tonkho(site, idtutruc):
 def duoc_tontutruc_chitiet(site, idtutruc):
     cursor =get_cursor(site)
     result = []
-    cols = ['mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'handung', 'losx', 'nhombo', 'dalieu']
+    cols = ['mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 
+            'handung', 'losx', 'nhombo', 'dalieu']
     stm = f'''
-        SELECT A.MABD , B.TEN || ' ' || B.HAMLUONG AS TEN_HAMLUONG , B.DANG, B.DONVIDUNG, B.DUONGDUNG , B.BHYT,  A.TONDAU , A.SLNHAP , A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,  D.HANDUNG , D.LOSX, B.NHOMBO, C.DALIEU 
-        FROM {schema_now()}.D_TUTRUCCT A
-        INNER JOIN D_DMBD B ON A.MABD = B.ID
-        INNER JOIN D_DMBD_ATC C ON B.ID = C.ID
-        LEFT JOIN {schema_now()}.D_THEODOI D ON A.STT = D.ID
-        WHERE A.MAKP = {idtutruc}
+        SELECT
+            A.MABD ,
+            B.TEN || ' ' || B.HAMLUONG AS TEN_HAMLUONG ,
+            B.TENHC,
+            B.DANG,
+            B.DONVIDUNG,
+            B.DUONGDUNG ,
+            B.BHYT,
+            A.TONDAU ,
+            A.SLNHAP ,
+            A.SLXUAT,
+            (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,
+            D.HANDUNG,
+            D.LOSX,
+            B.NHOMBO,
+            C.DALIEU
+        FROM
+            {schema_now() }.D_TUTRUCCT A
+        INNER JOIN D_DMBD B ON
+            A.MABD = B.ID
+        INNER JOIN D_DMBD_ATC C ON
+            B.ID = C.ID
+        LEFT JOIN {schema_now() }.D_THEODOI D ON
+            A.STT = D.ID
+        WHERE
+            A.MAKP = {idtutruc}
+        ORDER BY B.TEN ASC
     '''
     datas = cursor.execute(stm).fetchall()
     for data in datas:
@@ -316,7 +338,8 @@ def noitru_get_thucxuat_by_id(site, id):
     """
     cursor = get_cursor(site)
     result = []
-    col_names = ['ten_hamluong', 'madoituong', 'doituong', 'soluong', 'giaban1', 'iddienbien', 'sttt', 'losx', 'handung', 'giaban2', 'makho', 'tenkho']
+    col_names = ['ten_hamluong', 'madoituong', 'doituong', 'soluong', 'giaban1', 'iddienbien', 'sttt', 'losx', 
+                 'handung', 'giaban2', 'makho', 'tenkho']
     stm = f'''
         SELECT
             B.TEN || ' ' || B.HAMLUONG AS TENHAMLUONG,

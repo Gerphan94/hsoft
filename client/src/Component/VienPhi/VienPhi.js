@@ -1,8 +1,15 @@
 import React from "react";
+import PageHeader from "../PageHeader";
 
 function VienPhi() {
     return (
-        <div className="text-center w-full text-3xl">Viện phí</div>
+        <>
+
+            <PageHeader title="Viện phí" >
+                <button>111</button>
+            </PageHeader>
+
+        </>
     )
 
 }

@@ -22,7 +22,7 @@ function LongSideBar( { data, isShortSideBar, setIsShortSideBar, site, setShowCh
         <>
             <div className={`w-56 bg-[#031C30] relative text-white h-screen overflow-visible`}>
                 <span
-                    className="absolute flex items-center justify-center bg-[#031C30] rounded-full size-6 right-0 top-6 transform -translate-y-1/2 translate-x-1/2 cursor-pointer z-[1000]"
+                    className="absolute flex items-center justify-center bg-[#031C30] rounded-full size-6 right-0 top-6 transform -translate-y-1/2 translate-x-1/2 cursor-pointer "
                     onClick={() => setIsShortSideBar(!isShortSideBar)}
                 >
                    <FaAngleLeft />

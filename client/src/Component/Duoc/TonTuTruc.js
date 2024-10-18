@@ -5,7 +5,7 @@ import PharmarDetailModal from "./PharmarDetailModal";
 import Table from "./Table";
 import TableDetail from "./TableDetail";
 import Toggle from "../Common/ToggleSwitch";
-
+import SearchBar from "../Common/SearchBar";
 import { useAppContext } from "../Store/AppContext";
 
 function TonTuTruc() {
@@ -14,19 +14,33 @@ function TonTuTruc() {
     const apiURL = process.env.REACT_APP_API_URL;
     const site = localStorage.getItem('site');
 
+
     const [khoaphongList, setKhoaphongList] = useState([]);
     const [selectedKhoaphong, setSelectedKhoaphong] = useState({ id: 0, name: '' });
 
     const [tuTrucList, setTuTrucList] = useState([]);
     const [selectedTuTruc, setSelectedTuTruc] = useState({ id: 0, name: '' });
 
-    const [medicines, setMedicines] = useState([]);
+    // const [medicines, setMedicines] = useState([]);
+    const [data, setData] = useState([]);
     const [selectedPharmarId, setSelectedPharmarId] = useState(0);
     const [isShowModal, setIsShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [timeoutId, setTimeoutId] = useState(null);
+
     const [viewDatas, setViewDatas] = useState([]);
 
     const [isDetail, setIsDetail] = useState(false);
+
+    const [filterList, setFilterList] = useState([
+        { id: 'dalieu', name: 'Đa liều', value: false },
+        { id: 'bhyt', name: 'BHYT', value: false },
+        { id: 'khangsinh', name: 'Kháng sinh', value: false },
+        { id: 'adr', name: 'ADR', value: false },
+        { id: 'sldvsd', name: 'Sl DVSD', value: false },
+        { id: 'hoichan', name: 'Hội chẩn', value: false },
+        { id: 'luuy', name: 'Lưu ý', value: false }
+    ])
 
 
     useEffect(() => async () => {
@@ -67,11 +81,16 @@ function TonTuTruc() {
     }, [selectedKhoaphong.id, site]);
 
 
-    const getMedicines = async () => {
+    const getData = async () => {
+        if (!selectedTuTruc.id) return;
+        const fetchUrl = isDetail ?
+            `${apiURL}duoc/tutruc/tontutruc-chitiet/${site}/${selectedTuTruc.id}` :
+            `${apiURL}duoc/tutruc/tontutruc/${site}/${selectedTuTruc.id}`;
+
         try {
-            const response = await fetch(`${apiURL}duoc/tutruc/tontutruc/${site}/${selectedTuTruc.id}`);
+            const response = await fetch(fetchUrl);
             const data = await response.json();
-            setMedicines(data);
+            setData(data);
             if (searchTerm === '') {
                 setViewDatas(data);
             }
@@ -87,85 +106,141 @@ function TonTuTruc() {
     }
 
     const onClick = () => {
-        getMedicines();
+        getData();
     }
 
-    // useEffect(() => {
-    //     getPharmars();
+    useEffect(() => {
+        setData([])
+        setViewDatas([])
 
-    // }, [selectedKho]);
+    }, [isDetail])
 
-    // Search
-    const handleSearch = (event) => {
-        console.log(event.target.value)
-        setSearchTerm(event.target.value);
-        if (event.target.value === '') {
-            setViewDatas(medicines);
+    const search = (data, seachValue) => {
+        if (seachValue === '') {
+            return data;
         }
-        else {
-            const filedata = medicines.filter((item) =>
-                item.mabd.toLowerCase().includes(event.target.value.toLowerCase()) || item.tenbd.toLowerCase().includes(event.target.value.toLowerCase())
-            );
-            setViewDatas(filedata);
+        return data.filter((item) => item.mabd.toLowerCase().includes(seachValue.toLowerCase()) || item.tenbd.toLowerCase().includes(seachValue.toLowerCase()));
+    }
+
+   
+    const handleSearch = () => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
         }
+        const newTimeoutId = setTimeout(() => {
+            setViewDatas(search(data, searchTerm));
+        }, 1000);
+        setTimeoutId(newTimeoutId);
+    };
+
+    useEffect(() => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        const newTimeoutId = setTimeout(() => {
+            setViewDatas(search(data, searchTerm));
+        }, 1000);
+        setTimeoutId(newTimeoutId);
+    }, [searchTerm]);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+    }, [timeoutId]);
+
+    const filter = (iData) => {
+        const filterData = iData.filter((item) => {
+            // Initialize match to true
+            let matchesAllFilters = true;
+            // Iterate through each filter in the list
+            filterList.forEach(filter => {
+                if (filter.id === 'dalieu' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.dalieu === 1;
+                }
+               
+                if (filter.id === 'notbhyt' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.bhyt === 0;
+                }
+                if (filter.id === 'khangsinh' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.duocbvid === 3;
+                }
+                if (filter.id === 'adr' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.adr === 1;
+                }
+                if (filter.id === 'sldvsd' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.soluongdvsd > 0;
+                }
+                if (filter.id === 'luuy' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.luuy !== null;
+                }
+                if (filter.id === 'hoichan' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.bienban === 1;
+                }
+            });
+
+            return matchesAllFilters;
+        });
+        return filterData;
     };
 
 
     // /duoc/tonkho/theokho/dskho/<site>
     return (
         <div className="px-4">
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 p-2 gap-y-2">
+                <div className="flex items-center gap-2 px-2">
+                    <label className="w-10 text-left font-bold">KP</label>
+                    <div className="w-full">
+                        <Dropdown
+                            data={khoaphongList}
+                            setSelectedOption={setSelectedKhoaphong}
+                            selectedOption={selectedKhoaphong}
 
-            <div className="flex items-center gap-10">
-                <div className="flex gap-10 items-center p-2">
-                    <div className="flex items-center gap-2">
-                        <label className="w-10 text-left font-bold">KP</label>
-                        <div className="w-[400px]">
-                            <Dropdown
-                                data={khoaphongList}
-                                setSelectedOption={setSelectedKhoaphong}
-                                selectedOption={selectedKhoaphong}
-
-                                placeholder="Chọn khoa phòng "
-                            />
-
-                        </div>
-                    </div>
-                    <div className=" flex items-center gap-1">
-                        <label className="w-20 text-left font-bold">Tủ trực:</label>
-                        <div className="w-[400px]">
-                            <Dropdown
-                                data={tuTrucList}
-                                setSelectedOption={setSelectedTuTruc}
-                                placeholder="Chọn tủ trực"
-                                chooseIndex={1}
-                                searchable={false}
-                                selectedOption={selectedTuTruc}
-                            />
-
-                        </div>
-                    </div>
-                    <div className="">
-                        <Toggle
-                            idname="ton-chitiet"
-                            enabled={isDetail}
-                            setEnabled={setIsDetail}
-                            displayName="Tồn chi tiết"
+                            placeholder="Chọn khoa phòng "
                         />
 
-                    </div>
-                    <div className=" flex items-center gap-2">
-                        <input
-                            type="text"
-                            className="border w-56 px-2 py-1 outline-none"
-                            placeholder="Nhập mã, tên, ..."
-                            value={searchTerm}
-                            spellCheck="false"
-                            onChange={handleSearch}
-                        />
-                        <ViewButton onClick={onClick} />
                     </div>
                 </div>
+                <div className=" flex items-center gap-2 px-2">
+                    <label className="w-20 text-left font-bold">Tủ trực:</label>
+                    <div className="w-full">
+                        <Dropdown
+                            data={tuTrucList}
+                            setSelectedOption={setSelectedTuTruc}
+                            placeholder="Chọn tủ trực"
+                            chooseIndex={1}
+                            searchable={false}
+                            selectedOption={selectedTuTruc}
+                        />
+                    </div>
+                </div>
+                <div className="flex gap-2 items-center">
+                    <Toggle
+                        idname="ton-chitiet"
+                        enabled={isDetail}
+                        setEnabled={setIsDetail}
+                        displayName="Tồn chi tiết"
+                    />
+
+                    <ViewButton onClick={onClick} />
+                </div>
+
+                <div className=" flex items-center gap-2 px-2">
+                    <label className="w-10 text-left font-bold"></label>
+
+                    <SearchBar
+                        placeholder='Nhập Mã, Tên, HC'
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        handleSearch={handleSearch}
+                    />
+
+                </div>
             </div>
+
 
             {/* Table */}
 

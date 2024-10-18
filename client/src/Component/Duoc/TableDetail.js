@@ -124,11 +124,11 @@ function TableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
                                    
                                     <td>{item.bhyt}</td>
                                     <td className="text-right">{item.losx}</td>
-                                    <td className="text-center">{formatDateString(item.hsd)}</td>
+                                    <td className="text-center">{formatDateString(item.handung)}</td>
                                     <td className="text-right px-1">{Number(item.tondau).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
-                                    <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
+                                    <td className={`text-right px-1 pr-2 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
 
                                 </tr>
                             ))}

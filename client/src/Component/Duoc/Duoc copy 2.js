@@ -60,10 +60,9 @@ function Duoc() {
                         </div>
 
                     </div> */}
-               
-
-
-                
+                <div className="w-full grid grid-cols-4">
+                    <ButtonMenu />
+                </div>
                 <div className="overflow-hidden">
                     {selectedMenuId === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
                     {selectedMenuId === 'tonkho_tonbhyt' && <TonBHYT site={site} />}

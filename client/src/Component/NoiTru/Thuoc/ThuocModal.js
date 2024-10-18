@@ -87,11 +87,12 @@ function ThuocModal({ site, selected, setModalShow }) {
             setThucxuat(data);
         };
 
-        getThucxuat();
-
-        fetchDetail();
-        fetchMedicineDetail();
-    }, [selectedCoupon])
+        if (selectedCoupon && selectedCoupon.id) {
+            getThucxuat();
+            fetchDetail();
+            fetchMedicineDetail();
+        }
+    }, [selectedCoupon.id])
 
     return (
         <>
@@ -119,8 +120,7 @@ function ThuocModal({ site, selected, setModalShow }) {
                             </div>
 
                             <div className="w-2/3 h-full">
-                                <div className="mt-2 flex-grow px-4 w-full h-full overflow-y-auto my-4" >
-
+                                <div className="flex-grow px-4 w-full h-full overflow-y-auto" >
                                     <div className="flex border">
                                         <div className="w-56 flex border bg-white">
                                             <button
