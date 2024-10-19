@@ -3,6 +3,8 @@ import { RiSearch2Line, RiAlignJustify } from "react-icons/ri";
 import { FaAngleDown } from "react-icons/fa6";
 import { GiTestTubes, GiMedicines } from "react-icons/gi";
 import { BiSolidShieldPlus } from "react-icons/bi";
+import { IoPerson } from "react-icons/io5";
+import { FcSurvey, FcDocument  } from "react-icons/fc";
 
 const ButtonChucNang = ({
     selectedPatient, 
@@ -53,9 +55,19 @@ const ButtonChucNang = ({
                     </button>
                 
                 {isDropdownOpen && (
-                    <div className="origin-top-right absolute mt-0 w-full max-h-96 shadow-lg  bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
+                    <div className="origin-top-right absolute mt-2 w-60 max-h-96 shadow-lg shadow-gray-300 border border-gray-400 bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             <li>
+                            <button
+                                    className="w-full text-left flex gap-1 items-center px-4 py-2 hover:bg-gray-300 select-none"
+                                    onClick={() => {
+                                        setShowHealthInsurance(true);
+                                        setIsDropdownOpen(!isDropdownOpen);
+                                    }}
+                                >
+                                    <IoPerson className='text-gray-500' />
+                                    Thông tin hành chính
+                                </button>
                                 <button
                                     className="w-full text-left flex gap-1 items-center px-4 py-2 hover:bg-gray-300 select-none"
                                     onClick={() => {
@@ -93,7 +105,7 @@ const ButtonChucNang = ({
                                         setIsDropdownOpen(!isDropdownOpen);
                                     }}
                                 >
-                                    <GiMedicines className='text-red-500' />
+                                    <FcSurvey />
                                     Tờ điều trị
                                 </button>
 
@@ -104,7 +116,7 @@ const ButtonChucNang = ({
                                         setIsDropdownOpen(!isDropdownOpen);
                                     }}
                                 >
-                                    <GiMedicines className='text-red-500' />
+                                    <FcDocument />
                                     PCK
                                 </button>
                             </li>

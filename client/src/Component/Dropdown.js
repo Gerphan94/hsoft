@@ -75,12 +75,12 @@ const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, 
                         value={selectedOption.name}
                         readOnly={true}
                     />
-                    <div
-                        className="absolute inset-y-0 right-0 pr-3  px-2 py-1 group-hover:border-blue-200 "
+                    <span
+                        className="absolute flex items-center justify-center inset-y-0 right-0 pr-3  px-2 py-1 group-hover:border-blue-200 "
                         onClick={toggleDropdown}
                     >
                         <FaAngleDown className="h-5 w-5 text-gray-500 group-hover:text-blue-200 " />
-                    </div>
+                    </span>
                 </div>
 
                 {isDropdownOpen && (

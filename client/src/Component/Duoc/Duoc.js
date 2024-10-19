@@ -16,7 +16,7 @@ function Duoc() {
 
     console.count('fetching Dược')
 
-    const { site, setSite } = useAppContext();
+    const { site } = useAppContext();
 
     const [selectedMenuId, seSelectedMenuId] = useState('')
 
@@ -60,10 +60,6 @@ function Duoc() {
                         </div>
 
                     </div> */}
-               
-
-
-                
                 <div className="overflow-hidden">
                     {selectedMenuId === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
                     {selectedMenuId === 'tonkho_tonbhyt' && <TonBHYT site={site} />}

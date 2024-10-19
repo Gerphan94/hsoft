@@ -8,12 +8,12 @@ import Toggle from "../Common/ToggleSwitch";
 import SearchBar from "../Common/SearchBar";
 import { useAppContext } from "../Store/AppContext";
 
-function TonTuTruc() {
+function TonTuTruc( {site}  ) {
 
 
     const apiURL = process.env.REACT_APP_API_URL;
-    const site = localStorage.getItem('site');
 
+    const [selecteLoaiKP, setSelecteLoaiKP] = useState('khoa');
 
     const [khoaphongList, setKhoaphongList] = useState([]);
     const [selectedKhoaphong, setSelectedKhoaphong] = useState({ id: 0, name: '' });
@@ -21,7 +21,6 @@ function TonTuTruc() {
     const [tuTrucList, setTuTrucList] = useState([]);
     const [selectedTuTruc, setSelectedTuTruc] = useState({ id: 0, name: '' });
 
-    // const [medicines, setMedicines] = useState([]);
     const [data, setData] = useState([]);
     const [selectedPharmarId, setSelectedPharmarId] = useState(0);
     const [isShowModal, setIsShowModal] = useState(false);
@@ -160,7 +159,6 @@ function TonTuTruc() {
                 if (filter.id === 'dalieu' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.dalieu === 1;
                 }
-               
                 if (filter.id === 'notbhyt' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.bhyt === 0;
                 }
@@ -191,21 +189,30 @@ function TonTuTruc() {
     return (
         <div className="px-4">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 p-2 gap-y-2">
+           
                 <div className="flex items-center gap-2 px-2">
-                    <label className="w-10 text-left font-bold">KP</label>
+                <select 
+                    onChange={(e) => setSelecteLoaiKP(e.target.value)}
+                    className="border px-2 py-1"
+                    >
+                        <option  value="khoa">Khoa</option>
+                        <option value="phongkham">Phòng khám</option>
+                    </select>
+                    {/* <label className="w-10 text-left font-bold">KP</label> */}
                     <div className="w-full">
                         <Dropdown
                             data={khoaphongList}
                             setSelectedOption={setSelectedKhoaphong}
                             selectedOption={selectedKhoaphong}
 
-                            placeholder="Chọn khoa phòng "
+                            placeholder="Chọn khoa/phòng "
                         />
 
                     </div>
                 </div>
                 <div className=" flex items-center gap-2 px-2">
-                    <label className="w-20 text-left font-bold">Tủ trực:</label>
+                   
+                    <label className="w-20 text-left font-bold select-none">Tủ trực:</label>
                     <div className="w-full">
                         <Dropdown
                             data={tuTrucList}

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BiChevronsLeft, BiChevronsRight } from "react-icons/bi";
 
-function Pagination({ currentPage, setCurrentPage, totalPage }) {
+function Pagination({ currentPage, setCurrentPage, totalPage, itemsPerPage = 20, setItemsPerPage }) {
 
     console.log(totalPage)
-
 
     const range = (start, end) => {
         const length = end - start + 1;
@@ -51,7 +50,8 @@ function Pagination({ currentPage, setCurrentPage, totalPage }) {
     };
 
     return (
-        <div className="px-4 py-1 bg-slate-100 w-full flex - flex-row-reverse">
+        <div className="px-4 py-1 bg-slate-100 w-full flex flex-row-reverse justify-between">
+            
             <div className="flex gap-1">
                 <button
                     disabled={currentPage === 1}
@@ -67,17 +67,17 @@ function Pagination({ currentPage, setCurrentPage, totalPage }) {
                         ...
                     </button>
                     :
-                
-                getVisiblePages().map((page, index) => (
-                <button
-                    key={index}
-                    onClick={() => setCurrentPage(page)}
-                    disabled={page === currentPage || page === '...'}
-                    className={`${page === currentPage ? '!bg-blue-500 !text-white' : 'bg-white text-gray-700'} w-10 text-md px-2 py-1 border border-gray-300 rounded-md hover:bg-gray-100 disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed select-none`}
-                >
-                    {page}
-                </button>
-                ))}
+
+                    getVisiblePages().map((page, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setCurrentPage(page)}
+                            disabled={page === currentPage || page === '...'}
+                            className={`${page === currentPage ? '!bg-blue-500 !text-white' : 'bg-white text-gray-700'} w-10 text-md px-2 py-1 border border-gray-300 rounded-md hover:bg-gray-100 disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed select-none`}
+                        >
+                            {page}
+                        </button>
+                    ))}
                 <button
                     disabled={currentPage === totalPage || totalPage === 0}
                     onClick={() => setCurrentPage(currentPage + 1)}
@@ -86,6 +86,16 @@ function Pagination({ currentPage, setCurrentPage, totalPage }) {
 
                 </button>
             </div>
+
+            <select
+                value={itemsPerPage} 
+                onChange={(e) => setItemsPerPage(e.target.value)}>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+
+            <button>{itemsPerPage}</button>
         </div>
 
     );

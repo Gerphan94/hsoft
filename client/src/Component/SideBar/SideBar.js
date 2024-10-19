@@ -16,7 +16,7 @@ import ShortSideBar from "./ShortSideBar";
 
 function SideBar() {
 
-    const { site, setSite, selectedSideBar } = useAppContext();
+    const { site, setSite, setArea } = useAppContext();
 
     const navigate = useNavigate();
 
@@ -64,11 +64,12 @@ function SideBar() {
                 />
 
             }
-
-
-
-
-            {showChooseSite && <ChooseSiteModal setSite={setSite} setShowModal={setShowChooseSite} />}
+            {showChooseSite &&
+                <ChooseSiteModal
+                    setSite={setSite}
+                    setShowModal={setShowChooseSite}
+                    setArea={setArea}
+                />}
         </>
     )
 

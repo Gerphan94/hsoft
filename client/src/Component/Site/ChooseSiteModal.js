@@ -1,17 +1,19 @@
 import React from "react";
 import styles from "../styles.module.css"; // Assuming you are using this styles file
 
-function ChooseSiteModal({ setShowModal, setSite }) {
+function ChooseSiteModal({ setShowModal, setSite, setArea }) {
     const sites = [
-        { id: 'HCM_DEV', name: 'HCM - DEV' },
-        { id: 'HN_DEV', name: 'HN - DEV' },
-
+        { id: 'HCM_DEV', name: 'HCM - DEV', area: 1 },
+        { id: 'HN_DEV', name: 'HN - DEV', area: 6 },
     ];
 
-    const handleClick = (id) => {
-        localStorage.setItem('site', id); 
+    const handleClick = (iSite) => {
+        sessionStorage.setItem('site', iSite.id);
+        sessionStorage.setItem('area', iSite.area);
+
         setShowModal(false);
-        setSite(id);
+        setSite(iSite.id);
+        setArea(iSite.area);
     };
 
     return (
@@ -24,7 +26,7 @@ function ChooseSiteModal({ setShowModal, setSite }) {
                                 <div 
                                     key={site.id} // Ensure each item has a unique key
                                     className="border rounded-xl p-3 h-40 flex items-center justify-center text-[#1E3E62] hover:bg-[#9BB0C1] hover:text-white cursor-pointer"
-                                    onClick={() => handleClick(site.id)}
+                                    onClick={() => handleClick(site)}
                                 >
                                     {site.name}
                                 </div>
