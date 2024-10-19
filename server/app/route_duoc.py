@@ -180,14 +180,14 @@ def tonbhyt(site):
         })
     return jsonify(result)
 
-
-
 @duoc.route('/duoc/danhsach-tutruc/<site>/<makp>', methods=['GET'])
 def get_tutrucs(site, makp):
     cursor = get_cursor(site)
     stm = f'SELECT ID, TEN FROM D_DUOCKP WHERE MAKP = {makp}'
     rows = cursor.execute(stm).fetchall()
     return jsonify([dict(id=row[0], name=row[1]) for row in rows])
+
+@duoc.route('/duoc/tutruc/<site>', methods=['GET'])
 
 @duoc.route('/duoc/tutruc/tontutruc/<site>/<idtutruc>', methods=['GET'])
 def get_tutruc_tonkho(site, idtutruc):

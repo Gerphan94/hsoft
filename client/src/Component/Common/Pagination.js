@@ -88,6 +88,7 @@ function Pagination({ currentPage, setCurrentPage, totalPage, itemsPerPage = 20,
             </div>
 
             <select
+                className="px-2 pyu"
                 value={itemsPerPage} 
                 onChange={(e) => setItemsPerPage(e.target.value)}>
                 <option value="10">10</option>
