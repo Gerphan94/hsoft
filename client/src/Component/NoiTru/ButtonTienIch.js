@@ -45,7 +45,7 @@ const ButtonTienIch = ({ setShowCabinetModal }) => {
                     </button>
                
                 {isDropdownOpen && (
-                    <div className="origin-top-right absolute mt-0 w-full max-h-96 shadow-lg bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
+                    <div className="origin-top-left absolute mt-2 right-0 w-60 max-h-96 shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             <li>
                                 <button
@@ -57,6 +57,16 @@ const ButtonTienIch = ({ setShowCabinetModal }) => {
                                 >
                                     <BiSolidShieldPlus className='text-green-500' />
                                     Tủ trực
+                                </button>
+                                <button
+                                    className="w-full text-left flex gap-1 items-center px-4 py-2 hover:bg-gray-300 select-none"
+                                    onClick={() => {
+                                        setShowCabinetModal(true);
+                                        setIsDropdownOpen(!isDropdownOpen);
+                                    }}
+                                >
+                                    <BiSolidShieldPlus className='text-green-500' />
+                                    Danh sách phiếu đã lập
                                 </button>
                              
                               

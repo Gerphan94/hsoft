@@ -11,7 +11,7 @@ function Hiendien({ data, selected, setSelected }) {
     console.log('rending hiendien table -------------------------------------')
     console.log('data', data)
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(20);
+    const [itemsPerPage, setItemsPerPage] = useState(20);
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
 
@@ -24,7 +24,7 @@ function Hiendien({ data, selected, setSelected }) {
     useEffect(() => {
         setDataInPage(constDataInPage(1, data));
         setTotalPage(Math.ceil(data.length / itemsPerPage));
-    }, [data]);
+    }, [data, itemsPerPage]);
 
     useEffect(() => {
         // setTotalPage(Math.ceil(data.length / itemsPerPage));
@@ -89,6 +89,8 @@ function Hiendien({ data, selected, setSelected }) {
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     totalPage={totalPage}
+                    itemsPerPage={itemsPerPage}
+                    setItemsPerPage={setItemsPerPage}
                 />
             </div>
 

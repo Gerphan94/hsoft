@@ -112,11 +112,12 @@ def danhmuc_taikhoan(site):
     """
     cursor = get_cursor(site)
     result = []
-    col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhomtk', 'makp', 'mabs', 'hoten', 'manhomnv','tennhom', 'viettat', 'duyetkhambhyt', 'sochungchi', 'chungthuso', 'pin' ]
+    col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhomtk', 'makp', 'mabs', 
+                 'hoten', 'manhomnv','tennhom', 'viettat', 'duyetkhambhyt', 'sochungchi', 'chungthuso', 'pin', 'khoakyrv' ]
     
     stm = f'''
         WITH DMNV AS (
-        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI, C.CHUNGTHUSO, C.PIN
+        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI, C.CHUNGTHUSO, C.PIN, A.KHOAKYRV
         FROM DMBS A 
         LEFT JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
         LEFT JOIN DMBS_SIGNATURE C ON A.MA = C.MANV

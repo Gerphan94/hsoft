@@ -51,7 +51,7 @@ function Pagination({ currentPage, setCurrentPage, totalPage, itemsPerPage = 20,
 
     return (
         <div className="px-4 py-1 bg-slate-100 w-full flex flex-row-reverse justify-between">
-            
+
             <div className="flex gap-1">
                 <button
                     disabled={currentPage === 1}
@@ -88,15 +88,17 @@ function Pagination({ currentPage, setCurrentPage, totalPage, itemsPerPage = 20,
             </div>
 
             <select
-                className="px-2 pyu"
-                value={itemsPerPage} 
+                className="px-2 border border-gray-300 rounded-md hover:bg-gray-100 disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed"
+                value={itemsPerPage}
                 onChange={(e) => setItemsPerPage(e.target.value)}>
                 <option value="10">10</option>
+                <option value="15">15</option>
                 <option value="20">20</option>
-                <option value="50">50</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
             </select>
 
-            <button>{itemsPerPage}</button>
+
         </div>
 
     );

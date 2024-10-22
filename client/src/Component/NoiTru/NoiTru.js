@@ -12,6 +12,7 @@ import PublicNoteModal from "./Emr/PublicNoteModal";
 
 import { useAppContext } from "../Store/AppContext";
 import TuTrucModal from "./TuTruc/TuTrucModal";
+import DanhSachPhieuModal from "./DanhSachPhieuModal";
 import SearchBar from "../Common/SearchBar";
 
 import ButtonChucNang from "./ButtonChucNang";
@@ -51,8 +52,9 @@ function NoiTru() {
     const [showTreatmentSheet, setShowTreatmentSheet] = useState(false);
 
     const [showPublicNote, setShowPublicNote] = useState(false);
-
     const [showCabinetModal, setShowCabinetModal] = useState(false);
+
+    const [showDSPhieuModal, setShowDSPhieuModal] = useState(false);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);

@@ -14,7 +14,7 @@ import ItemComponent from "./TableIconComponent";
 function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) {
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(25);
+    const [itemsPerPage, setItemsPerPage] = useState(25);
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
 
@@ -27,7 +27,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) 
     useEffect(() => {
         setDataInPage(constDataInPage(1, data));
         setTotalPage(Math.ceil(data.length / itemsPerPage));
-    }, [data]);
+    }, [data, itemsPerPage]);
 
     useEffect(() => {
         setDataInPage(constDataInPage(currentPage, data));
@@ -142,6 +142,8 @@ function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) 
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     totalPage={totalPage}
+                    itemsPerPage={itemsPerPage}
+                    setItemsPerPage={setItemsPerPage}
                 />
             </div >
 

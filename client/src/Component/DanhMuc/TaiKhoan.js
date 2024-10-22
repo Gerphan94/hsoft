@@ -38,7 +38,7 @@ function TaiKhoan({ site }) {
 
     const [disableFilterBtn, setdisableFilterBtn] = useState(true);
 
-    const [kpModal, setKpModal] = useState({'show': false, 'data': ''});
+    const [kpModal, setKpModal] = useState({ 'show': false, 'data': '' });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -87,7 +87,6 @@ function TaiKhoan({ site }) {
     const handeleView = async () => {
         try {
             const fecthURL = apiURL + "danhmuc/taikhoan-hsoft/" + site;
-            console.log("call", fecthURL)
             const response = await fetch(fecthURL);
             const data = await response.json();
             setData(data);
@@ -118,11 +117,15 @@ function TaiKhoan({ site }) {
         } else {
             const lowerCasedSearchTerm = debouncedSearchTerm.toLowerCase();
             const filteredData = data.filter(item => {
+                
                 const userid = item.userid?.toLowerCase() ?? '';
-                const ma = item.ma?.toLowerCase() ?? '';
+                const ma = item.mabs?.toLowerCase() ?? '';
                 const hoten = item.hoten?.toLowerCase() ?? '';
 
-                return ma.includes(lowerCasedSearchTerm) || hoten.includes(lowerCasedSearchTerm) || userid.includes(lowerCasedSearchTerm);
+                return String(item.id) === debouncedSearchTerm ||
+                    ma.includes(lowerCasedSearchTerm) ||
+                    hoten.includes(lowerCasedSearchTerm) ||
+                    userid.includes(lowerCasedSearchTerm);
             });
             setTotalPage(Math.ceil(filteredData.length / itemsPerPage));
             setDataInPage(constDataInPage(1, filteredData));
@@ -157,7 +160,7 @@ function TaiKhoan({ site }) {
         setViewDatas(filterData);
     };
 
-    
+
 
     return (
         <>
@@ -254,11 +257,11 @@ function TaiKhoan({ site }) {
                                     <td>{item.pin}</td>
                                     <td className="hidden">{item.makp}</td>
                                     <td>
-                                       
-                                            <button onClick={() => setKpModal({show: true, data: item.makp})}>
-                                                <FaGrip />
 
-                                            </button>
+                                        <button onClick={() => setKpModal({ show: true, data: item.makp })}>
+                                            <FaGrip />
+
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

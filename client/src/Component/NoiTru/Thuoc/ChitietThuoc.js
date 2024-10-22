@@ -77,12 +77,13 @@ function ChitietThuoc({ detail, data, couponType }) {
 
                 </div>
             </div>
-            <div className="border rounded-md p-2 mt-4 bg-[#F7FBFF]">
+            <div className="border rounded-md mt-4 bg-[#F7FBFF]">
                 {data.map((item) => (
                     <div
                         key={item.stt_index}
-                        className="relative border-b rounded-md p-3 mb-3 text-left"
+                        className="relative border-b rounded-md mb-3 text-left"
                     >
+                        <div className="bg-green-50">121212</div>
                         <span className="absolute top-0 text-[10px] text-center right-0 w-10 rounded-md bg-slate-300">{item.stt_index}</span>
                         <div className="flex justify-between">
                             <div className="flex gap-2 items-center">

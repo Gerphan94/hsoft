@@ -106,6 +106,7 @@ function ThuocModal({ site, selected, setModalShow }) {
                         {/* BODY */}
                         <div className="flex h-full p-4 overflow-hidden ">
                             <div className="h-full w-1/3">
+                                <div className="text-left bg-slate-200 py-0.5">Danh sách</div>
                                 <div className=" flex-grow h-full text-left overflow-y-auto ">
                                     {Object.keys(dutrull).map((date) => (
                                         <CouponList
@@ -132,7 +133,7 @@ function ThuocModal({ site, selected, setModalShow }) {
                                                 onClick={() => setTabNumber(2)}
                                             >Thông tin xuất</button>
                                         </div>
-                                        <div className="w-full flex justify-between border bg-white p-2 ">
+                                        <div className="w-full flex justify-between border bg-white px-2 ">
                                             <div className="font-medium">
                                                 {chitiet && chitiet.ten ? chitiet.ten : '...'}
                                             </div>
