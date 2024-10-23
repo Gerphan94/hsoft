@@ -41,6 +41,36 @@ def get_khoaphong(site):
 
 @noitru.route('/noitru/hiendien/<site>/<makp>', methods=['GET'])
 def noitru_hiendien(site, makp):
+    """
+    Get Danh sách hiện diện BN
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: makp
+        in: path
+        type: string
+        required: true
+        description: Mã Khoa Phòng
+     
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
     cursor = get_cursor(site)
     result = []
     stm = f'''

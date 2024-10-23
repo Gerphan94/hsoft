@@ -8,13 +8,14 @@ import Toggle from "../Common/ToggleSwitch";
 import SearchBar from "../Common/SearchBar";
 import { useAppContext } from "../Store/AppContext";
 
-function TonTuTruc( {site}  ) {
+function TonTuTruc( {site, area}  ) {
 
 
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [selecteLoaiKP, setSelecteLoaiKP] = useState('khoa');
 
+    const [khoaPhongData, setKhoaPhongData] = useState([]);
     const [khoaphongList, setKhoaphongList] = useState([]);
     const [selectedKhoaphong, setSelectedKhoaphong] = useState({ id: 0, name: '' });
 
@@ -41,18 +42,40 @@ function TonTuTruc( {site}  ) {
         { id: 'luuy', name: 'Lưu ý', value: false }
     ])
 
+    const getKhoaPhongList = (data) => {
+        const updatedData = data.filter((item) => {
+            if (selecteLoaiKP === 'capcuu') {
+                return item.capcuu === 1;
+            } else if (selecteLoaiKP === 'khoa') {
+                return item.capcuu === 0 && item.loai === 0;
+            } else if (selecteLoaiKP === 'phongkham') {
+                return item.capcuu === 0 && item.loai === 1;
+            }
+            return false;
+        });
+        return updatedData;
+    }
 
     useEffect(() => async () => {
-        try {
-            // const fecthURL = apiURL + "duoc/tutruc/ds_khoaphong/" + site;
-            const response = await fetch(`${apiURL}noitru/danhsach-khoaphong/${site}`);
-            const data = await response.json();
-            setKhoaphongList(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
+        const fetchKhoaphongList = async () => {
+            try {
+                const fecthURL = apiURL + "duoc/tutruc/danhsach-khoaphong/" + site + "/" + area;
+                const response = await fetch(fecthURL);
+                const data = await response.json();
+                console.log('data', data)
+                setKhoaPhongData(data);
+                setKhoaphongList(getKhoaPhongList(data));
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         }
-
+        fetchKhoaphongList();
     }, [site]);
+
+
+    useEffect(() => {
+        setKhoaphongList(getKhoaPhongList(khoaPhongData));
+    }, [selecteLoaiKP]);
 
     useEffect(() => {
         const fetchTuTrucList = async () => {
@@ -189,13 +212,13 @@ function TonTuTruc( {site}  ) {
     return (
         <div className="px-4">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 p-2 gap-y-2">
-           
                 <div className="flex items-center gap-2 px-2">
                 <select 
                     onChange={(e) => setSelecteLoaiKP(e.target.value)}
                     className="border px-2 py-1"
                     >
                         <option  value="khoa">Khoa</option>
+                        <option  value="capcuu">Cấp cứu</option>
                         <option value="phongkham">Phòng khám</option>
                     </select>
                     {/* <label className="w-10 text-left font-bold">KP</label> */}
@@ -204,7 +227,7 @@ function TonTuTruc( {site}  ) {
                             data={khoaphongList}
                             setSelectedOption={setSelectedKhoaphong}
                             selectedOption={selectedKhoaphong}
-
+                            chooseIndex={1}
                             placeholder="Chọn khoa/phòng "
                         />
 

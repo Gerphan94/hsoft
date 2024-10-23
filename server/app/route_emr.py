@@ -7,10 +7,10 @@ from .db import get_cursor, schema_now, schema_mutil
 emr = Blueprint('emr', __name__)
 
 
-@emr.route('/emr/pck-thuocll/<site>/<pid>', methods=['GET'])
-def emr_pck_thuocll(site, pid):
+@emr.route('/emr/danhsach-pck-thuoc/<site>/<pid>', methods=['GET'])
+def emr_ds_pck_thuoc(site, pid):
     """
-    Get Danh mục Khoa Phòng
+    Get Danh sách phiếu công khai thuốc
     ---
     tags:
       - EMR

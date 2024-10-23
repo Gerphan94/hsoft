@@ -31,8 +31,8 @@ function Hiendien({ data, selected, setSelected }) {
         setDataInPage(constDataInPage(currentPage, data));
     }, [currentPage]);
 
-    const onClickPid = (pid, name, idkhoa, maql) => {
-        setSelected({ 'pid': pid, 'pname': name, 'idkhoa': idkhoa, 'maql': maql });
+    const onClickPid = (pid, name, idkhoa, maql, mavv) => {
+        setSelected({ 'pid': pid, 'pname': name, 'idkhoa': idkhoa, 'maql': maql, 'mavv': mavv });
     };
 
     return (
@@ -60,7 +60,7 @@ function Hiendien({ data, selected, setSelected }) {
                                 <tr
                                     key={ele.id}
                                     className={`${selected.pid === ele.mabn ? '!bg-[#96C9F4] font-medium' : ''}`}
-                                    onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString(), ele.maql.toString())}
+                                    onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString(), ele.maql.toString(), ele.mavaovien.toString())}
                                     data-idkhoa={ele.id}
                                     data-maql={ele.maql}
                                 >

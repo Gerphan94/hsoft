@@ -156,13 +156,6 @@ function ThuocModal({ site, selected, setModalShow }) {
                                             }
 
                                         </>
-                                        // <ThuocDetail 
-                                        // site={site}
-                                        // couponType={selectedCoupon.type} 
-                                        // data={medicineDetail}
-                                        // couponId={selectedCoupon.id}
-                                        // selectedCoupon={selectedCoupon}
-                                        // />
                                     }
                                 </div>
                             </div>

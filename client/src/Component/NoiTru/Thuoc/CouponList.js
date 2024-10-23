@@ -39,8 +39,6 @@ function CouponList({ date, entries, setMedicineDetail, setDutrullDetail, select
                     />
                 ))}
             </div>
-
-
         </div>
     );
 }

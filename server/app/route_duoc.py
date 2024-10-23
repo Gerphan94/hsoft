@@ -187,7 +187,54 @@ def get_tutrucs(site, makp):
     rows = cursor.execute(stm).fetchall()
     return jsonify([dict(id=row[0], name=row[1]) for row in rows])
 
-@duoc.route('/duoc/tutruc/<site>', methods=['GET'])
+@duoc.route('/duoc/tutruc/danhsach-khoaphong/<site>/<area>', methods=['GET'])
+def get_khoaphong(site, area):
+    """
+    Danh sách khoa phòng (Tủ trực)
+    ---
+    tags:
+      - Dược
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: Site (HCM_DEV, HN_DEV,...)
+        default: HCM_DEV
+      - name: area
+        in: path
+        type: integer
+        required: true
+        description:
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    cursor = get_cursor(site)
+    stm = '''
+        SELECT DISTINCT(A.MAKP), B.TENKP, B.LOAI, B.KHU, B.CAPCUU
+        FROM D_DUOCKP A
+        INNER JOIN BTDKP_BV B ON A.MAKP = B.MAKP 
+        WHERE A.MAKP IS NOT NULL
+        AND B.KHU = :area AND B.LOAI >= 0
+        ORDER BY B.TENKP
+    '''
+    col_names = ['id', 'name', 'loai', 'khu', 'capcuu']
+    departments = cursor.execute(stm, area=area).fetchall()
+    return jsonify([dict(zip(col_names, department)) for department in departments])
+
+
+
+@duoc.route('/duoc/tutruc/danhsach-tutruc/<site>', methods=['GET'])
+
 
 @duoc.route('/duoc/tutruc/tontutruc/<site>/<idtutruc>', methods=['GET'])
 def get_tutruc_tonkho(site, idtutruc):
@@ -262,13 +309,43 @@ def get_tutruc_tonkho(site, idtutruc):
 
 @duoc.route('/duoc/tutruc/tontutruc-chitiet/<site>/<idtutruc>', methods=['GET'])
 def duoc_tontutruc_chitiet(site, idtutruc):
+    """
+    Get Tồn tủ trực - Chi tiết
+    ---
+    tags:
+      - Dược
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: Site (HCM_DEV, HN_DEV,...)
+        default: HCM_DEV
+      - name: idtutruc
+        in: path
+        type: integer
+        required: true
+        description:
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
     cursor =get_cursor(site)
     result = []
-    cols = ['mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 
+    cols = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 
             'handung', 'losx', 'nhombo', 'dalieu']
     stm = f'''
         SELECT
             A.MABD ,
+            B.MA,
             B.TEN || ' ' || B.HAMLUONG AS TEN_HAMLUONG ,
             B.TENHC,
             B.DANG,

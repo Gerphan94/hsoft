@@ -16,7 +16,7 @@ function Duoc() {
 
     console.count('fetching Dược')
 
-    const { site } = useAppContext();
+    const { site, area } = useAppContext();
 
     const [selectedMenuId, seSelectedMenuId] = useState('')
 
@@ -64,7 +64,7 @@ function Duoc() {
                     {selectedMenuId === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
                     {selectedMenuId === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
                     {selectedMenuId === 'tonkho_theokho' && <TonTheoKho site={site} />}
-                    {selectedMenuId === 'tontutruc' && <TonTuTruc site={site} />}
+                    {selectedMenuId === 'tontutruc' && <TonTuTruc site={site} area={area}  />}
                     {selectedMenuId === 'dmbd' && <Dmbd site={site} />}
                 </div>
 

@@ -13,7 +13,7 @@ const ButtonChucNang = ({
     setShowBloodModal, 
     setShowMedicineModal,
     setShowTreatmentSheet,
-    setShowPublicNote
+    setShowPhieuCongKhai
 }) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -112,7 +112,7 @@ const ButtonChucNang = ({
                                 <button
                                     className="w-full text-left flex gap-1 items-center px-4 py-2  hover:bg-gray-300 select-none"
                                     onClick={() => {
-                                        setShowPublicNote(true);
+                                        setShowPhieuCongKhai(true);
                                         setIsDropdownOpen(!isDropdownOpen);
                                     }}
                                 >

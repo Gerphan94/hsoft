@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 
 
-function PublicNoteModal({ site, selected, setModalShow }) {
+function PhieuCongKhaiModal({ site, selected, setModalShow }) {
 
 
     const apiURL = process.env.REACT_APP_API_URL;
@@ -11,7 +11,7 @@ function PublicNoteModal({ site, selected, setModalShow }) {
     const [danhsachPhieu, setDanhsachPhieu] = useState([]);
 
 
-    
+
 
     const fetchDanhSach = async () => {
         const fetchUrl = apiURL + "emr/pck-thuocll/" + site + "/" + selected.pid
@@ -30,7 +30,7 @@ function PublicNoteModal({ site, selected, setModalShow }) {
         fetchDanhSach();
     }, [selected.pid]);
 
-  
+
 
     return (
         <>
@@ -39,17 +39,29 @@ function PublicNoteModal({ site, selected, setModalShow }) {
                     <div className="h-full flex flex-col justify-between">
                         {/* HEADER */}
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
-                            PHIẾU CÔNG KHAI
+                            PHIẾU CÔNG KHAI {selected.mavv}
                         </div>
                         {/* BODY */}
                         <div className="flex h-full p-4 overflow-hidden ">
-                           
-                        
-                           
+                            <div className="w-1/3 flex-grow h-full text-left overflow-y-auto ">
+                                <div className="p-2">
+                                    COl1
+                                </div>
+                            </div>
+                            <div className="w-2/3 h-full">
+                                <div className="mt-2 flex-grow px-4 w-full h-full overflow-y-auto my-4" >
+                                    COL2
+                                </div>
+                            </div>
+
+
+
+
+
                         </div>
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
-                           
+
 
                             <button
                                 type="button"
@@ -66,5 +78,5 @@ function PublicNoteModal({ site, selected, setModalShow }) {
     )
 }
 
-export default PublicNoteModal;
+export default PhieuCongKhaiModal;
 

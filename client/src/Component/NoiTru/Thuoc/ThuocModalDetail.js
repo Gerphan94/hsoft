@@ -48,6 +48,11 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
         <>
             <div>
                 <div className="flex items-center w-full bg-gray-100">
+                   
+                    <div className="flex px-2">
+                        <div className="font-bold px-0.5">{TITLE}</div>
+                        <div className="flex-1 text-left">{detail && detail.ten}</div>
+                    </div>
                     <div className="flex border bg-white h-full">
                         <button 
                         className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 1 ? 'bg-blue-500 text-white' : ''}`}
@@ -57,10 +62,6 @@ function ThuocDetail({ couponType, site, data, couponId, selectedCoupon }) {
                         className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 2 ? 'bg-blue-500 text-white' : ''}`}
                         onClick={() => setTabNumber(2)}
                         >Thông tin xuất</button>
-                    </div>
-                    <div className="flex px-2">
-                        <div className="font-bold px-0.5">{TITLE}</div>
-                        <div className="flex-1 text-left">{detail && detail.ten}</div>
                     </div>
                     <input type="text" className="w-48 text-center border outline-none px-0.5 py-0.5" value={selectedCoupon.id} />
                 </div>

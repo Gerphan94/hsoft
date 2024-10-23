@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import Dropdown from "../Dropdown";
+// import Dropdown from "../Dropdown";
 
-
+import Dropdown from "../Common/Dropdown";
 import ThuocModal from "./Thuoc/ThuocModal";
 import DichVuModal from "./DichVu/DichVuModal";
 import MauModal from "./Mau/MauModal";
 import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
 import TreatmentSheetModal from "./ToDieuTri/ToDieuTrIModal";
-import PublicNoteModal from "./Emr/PublicNoteModal";
+import PhieuCongKhaiModal from "./Emr/PhieuCongKhaiModal";
 
 import { useAppContext } from "../Store/AppContext";
 import TuTrucModal from "./TuTruc/TuTrucModal";
@@ -43,7 +43,7 @@ function NoiTru() {
     const [hiendiens, setHiendiens] = useState([]);
     const [viewData, setViewData] = useState([]);
 
-    const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '' });
+    const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '' , mavv:'' });
 
     const [showMedicineModal, setShowMedicineModal] = useState(false);
     const [showServiceModal, setShowServiceModal] = useState(false);
@@ -51,7 +51,7 @@ function NoiTru() {
     const [showHealthInsurance, setShowHealthInsurance] = useState(false);
     const [showTreatmentSheet, setShowTreatmentSheet] = useState(false);
 
-    const [showPublicNote, setShowPublicNote] = useState(false);
+    const [showPhieuCongKhai, setShowPhieuCongKhai] = useState(false);
     const [showCabinetModal, setShowCabinetModal] = useState(false);
 
     const [showDSPhieuModal, setShowDSPhieuModal] = useState(false);
@@ -150,6 +150,7 @@ function NoiTru() {
                                 data={khoas}
                                 selectedOption={selectedKhoa}
                                 setSelectedOption={setSelectedKhoa}
+                                searchable
                             />
                         </div>
                         <div className="h-full">
@@ -192,7 +193,7 @@ function NoiTru() {
                             setShowBloodModal={setShowBloodModal}
                             setShowMedicineModal={setShowMedicineModal}
                             setShowTreatmentSheet={setShowTreatmentSheet}
-                            setShowPublicNote={setShowPublicNote}
+                            setShowPhieuCongKhai={setShowPhieuCongKhai}
                         />
                         <ButtonTienIch
                             setShowCabinetModal={setShowCabinetModal}
@@ -248,11 +249,11 @@ function NoiTru() {
                     setModalShow={setShowTreatmentSheet}
                 />}
 
-            {showPublicNote &&
-                <PublicNoteModal
+            {showPhieuCongKhai &&
+                <PhieuCongKhaiModal
                     site={site}
                     selected={selected}
-                    setModalShow={setShowPublicNote}
+                    setModalShow={setShowPhieuCongKhai}
                 />}
 
 

@@ -29,9 +29,11 @@ const Dropdown = memo(({
     // Initialize selected option if chooseIndex > 0
     useEffect(() => {
         if (chooseIndex > 0 && initData.length > 0) {
+           
             setSelectedOption({ id: initData[chooseIndex - 1].id, name: initData[chooseIndex - 1].name });
         }
         setViewData(initData);
+        setSearchTerm('');
     }, [chooseIndex, initData, setSelectedOption]);
 
     const toggleDropdown = useCallback(() => {
@@ -53,6 +55,8 @@ const Dropdown = memo(({
     }, []);
 
     const handleChange = useCallback((e) => {
+        console.log('handleChange', handleChange)
+
         setSearchTerm(e.target.value);
         setIsDropdownOpen(true);
         if (e.target.value === '') {
@@ -125,6 +129,7 @@ const Dropdown = memo(({
                                     {viewData.map(item => (
                                         <li key={item.id}>
                                             <button
+                                                data-id={item.id}
                                                 className={`w-full text-left block px-4 py-2 text-sm select-none text-[#0C1844] hover:bg-[#667BC6] hover:text-white ${selectedOption.id === item.id ? 'bg-[#667BC6] text-white' : ''}`}
                                                 onClick={() => handleClick(item.id, item.name)}
                                             >
