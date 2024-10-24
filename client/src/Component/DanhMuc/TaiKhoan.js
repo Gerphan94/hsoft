@@ -220,7 +220,7 @@ function TaiKhoan({ site }) {
                     </div>
                 </div>
 
-                <div className=" px-3 mt-14 overflow-y-auto h-[750px] w-full flex flex-col justify-between">
+                <div className=" px-3 mt-14 overflow-y-auto h-[750px] w-full flex flex-col ">
                     <table className="table-auto w-full">
                         <thead className="sticky top-0 bg-white ">
                             <tr className="">

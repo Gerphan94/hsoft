@@ -197,6 +197,7 @@ function NoiTru() {
                         />
                         <ButtonTienIch
                             setShowCabinetModal={setShowCabinetModal}
+                            setShowDSPhieuModal={setShowDSPhieuModal}
 
 
                         />
@@ -261,6 +262,13 @@ function NoiTru() {
                 <TuTrucModal
                     site={site}
                     setShowModal={setShowCabinetModal}
+                    khoa={selectedKhoa}
+                />}
+
+            {showDSPhieuModal &&
+                <DanhSachPhieuModal
+                    site={site}
+                    setShowModal={setShowDSPhieuModal}
                     khoa={selectedKhoa}
                 />}
         </>

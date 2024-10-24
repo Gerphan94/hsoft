@@ -25,7 +25,7 @@ function GiaVP({ site }) {
     const [disabledLoaiVP, setDisabledLoaiVP] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 25;
+    const [itemsPerPage, setItemsPerPage] = useState(20);
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
 
@@ -246,39 +246,49 @@ function GiaVP({ site }) {
                     </button>
                 </div>
 
-                <div className="px-4 w-full h-[750px] overflow-y-auto flex flex-col justify-between">
-                    <table className=" w-full text-sm">
+                <div className="overflow-x-auto overflow-y-hidden p-4">
+                    <table >
                         <thead className="sticky top-0 z-80">
                             <tr>
-                                <th className="text-center py-1">STT</th>
-                                <th className="text-left px-2">Tên VP</th>
+                                <th className="text-center py-1 px-2">STT</th>
+                                <th className="text-left px-2 ">Tên VP</th>
                                 <th className="text-center w-14">DVT</th>
-                                <th className="text-center w-10">BHYT</th>
-                                <th className="text-right w-24 px-2">Thường</th>
-                                <th className="text-right w-24 px-2">BHYT</th>
-                                <th className="text-right w-24 px-2">Dịch vụ</th>
+                                <th className="text-center w-10 px-2">BHYT</th>
+                                <th className="text-right whitespace-nowrap px-2">Giá Thường</th>
+                                <th className="text-right whitespace-nowrap px-2">Giá BHYT</th>
+                                <th className="text-right whitespace-nowrap px-2">Giá Dịch vụ</th>
+                                <th className="text-right w-24 px-2">Nhóm BHYT</th>
+                                <th className="text-right w-24 px-2">Nhóm VP</th>
+                                <th className="text-right w-24 px-2">Loại VP</th>
                             </tr>
                         </thead>
                         <tbody>
                             {dataInPage.map((giavp, index) => (
                                 <tr key={index} className="even:bg-gray-200">
-                                    <td className="text-center  py-1">{index + 1}</td>
-                                    <td className="text-left px-2 w-full max-w-xs truncate">{giavp.ten} </td>
+                                    <td className="text-center py-1 w-10">{itemsPerPage * (currentPage - 1) + (index + 1)}</td>
+                                    <td className="text-left px-2 w-[400px]  truncate">{giavp.tenvp} </td>
                                     <td className="text-center">{giavp.dvt}</td>
                                     <td><div className="text-center">{giavp.bhyt}</div></td>
                                     <td className="text-right px-2">{Number(giavp.giath).toLocaleString()}</td>
                                     <td className="text-right px-2"> {Number(giavp.giabh).toLocaleString()}</td>
                                     <td className="text-right px-2">{Number(giavp.giadv).toLocaleString()}</td>
+                                    <td className="text-left px-2 whitespace-nowrap">{giavp.tennhombhyt}</td>
+                                    <td className="text-left px-2 whitespace-nowrap">{giavp.tennhom}</td>
+                                    <td className="text-left px-2 whitespace-nowrap">{giavp.tenloai}</td>
+
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    <Pagination
+                    
+                </div>
+                <Pagination
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
                         totalPage={totalPage}
+                        itemsPerPage={itemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
                     />
-                </div>
             </div>
 
         </>

@@ -31,11 +31,7 @@ h0 {
 
 table {
   width: 100%;
-  
-
-
 }
-
 
 thead{
   position:sticky;
@@ -56,6 +52,7 @@ tbody tr:nth-of-type(odd) {
 tbody tr:hover {
   background-color: #96C9F4; 
 }
+
 
 @tailwind base;
 @tailwind components;

@@ -207,21 +207,48 @@ def vienphi_giavp(site):
   
     cursor = get_cursor(site)
     result = []
-    col_name = ['id', 'idloai', 'idnhom', 'idnhombhyt', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi', 'benhphamrangbuoc']
+    col_names = ['id', 'mavp', 'tenvp', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 
+              'idnhombhyt', 'tennhombhyt', 'idnhom', 'tennhom', 'idloai', 'tenloai',
+              'trongoi', 'benhphamrangbuoc', 'luuy']
     stm = f'''
-    SELECT A.ID, A.ID_LOAI, B.ID_NHOM, C.IDNHOMBHYT, A.MA, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI, A.BENHPHAMRANGBUOC
-    FROM V_GIAVP A
-    INNER JOIN V_LOAIVP B ON A.ID_LOAI = B.ID
-    INNER JOIN V_NHOMVP C ON B.ID_NHOM = C.MA
-    WHERE A.DIEUTIET = 0 AND A.HIDE = 0 AND A.TRONGOI = 0
-    ORDER BY A.TEN ASC
+      SELECT
+        A.ID, 
+        A.MA,
+        A.TEN,
+        A.DVT,
+        A.BHYT,
+        A.GIA_TH ,
+        A.GIA_BH ,
+        A.GIA_DV,
+        C.IDNHOMBH,
+        C.TENBHYT,
+        B.ID_NHOM,
+        C.TENNHOM,
+        A.ID_LOAI,
+        B.TEN AS TENLOAI,
+        A.BENHPHAMRANGBUOC,
+        A.LUUY
+      FROM
+        V_GIAVP A
+      INNER JOIN V_LOAIVP B ON
+        A.ID_LOAI = B.ID
+      INNER JOIN (
+        SELECT A.MA, A.TEN AS TENNHOM, B.ID AS IDNHOMBH, B.TEN AS TENBHYT 
+        FROM V_NHOMVP A
+        INNER JOIN V_NHOMBHYT B ON A.IDNHOMBHYT = B.ID
+        ORDER BY A.MA ASC
+        ) C ON
+        B.ID_NHOM = C.MA
+      WHERE
+        A.DIEUTIET = 0
+        AND A.HIDE = 0
+        AND A.TRONGOI = 0
+      ORDER BY
+        A.TEN ASC
     '''
     giavps = cursor.execute(stm).fetchall()
     for giavp in giavps:
-        obj = {}
-        for idx, col in  enumerate(col_name):
-            obj[col] = giavp[idx]
-        result.append(obj)
+        result.append(dict(zip(col_names, giavp)))
     return jsonify(result), 200
 
     
