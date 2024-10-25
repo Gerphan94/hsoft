@@ -109,6 +109,94 @@ def noitru_hiendien(site, makp):
         })
     
     return jsonify(result), 200
+@noitru.route('/noitru/hiendien-phongluu/<site>/<mmyy>', methods=['GET'])
+def noitru_hiendienphongluu(site, mmyy):
+    """
+    Get Danh sách hiện diện Phòng lưu
+    ---
+    tags:
+      - Phòng Lưu
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: mmyy
+        in: path
+        type: string
+        required: true
+        default: 1024
+        description: 
+     
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    
+    cursor = get_cursor(site)
+    schema = 'HSOFTTAMANH' + mmyy
+    col_names = ['mavv', 'maql','mabn', 'hoten', 'ngaysinh', 'phai', 'ngayvao','noigioithieu',
+                 'nhantu', 'madoituong', 'doituong', 'sovaovien', 'ngayra','ketquaid', 'ketqua', 'ttlucrv','xutri']
+    stm = f'''
+        SELECT 
+        TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN,
+        TO_CHAR(A.MAQL) AS MAQL,
+        A.MABN,
+        B.HOTEN,
+        TO_CHAR(B.NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH,
+        B.PHAI,
+        TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI') AS NGAYVAO,
+        CASE
+            WHEN DENTU = 1 THEN 'Cơ quan y tế'
+            WHEN DENTU = 2 THEN 'Tự đến'
+            ELSE 'Khác'
+        END AS NOIGIOITHIEU,
+        CASE
+            WHEN NHANTU = 1 THEN 'Cấp cứu'
+            WHEN NHANTU = 2 THEN 'KKB'
+            ELSE 'Khoa điều trị'
+        END AS NHANTU,
+        A.MADOITUONG,
+        C.DOITUONG,
+        A.SOVAOVIEN,
+        TO_CHAR(A.NGAYRV , 'dd/MM/yyyy HH24:MI') AS NGAYRA,
+        A.KETQUA,
+        E.TEN,
+        A.TTLUCRV,
+        D.TEN
+    FROM
+        {schema}.BENHANCC A
+    INNER JOIN 
+        BTDBN B ON
+        A.MABN = B.MABN
+    INNER JOIN 
+        DOITUONG C ON
+        A.MADOITUONG = C.MADOITUONG
+    INNER JOIN
+        XUTRIKB D ON
+        A.TTLUCRV = D.MA
+    LEFT JOIN 
+        KETQUA E ON
+        A.KETQUA = E.MA
+    ORDER BY
+        A.NGAY DESC
+    '''
+    hiendiens = cursor.execute(stm).fetchall()
+    result = []
+    for hiendien in hiendiens:
+        result.append(dict(zip(col_names, hiendien)))
+    return jsonify(result), 200
+
 
 @noitru.route('/noi-tru/insert-bhyt/<site>', methods=['POST'])
 def noitru_insertbhyt(site):
@@ -148,6 +236,8 @@ def noitru_insertbhyt(site):
             return jsonify({'error':'Không thêm được BHYT'}), 500
     else:
         return jsonify({'error':'Bệnh nhân đã có thẻ'}), 500
+
+
 
 @noitru.route('/noitru/thuoc-danhsach-theo-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
 def noitru_get_thuoc_dutrull_by_idkhoa(site, idkhoa):

@@ -33,7 +33,7 @@ function GiaVP({ site }) {
     const [viewDatas, setViewDatas] = useState([]);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
-    const [ isBenhphamRangbuoc, setIsBenhphamRangbuoc ] = useState(false);
+    const [isBenhphamRangbuoc, setIsBenhphamRangbuoc] = useState(false);
 
 
     const giavpTypes = [
@@ -231,10 +231,10 @@ function GiaVP({ site }) {
                         />
                     </div>
                     <div>
-                        <Toggle 
-                        idname={'bprangbuoc'} 
-                        displayName='Bệnh phẩm ràng buộc'
-                        setEnabled={setIsBenhphamRangbuoc}
+                        <Toggle
+                            idname={'bprangbuoc'}
+                            displayName='Bệnh phẩm ràng buộc'
+                            setEnabled={setIsBenhphamRangbuoc}
 
                         />
                     </div>
@@ -246,49 +246,51 @@ function GiaVP({ site }) {
                     </button>
                 </div>
 
-                <div className="overflow-x-auto overflow-y-hidden p-4">
-                    <table >
-                        <thead className="sticky top-0 z-80">
-                            <tr>
-                                <th className="text-center py-1 px-2">STT</th>
-                                <th className="text-left px-2 ">Tên VP</th>
-                                <th className="text-center w-14">DVT</th>
-                                <th className="text-center w-10 px-2">BHYT</th>
-                                <th className="text-right whitespace-nowrap px-2">Giá Thường</th>
-                                <th className="text-right whitespace-nowrap px-2">Giá BHYT</th>
-                                <th className="text-right whitespace-nowrap px-2">Giá Dịch vụ</th>
-                                <th className="text-right w-24 px-2">Nhóm BHYT</th>
-                                <th className="text-right w-24 px-2">Nhóm VP</th>
-                                <th className="text-right w-24 px-2">Loại VP</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {dataInPage.map((giavp, index) => (
-                                <tr key={index} className="even:bg-gray-200">
-                                    <td className="text-center py-1 w-10">{itemsPerPage * (currentPage - 1) + (index + 1)}</td>
-                                    <td className="text-left px-2 w-[400px]  truncate">{giavp.tenvp} </td>
-                                    <td className="text-center">{giavp.dvt}</td>
-                                    <td><div className="text-center">{giavp.bhyt}</div></td>
-                                    <td className="text-right px-2">{Number(giavp.giath).toLocaleString()}</td>
-                                    <td className="text-right px-2"> {Number(giavp.giabh).toLocaleString()}</td>
-                                    <td className="text-right px-2">{Number(giavp.giadv).toLocaleString()}</td>
-                                    <td className="text-left px-2 whitespace-nowrap">{giavp.tennhombhyt}</td>
-                                    <td className="text-left px-2 whitespace-nowrap">{giavp.tennhom}</td>
-                                    <td className="text-left px-2 whitespace-nowrap">{giavp.tenloai}</td>
-
+                <div className="p-4">
+                    <div className="overflow-x-auto overflow-y-hidden">
+                        <table >
+                            <thead className="sticky top-0 z-80">
+                                <tr>
+                                    <th className="text-center py-1 px-2">STT</th>
+                                    <th className="text-left px-2 ">Tên VP</th>
+                                    <th className="text-center w-14">DVT</th>
+                                    <th className="text-center w-10 px-2">BHYT</th>
+                                    <th className="text-right whitespace-nowrap px-2">Giá Thường</th>
+                                    <th className="text-right whitespace-nowrap px-2">Giá BHYT</th>
+                                    <th className="text-right whitespace-nowrap px-2">Giá Dịch vụ</th>
+                                    <th className="text-right w-24 px-2">Nhóm BHYT</th>
+                                    <th className="text-right w-24 px-2">Nhóm VP</th>
+                                    <th className="text-right w-24 px-2">Loại VP</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    
+                            </thead>
+                            <tbody>
+                                {dataInPage.map((giavp, index) => (
+                                    <tr key={index} className="even:bg-gray-200">
+                                        <td className="text-center py-1 w-10">{itemsPerPage * (currentPage - 1) + (index + 1)}</td>
+                                        <td className="text-left px-2 w-[400px]  truncate">{giavp.tenvp} </td>
+                                        <td className="text-center">{giavp.dvt}</td>
+                                        <td><div className="text-center">{giavp.bhyt}</div></td>
+                                        <td className="text-right px-2">{Number(giavp.giath).toLocaleString()}</td>
+                                        <td className="text-right px-2"> {Number(giavp.giabh).toLocaleString()}</td>
+                                        <td className="text-right px-2">{Number(giavp.giadv).toLocaleString()}</td>
+                                        <td className="text-left px-2 whitespace-nowrap">{giavp.tennhombhyt}</td>
+                                        <td className="text-left px-2 whitespace-nowrap">{giavp.tennhom}</td>
+                                        <td className="text-left px-2 whitespace-nowrap">{giavp.tenloai}</td>
+
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                    </div>
                 </div>
                 <Pagination
-                        currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}
-                        totalPage={totalPage}
-                        itemsPerPage={itemsPerPage}
-                        setItemsPerPage={setItemsPerPage}
-                    />
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    totalPage={totalPage}
+                    itemsPerPage={itemsPerPage}
+                    setItemsPerPage={setItemsPerPage}
+                />
             </div>
 
         </>
