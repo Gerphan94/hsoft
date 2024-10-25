@@ -30,6 +30,7 @@ function SideBar() {
     const funcs = [
         { id: 'hosobenhan', name: 'Hồ sơ bệnh án', icon: IoFileTrayFullSharp, path: '/hosobenhan' },
         { id: 'khambenh', name: 'Khám bệnh', icon: GiEarbuds, path: '/kham-benh' },
+        { id: 'phongluu', name: 'Phòng lưu', icon: GiEarbuds, path: '/phong-luu' },
         { id: 'noitru', name: 'Nội trú', icon: FaBed, path: '/noi-tru' },
         { id: 'vienphi', name: 'Viện phí', icon: MdAttachMoney, path: '/vien-phi' },
         { id: 'duoc', name: 'Dược', icon: CiPill, path: '/duoc' },
