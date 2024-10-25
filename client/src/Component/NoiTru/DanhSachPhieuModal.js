@@ -23,7 +23,7 @@ function DanhSachPhieuModal({ site, setShowModal }) {
                                 <div className="">
                                     <label className="">Ngày:</label>
                                     <DatePicker
-                                        className="w-32 border px-2 py-1 text-center outline-none "
+                                        className="w-32 border px-2 py-1 ml-2 text-center outline-none "
                                         name='fromDate'
                                         id='fromDate'
                                         dateFormat="dd/MM/yyyy"

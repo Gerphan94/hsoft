@@ -13,12 +13,13 @@ import PhongLuuTable from "./PhongLuuTable";
 import ToDieuTriModal from "./ToDieuTri/ToDieuTrIModal";
 import PageHeader from "../PageHeader";
 
+import Toggle from "../Common/ToggleSwitch";
+
 function PhongLuu() {
 
     const apiURL = process.env.REACT_APP_API_URL;
     const { site, setSelectedSideBar } = useAppContext();
     const monthNow = new Date().getMonth() + 1;
-
 
     const [selectedBTN, setSelectedBNT] = useState(1);
     const [selectedKhoa, setSelectedKhoa] = useState({ id: 999, name: 'Cấp cứu' });
@@ -28,7 +29,9 @@ function PhongLuu() {
     const [selectedPatient, setSelectedPatient] = useState({ 'pid': '', 'name': '' });
     const [selectedIdKhoaOfPatinent, setSelectedIdKhoaOfPatinent] = useState('');
 
-    const [selected, setSelected] = useState({ pid: '', pname: '',   maql: '' });
+    const [isAll, setIsAll] = useState(false);
+
+    const [selected, setSelected] = useState({ pid: '', pname: '', maql: '' });
 
 
     const [isShowModalThuoc, setIsShowModalThuoc] = useState(false);
@@ -117,6 +120,13 @@ function PhongLuu() {
                         onClick={handleClickView}
 
                     >Xem</button>
+
+                    <Toggle
+                        idname={'is-all'}
+                        displayName="Tất cả"
+                        setEnabled={setIsAll}
+                        enabled={isAll}
+                    />
                 </div>
 
 

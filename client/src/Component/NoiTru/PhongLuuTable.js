@@ -42,7 +42,7 @@ function PhongLuuTable({ data, selected, setSelected }) {
                                 <th className="text-center"><div className=" py-1 text-center">STT</div></th>
                                 <th className=""><div className="">PID</div></th>
                                 <th className=""><div>Họ tên</div></th>
-                                <th className="w-12"><div>Ngày sinh</div></th>
+                                <th className="w-12 whitespace-nowrap"><div>Ngày sinh</div></th>
                                 <th><div>Đối tượng</div></th>
                                 <th><div className="text-center">Ngày vào</div></th>
                                 <th><div className="text-center">Ngày ra</div></th>
@@ -72,7 +72,10 @@ function PhongLuuTable({ data, selected, setSelected }) {
                                     <td><div className="text-center px-2">{ele.doituong}</div></td>
                                     <td><div className="text-right">{ele.ngayvao}</div></td>
                                     <td><div className="text-right">{ele.ngayra}</div></td>
-                                    <td><div className="text-left">{ele.ketqua}</div></td>
+                                    <td>
+                                        <div className="text-center">
+                                            {ele.ketqua}
+                                      </div></td>
                                     <td><div className="text-left">{ele.xutri}</div></td>
                                 </tr>))}
                         </tbody>

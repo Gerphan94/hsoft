@@ -237,6 +237,8 @@ def noitru_insertbhyt(site):
     else:
         return jsonify({'error':'Bệnh nhân đã có thẻ'}), 500
 
+
+
 @noitru.route('/noitru/thuoc-danhsach-theo-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
 def noitru_get_thuoc_dutrull_by_idkhoa(site, idkhoa):
     """
