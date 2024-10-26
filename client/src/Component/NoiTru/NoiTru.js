@@ -12,7 +12,7 @@ import PhieuCongKhaiModal from "./Emr/PhieuCongKhaiModal";
 
 import { useAppContext } from "../Store/AppContext";
 import TuTrucModal from "./TuTruc/TuTrucModal";
-import DanhSachPhieuModal from "./DanhSachPhieuModal";
+import DanhSachPhieuModal from "./Thuoc/DanhSachPhieuModal";
 import SearchBar from "../Common/SearchBar";
 
 import ButtonChucNang from "./ButtonChucNang";
@@ -80,9 +80,6 @@ function NoiTru() {
 
         }
     }, [site]);
-
-
-
 
     const gethiendien = async () => {
         try {
