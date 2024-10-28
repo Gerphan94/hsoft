@@ -236,9 +236,102 @@ def noitru_insertbhyt(site):
             return jsonify({'error':'Không thêm được BHYT'}), 500
     else:
         return jsonify({'error':'Bệnh nhân đã có thẻ'}), 500
-
-
-
+    
+@noitru.route('/noitru/thuoc/danhsach-phieudalap/<site>/<makp>/<string_ngay>', methods=['GET'])
+def get_thuoc_danhsach_phieudalap(site, makp, string_ngay):
+    """
+    Danh sách phiếu đã lập
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: makp
+        in: path
+        type: string
+        required: true
+        default: 048
+        description: 
+      - name: string_ngay
+        in: path
+        type: string
+        required: true
+        description:
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    
+    schema = 'HSOFTTAMANH' + string_ngay[4:6]+string_ngay[2:4]
+    cursor = get_cursor(site)
+    result = []
+    
+    stm = f'''
+        WITH ApprovedIDs AS (
+            SELECT A.ID
+            FROM {schema}.D_DUYET A
+            WHERE A.MAKHOA IN (SELECT ID FROM D_DUOCKP WHERE MAKP = '{makp}')
+            AND TO_CHAR(A.NGAY, 'yyyyMMdd') = '{string_ngay}'
+        ),
+        TMP_TABLE AS (
+            SELECT DISTINCT
+                B.IDDUYET,
+                A.MAKHO,
+                C.TEN
+            FROM {schema}.D_DUTRUCT A
+            JOIN {schema}.D_DUTRULL B ON A.ID = B.ID
+            JOIN D_DMKHO C ON A.MAKHO = C.ID
+            WHERE B.IDDUYET IN (SELECT ID FROM ApprovedIDs)
+            
+            UNION ALL
+            
+            SELECT DISTINCT
+                B.IDDUYET,
+                A.MAKHO,
+                C.TEN
+            FROM {schema}.D_XTUTRUCCT A
+            JOIN {schema}.D_XTUTRUCLL B ON A.ID = B.ID
+            JOIN D_DMKHO C ON A.MAKHO = C.ID
+            WHERE B.IDDUYET IN (SELECT ID FROM ApprovedIDs)
+        )
+        SELECT
+            A.ID AS IDDUYET,
+            B.TEN AS TENPHIEU,
+            C.TEN AS TENKHOADUOC,
+            D.TEN AS TENTT ,
+            A.DONE,
+            TMP_TABLE.MAKHO,
+            TMP_TABLE.TEN AS TENKHO
+        FROM
+            {schema}.D_DUYET A
+        INNER JOIN D_LOAIPHIEU B ON
+            A.PHIEU = B.ID
+        INNER JOIN D_DUOCKP C ON
+            A.MAKHOA = C.ID
+        INNER JOIN D_DUOCKP D ON
+            A.MAKP = D.ID
+        INNER JOIN TMP_TABLE ON A.ID = TMP_TABLE.IDDUYET
+    '''
+    col_names = ['idduyet', 'tenphieu', 'tenkhoaduoc', 'tentt', 'done', 'makho', 'tenkho']
+    phieus = cursor.execute(stm).fetchall()
+    for phieu in phieus:
+        result.append(dict(zip(col_names, phieu)))
+    return jsonify(result), 200
+    
+    
 @noitru.route('/noitru/thuoc-danhsach-theo-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
 def noitru_get_thuoc_dutrull_by_idkhoa(site, idkhoa):
     """

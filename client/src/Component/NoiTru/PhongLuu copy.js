@@ -129,7 +129,7 @@ function PhongLuu() {
                         </select>
                     </div>
                     <button
-                        className="btn btn-view"
+                        className="btn-view"
                         onClick={handleClickView}
 
                     >Xem</button>
