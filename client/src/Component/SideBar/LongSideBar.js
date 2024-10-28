@@ -36,7 +36,7 @@ function LongSideBar({ data, isShortSideBar, setIsShortSideBar, site, setShowCho
                     > {site}</button>
                 </div>
 
-                <ul className="p-4 mt-10 w-full space-y-1 ">
+                <ul className="p-4 mt-10 w-full space-y-1 select-none">
                     {data.map((item, index) => (
                         <li
                             className={`flex gap-2 items-center p-2 cursor-pointer hover:bg-gray-700 rounded-lg border-white  ${pathName === item.path ? 'border opacity-100' : 'opacity-75'}`}

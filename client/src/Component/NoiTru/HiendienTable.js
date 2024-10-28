@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineMan, AiOutlineWoman } from "react-icons/ai";
 import Pagination from "../Common/Pagination";
 import { TbSortAZ } from "react-icons/tb";
-
+import { VscCopy } from "react-icons/vsc";
+import { Alert } from "../Common/Alert";
+import moment from "moment";
 
 
 function Hiendien({ data, selected, setSelected }) {
@@ -21,6 +23,10 @@ function Hiendien({ data, selected, setSelected }) {
         return iData.slice(indexOfFirstItem, indexOfLastItem);
     }
 
+    const [showAlert, setShowAlert] = useState(false);
+
+
+
     useEffect(() => {
         setDataInPage(constDataInPage(1, data));
         setTotalPage(Math.ceil(data.length / itemsPerPage));
@@ -31,8 +37,14 @@ function Hiendien({ data, selected, setSelected }) {
         setDataInPage(constDataInPage(currentPage, data));
     }, [currentPage]);
 
-    const onClickPid = (pid, name, idkhoa, maql, mavv) => {
-        setSelected({ 'pid': pid, 'pname': name, 'idkhoa': idkhoa, 'maql': maql, 'mavv': mavv });
+    const onClickPid = (pid, name, idkhoa, maql, mavv, ngayvk) => {
+        setSelected({ 'pid': pid, 'pname': name, 'idkhoa': idkhoa, 'maql': maql, 'mavv': mavv, 'ngayvk': ngayvk });
+    };
+
+    const handleClickCopy = (pid) => {
+        navigator.clipboard.writeText(pid)
+
+        setShowAlert(true);
     };
 
     return (
@@ -60,12 +72,29 @@ function Hiendien({ data, selected, setSelected }) {
                                 <tr
                                     key={ele.id}
                                     className={`${selected.pid === ele.mabn ? '!bg-[#96C9F4] font-medium' : ''}`}
-                                    onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString(), ele.maql.toString(), ele.mavaovien.toString())}
+                                    onClick={() => onClickPid(
+                                        ele.mabn,
+                                        ele.hoten,
+                                        ele.id.toString(),
+                                        ele.maql.toString(),
+                                        ele.mavaovien.toString(),
+                                        ele.ngayvk
+                                    )}
                                     data-idkhoa={ele.id}
                                     data-maql={ele.maql}
                                 >
                                     <td className="text-center"><div className=" py-1 text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</div></td>
-                                    <td><div className="text-right pr-2 hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn}</div></td>
+                                    <td >
+                                        <div className="flex gap-2 items-center flex-row-reverse group">
+                                            <div name="mabn" className="text-right pr-2 hover:underline hover:text-blue-500 cursor-pointer">
+                                                {ele.mabn}
+                                            </div>
+                                            <button
+                                                className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                                onClick={handleClickCopy}
+                                            ><VscCopy /></button>
+                                        </div>
+                                    </td>
                                     <td>
                                         <div className="flex gap-2 items-center">
                                             {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}
@@ -73,8 +102,8 @@ function Hiendien({ data, selected, setSelected }) {
                                         </div>
                                     </td>
                                     <td><div className="text-center">{ele.namsinh}</div></td>
-                                    <td><div className="text-right">{ele.ngayvv}</div></td>
-                                    <td><div className="text-right">{ele.ngayvk}</div></td>
+                                    <td><div className="text-right">{moment(ele.ngayvv).utc().format('DD/MM/YYYY HH:mm')}</div></td>
+                                    <td><div className="text-right">{moment(ele.ngayvk).utc().format('DD/MM/YYYY HH:mm')}</div></td>
                                     <td><div className="text-center px-2">{ele.doituong}</div></td>
                                     <td><div className="">{ele.sothe}</div></td>
                                     <td><div className="">{ele.mauabo}{ele.maurh}</div></td>
@@ -94,6 +123,13 @@ function Hiendien({ data, selected, setSelected }) {
                 />
             </div>
 
+
+            {showAlert &&
+                <Alert
+                    visible={showAlert}
+                    setVisible={setShowAlert}
+                    message={'Đã sao chép PID thành công!'}
+                />}
 
         </>
     );

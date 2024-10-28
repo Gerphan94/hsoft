@@ -63,7 +63,7 @@ function DichVuModal({ site, setModalShow, selected }) {
                     <div className="h-full flex flex-col justify-between">
                         {/* HEADER */}
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
-                            {'Dịch vụ'}
+                            {'Dịch vụ'} - {selected.ngayvk}
                         </div>
                         {/* BODY */}
                         <div className=" h-full p-4 overflow-hidden ">

@@ -43,7 +43,7 @@ function NoiTru() {
     const [hiendiens, setHiendiens] = useState([]);
     const [viewData, setViewData] = useState([]);
 
-    const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '' , mavv:'' });
+    const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '' , mavv:'', ngayvk:'' });
 
     const [showMedicineModal, setShowMedicineModal] = useState(false);
     const [showServiceModal, setShowServiceModal] = useState(false);

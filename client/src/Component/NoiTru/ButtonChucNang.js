@@ -4,13 +4,13 @@ import { FaAngleDown } from "react-icons/fa6";
 import { GiTestTubes, GiMedicines } from "react-icons/gi";
 import { BiSolidShieldPlus } from "react-icons/bi";
 import { IoPerson } from "react-icons/io5";
-import { FcSurvey, FcDocument  } from "react-icons/fc";
+import { FcSurvey, FcDocument } from "react-icons/fc";
 
 const ButtonChucNang = ({
-    selectedPatient, 
-    setShowHealthInsurance, 
-    setShowServiceModal, 
-    setShowBloodModal, 
+    selectedPatient,
+    setShowHealthInsurance,
+    setShowServiceModal,
+    setShowBloodModal,
     setShowMedicineModal,
     setShowTreatmentSheet,
     setShowPhieuCongKhai
@@ -42,23 +42,35 @@ const ButtonChucNang = ({
         };
     }, [isDropdownOpen]);
 
+    const subMenu = () => {
+        return (
+            <div className="origin-top-right absolute mt-2 w-48 max-h-96 shadow-lg shadow-gray-300 border border-gray-400 bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
+                <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <li>
+                        <button>1111</button>
+                    </li>
+                </ul>
+            </div>
+        )
+    }
+
     return (
         <div className='w-full items-center inline-block' ref={dropdownRef}>
             <div className="relative inline-block w-32">
-                    <button
-                        className={`flex items-center justify-between gap-2 w-full h-full p-1  px-2 border bg-[#667BC6] text-white font-bold select-none disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed outline-none'}`}
-                        onClick={toggleDropdown}
-                        disabled = {selectedPatient && selectedPatient.pid ? false : true}
-                    >
-                        Chức năng
-                        <span><FaAngleDown /></span>
-                    </button>
-                
+                <button
+                    className={`flex items-center justify-between gap-2 w-full h-full p-1  px-2 border bg-[#667BC6] text-white font-bold select-none disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed outline-none'}`}
+                    onClick={toggleDropdown}
+                    disabled={selectedPatient && selectedPatient.pid ? false : true}
+                >
+                    Chức năng
+                    <span><FaAngleDown /></span>
+                </button>
+
                 {isDropdownOpen && (
                     <div className="origin-top-right absolute mt-2 w-60 max-h-96 shadow-lg shadow-gray-300 border border-gray-400 bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             <li>
-                            <button
+                                <button
                                     className="w-full text-left flex gap-1 items-center px-4 py-2 hover:bg-gray-300 select-none"
                                     onClick={() => {
                                         setShowHealthInsurance(true);
@@ -98,6 +110,7 @@ const ButtonChucNang = ({
                                     <GiMedicines className='text-red-500' />
                                     Thuốc
                                 </button>
+
                                 <button
                                     className="w-full text-left flex gap-1 items-center px-4 py-2  hover:bg-gray-300 select-none"
                                     onClick={() => {
@@ -108,6 +121,7 @@ const ButtonChucNang = ({
                                     <FcSurvey />
                                     Tờ điều trị
                                 </button>
+
 
                                 <button
                                     className="w-full text-left flex gap-1 items-center px-4 py-2  hover:bg-gray-300 select-none"
