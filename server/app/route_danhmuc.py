@@ -23,11 +23,40 @@ def get_danhmuc():
     """
     return jsonify({"message": "ok"}), 200
 
-# stm = '''
-#         SELECT ID, TEN
-#         FROM NHOMNHANVIEN 
-#         ORDER BY ID ASC
-#     '''
+
+@dm.route('/danhmuc/danhmuc-coso-tamanh/<site>', methods=['GET'])
+def danhmuc_coso_tamanh(site):
+  """
+    Danh mục Cơ s BV TÂM ANH
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  
+  
+  cursor = get_cursor(site)
+  stm = 'SELECT ID, TEN FROM DMKHUDT'
+  cosos = cursor.execute(stm).fetchall()
+  return jsonify([{"id": row[0], "name": row[1]} for row in cosos]), 200
+
 
 @dm.route('/danhmuc/danhmuc-khoaphong-in/<site>/<khoaphong_string>', methods=['GET'])
 def danhmuc_khoaphong_in(site, khoaphong_string):

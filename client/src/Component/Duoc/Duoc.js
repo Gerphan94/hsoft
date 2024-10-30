@@ -10,15 +10,17 @@ import TonTuTruc from "./TonTuTruc";
 import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
 import PageHeader from "../PageHeader";
+import ButtonChucNang from "./ButtonChucNang";
 import ButtonMenu from "./ButtonMenu";
+import DanhMucDuocKPModal from "./Modal/DanhMucDuocKPModal";
 
 function Duoc() {
 
-    console.count('fetching Dược')
-
     const { site, area } = useAppContext();
 
-    const [selectedMenuId, seSelectedMenuId] = useState('')
+    const [selectedMenu, setSelectedMenu] = useState({id:'tonkho_theokho', name: 'Tồn Theo kho'})
+
+    const [showDMDuocKP, setShowDMDuocKP] = useState(false);
 
     const menuData = [
         { id: 'tonkho_theokho', name: 'Tồn Theo kho' },
@@ -30,45 +32,45 @@ function Duoc() {
 
     return (
         <>
-
-            {/* <SideMenu site={site} setSite={setSite} selectedMenu='duoc' /> */}
             <div className="w-full flex flex-col">
                 <PageHeader title="Dược" >
                     <>
-                        {menuData.map((item) => (
-                            <button
-                                key={item.id}
-                                className={`border px-2 py-0.5 ${selectedMenuId === item.id ? 'bg-[#55679C]' : 'bg-[#7C93C3]'}  text-white hover:bg-[#55679C]`}
-                                onClick={() => seSelectedMenuId(item.id)}
+                    <div className="flex">
+                        <ButtonMenu
+                            menuData={menuData}
+                            selectedMenu={selectedMenu}
+                            setSelectedMenu={setSelectedMenu}
+                        />
+                   
+                        <ButtonChucNang
+                        setShowDMDuocKP={setShowDMDuocKP}
 
-                            >{item.name}</button>
-                        ))}
+                        
+                        />
+                    </div>
+                        
+
                     </>
 
                 </PageHeader>
-                {/* <div className="px-4 py-2 text-left flex gap-4 border-b shadow-md">
-                        <div className="text-xl font-medium">Dược</div>
-                        <div>
-                            {menuData.map((item) => (
-                                <button
-                                    key={item.id}
-                                    className={`border px-2 py-1 ${selectedMenuId === item.id ? 'bg-[#55679C]' : 'bg-[#7C93C3]'}  text-white hover:bg-[#55679C]`}
-                                    onClick={() => seSelectedMenuId(item.id)}
-
-                                >{item.name}</button>
-                            ))}
-                        </div>
-
-                    </div> */}
+                
                 <div className="overflow-hidden">
-                    {selectedMenuId === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
-                    {selectedMenuId === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
-                    {selectedMenuId === 'tonkho_theokho' && <TonTheoKho site={site} />}
-                    {selectedMenuId === 'tontutruc' && <TonTuTruc site={site} area={area}  />}
-                    {selectedMenuId === 'dmbd' && <Dmbd site={site} />}
+                    {selectedMenu && selectedMenu.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
+                    {selectedMenu && selectedMenu.id === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
+                    {selectedMenu && selectedMenu.id === 'tonkho_theokho' && <TonTheoKho site={site} />}
+                    {selectedMenu && selectedMenu.id === 'tontutruc' && <TonTuTruc site={site} area={area}  />}
+                    {selectedMenu && selectedMenu.id === 'dmbd' && <Dmbd site={site} />}
                 </div>
 
             </div>
+
+            {showDMDuocKP && 
+
+                <DanhMucDuocKPModal
+                    site={site}
+                    setShowModal={setShowDMDuocKP}
+                />
+            }
         </>
     )
 }

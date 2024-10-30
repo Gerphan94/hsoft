@@ -6,30 +6,25 @@ import styles from "../../styles.module.css"
 function DichVuModal({ site, setModalShow, selected }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
-    const [nhapKhoas, setnhapKhoas] = useState([]);
-    const [selectedKhoa, setSelectedKhoa] = useState({ id: 0, name: '' });
     const [chidinhs, setChidinhs] = useState([]);
 
-    console.log('fetch nhap khoa', selectedKhoa)
+    // useEffect(() => {
+    //     const fetchNhapKhoa = async () => {
+    //         const fetchUrl = apiURL + "/noi-tru/get-nhap-khoa-of-bn/" + site + "/" + selected.maql;
+    //         console.log(fetchUrl)
+    //         const response = await fetch(fetchUrl);
+    //         const data = await response.json();
+    //         setnhapKhoas(data);
+    //         console.log('----------------------', data);
+    //     }
+    //     fetchNhapKhoa();
 
-    useEffect(() => {
-        const fetchNhapKhoa = async () => {
-            const fetchUrl = apiURL + "/noi-tru/get-nhap-khoa-of-bn/" + site + "/" + selected.maql;
-            console.log(fetchUrl)
-            const response = await fetch(fetchUrl);
-            const data = await response.json();
-            setnhapKhoas(data);
-            console.log('----------------------', data);
-        }
-        fetchNhapKhoa();
-
-    }, [selected, apiURL, site])
+    // }, [selected, apiURL, site])
 
 
     const fetchChidinh = async () => {
         try {
-            const fetchUrl = apiURL + "/noi-tru/get-chidinh-by-idkhoa/" + site + "/" + selectedKhoa.id;
-            console.log(fetchUrl)
+            const fetchUrl = apiURL + "/noitru/get-chidinh-by-idkhoa/" + site + "/" + selected.idkhoa;
             const response = await fetch(fetchUrl);
             const data = await response.json();
 
@@ -52,7 +47,6 @@ function DichVuModal({ site, setModalShow, selected }) {
     }
 
     const onClickView = () => {
-        console.log('Click -----', selectedKhoa.idkhoa)
         fetchChidinh();
     }
 
@@ -63,25 +57,13 @@ function DichVuModal({ site, setModalShow, selected }) {
                     <div className="h-full flex flex-col justify-between">
                         {/* HEADER */}
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
-                            {'Dịch vụ'} - {selected.ngayvk}
+                            {'Dịch vụ'} - {selected.idkhoa}
                         </div>
                         {/* BODY */}
                         <div className=" h-full p-4 overflow-hidden ">
                             <div className="flex gap-2 items-center">
-                                <div className="w-96 flex items-center">
-                                    <Dropdown
-                                        data={nhapKhoas}
-                                        selectedOption={selectedKhoa}
-                                        searchable={false}
-                                        chooseIndex={1}
-                                        setSelectedOption={setSelectedKhoa} />
-                                </div>
-                                <button
-                                    className={`${styles.btn} ${styles.btnNew}`}
-                                    onClick={onClickView}
-                                >
-                                    Xem
-                                </button>
+                                
+                               
                             </div>
                             <div className="h-full w-full flex-grow overflow-y-auto pb-10">
                                 {Object.keys(chidinhs).map((date) => (
@@ -97,14 +79,14 @@ function DichVuModal({ site, setModalShow, selected }) {
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
                             <button
-                                className={`${styles.btn} ${styles.btnNew}`}
-                            // onClick={onClickReload}
+                                className="btn btn-view"
+                            onClick={onClickView}
                             >
                                 Xem
                             </button>
 
                             <button
-                                className={`${styles.btn} ${styles.btnClose}`}
+                                className="btn btn-close"
                                 type="button"
                                 onClick={() => setModalShow(false)}
                             >

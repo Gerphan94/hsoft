@@ -4,7 +4,7 @@ import { AiOutlineMan, AiOutlineWoman } from "react-icons/ai";
 import Pagination from "../Common/Pagination";
 import { TbSortAZ } from "react-icons/tb";
 import { VscCopy } from "react-icons/vsc";
-import { Alert } from "../Common/Alert";
+import { SuccessAlert } from "../Common/Alert";
 import moment from "moment";
 
 
@@ -42,6 +42,7 @@ function Hiendien({ data, selected, setSelected }) {
     };
 
     const handleClickCopy = (pid) => {
+        console.log(pid)
         navigator.clipboard.writeText(pid)
 
         setShowAlert(true);
@@ -91,7 +92,7 @@ function Hiendien({ data, selected, setSelected }) {
                                             </div>
                                             <button
                                                 className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                                                onClick={handleClickCopy}
+                                                onClick={() => handleClickCopy(ele.mabn)}
                                             ><VscCopy /></button>
                                         </div>
                                     </td>
@@ -125,7 +126,7 @@ function Hiendien({ data, selected, setSelected }) {
 
 
             {showAlert &&
-                <Alert
+                <SuccessAlert
                     visible={showAlert}
                     setVisible={setShowAlert}
                     message={'Đã sao chép PID thành công!'}

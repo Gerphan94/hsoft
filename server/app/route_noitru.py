@@ -443,3 +443,84 @@ def noitru_dutru_ct(site,type, id):
     for dutru in dutruct:
         result.append(dict(zip(col_names, dutru)))
     return jsonify(result), 200
+
+
+@noitru.route('/noitru/get-chidinh-by-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
+def noitru_getchidinhbyidkhoa(site, idkhoa):
+    """
+    Danh sách chỉ định dịch vụ
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: idkhoa
+        in: path
+        type: string
+        required: true
+        description: IDNHAPKHOA
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    cursor = get_cursor(site)
+    result = []
+    
+    ngaynhapkhoa = cursor.execute(f'SELECT NGAY FROM NHAPKHOA WHERE ID = {idkhoa}').fetchone()[0]
+    iNow = datetime.now()  
+    schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
+    
+    col_names = ['id','ngay', 'doituong', 'tendichvu', 'soluong', 'dongia', 'idchidinh', 'ghichu', 'thuchien', 'ngayylenh', 'ngaythuchien', 'maphieu', 'benhpham', 'idloai', 'idnhom', 'loaiba']
+    for schema in reversed(schema_ar):
+        stm = f'''
+            SELECT
+                A.ID,
+                TO_CHAR(A.NGAY, 'dd/MM/yyyy') AS NGAY,
+                C.DOITUONG,
+                B.TEN,
+                A.SOLUONG,
+                A.DONGIA,
+                TO_CHAR(A.IDCHIDINH) AS IDCHIDINH,
+                A.GHICHU,
+                A.THUCHIEN,
+                TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI') AS NGAYYLENH,
+                TO_CHAR(A.NGAYTHUCHIEN, 'dd/MM/yyyy HH24:MI') AS NGAYTHUCHIEN,
+                A.MAPHIEU,
+                D.TEN AS BENHPHAM,
+                E.ID AS IDLOAI,
+                E.ID_NHOM AS IDNHOM,
+                A.LOAIBA
+            FROM
+                {schema}.V_CHIDINH A
+            INNER JOIN V_GIAVP B ON
+                B.ID = A.MAVP
+            INNER JOIN DOITUONG C ON
+                C.MADOITUONG = A.MADOITUONG
+            INNER JOIN DMBENHPHAM D ON
+                D.ID = A.BENHPHAM
+            INNER JOIN V_LOAIVP E ON
+                B.ID_LOAI = E.ID
+            WHERE
+                A.IDKHOA = '{idkhoa}'
+                AND A.MADOITUONG <> 3
+            ORDER BY
+                NGAY DESC,
+                NGAYYLENH ASC
+        '''
+        chidinh = cursor.execute(stm).fetchall()
+        for chidinh in chidinh:
+            result.append(dict(zip(col_names, chidinh)))
+    return jsonify(result), 200
