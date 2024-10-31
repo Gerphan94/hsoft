@@ -7,6 +7,7 @@ import Pagination from "../Common/Pagination";
 import { useSearchParams } from 'react-router-dom';
 import { FaGrip } from "react-icons/fa6";
 import TaiKhoaKpModal from "./Modal/TaiKhoaKpModal";
+import SearchBar from "../Common/SearchBar";
 
 function TaiKhoan({ site }) {
 
@@ -19,6 +20,10 @@ function TaiKhoan({ site }) {
         { id: 'duoc', name: 'Dược' }
     ];
     const [accountType, setAccountType] = useState({ id: 'hsoft', name: 'Hsoft' });
+
+    const [cosos, setCosos] = useState([]);
+    const [selectedCoso, setSelectedCoso] = useState({ id: 0, name: '' });
+
 
     const [nhomnvs, setNhomnvs] = useState([]);
     const [khoaphongs, setKhoaphongs] = useState([]);
@@ -40,31 +45,46 @@ function TaiKhoan({ site }) {
 
     const [kpModal, setKpModal] = useState({ 'show': false, 'data': '' });
 
+    const fetchDSKhoa =  async() => {
+        if (site === '') return;
+        if (selectedCoso.id === 0) return;
+        const kpsURL = `${apiURL}noitru/dskhoa/${site}/${selectedCoso.id}`;
+        try {
+            const response = await fetch(kpsURL);
+            const data = await response.json();
+            setKhoaphongs(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchDSKhoa();
+    }, [selectedCoso.id]);
+
     useEffect(() => {
         const fetchData = async () => {
             if (site === '') return;
 
+            const cosoURL = `${apiURL}/danhmuc/danhmuc-coso-tamanh/${site}`;
             const nhomnvsURL = `${apiURL}/danhmuc/nhom-nhanvien/${site}`;
-            const khoaphongsURL = `${apiURL}noitru/dskhoa/${site}`;
 
             try {
-                const [nhomnvsResponse, khoaphongsResponse] = await Promise.all([
+                const [cosoResponse, nhomnvsResponse] = await Promise.all([
+                    fetch(cosoURL),
                     fetch(nhomnvsURL),
-                    fetch(khoaphongsURL)
                 ]);
-
+                const cosoData = await cosoResponse.json();
                 const nhomnvsData = await nhomnvsResponse.json();
-                const khoaphongsData = await khoaphongsResponse.json();
-                console.log('nhomnvsData', nhomnvsData)
+                setCosos(cosoData);
                 setNhomnvs(nhomnvsData);
-                setKhoaphongs(khoaphongsData);
+                setSelectedCoso({ id: cosoData[0].id, name: cosoData[0].name });
 
-                console.log("Fetched data:", { nhomnvsURL, khoaphongsURL });
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-
+        fetchDSKhoa();
         fetchData();
     }, [site]);
 
@@ -86,7 +106,7 @@ function TaiKhoan({ site }) {
 
     const handeleView = async () => {
         try {
-            const fecthURL = apiURL + "danhmuc/taikhoan-hsoft/" + site;
+            const fecthURL = apiURL + "danhmuc/taikhoan-hsoft/" + site + "/" + selectedCoso.id;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setData(data);
@@ -117,7 +137,7 @@ function TaiKhoan({ site }) {
         } else {
             const lowerCasedSearchTerm = debouncedSearchTerm.toLowerCase();
             const filteredData = data.filter(item => {
-                
+
                 const userid = item.userid?.toLowerCase() ?? '';
                 const ma = item.mabs?.toLowerCase() ?? '';
                 const hoten = item.hoten?.toLowerCase() ?? '';
@@ -164,14 +184,22 @@ function TaiKhoan({ site }) {
 
     return (
         <>
-            <div className="flex flex-col">
-                <div className='fixed w-full text-md bg-white h-14 p-3 z-10'>
-                    <div className="flex gap-10 items-center">
+            <div className="">
+                <div className=' w-full text-md bg-white p-3 z-10'>
+                    <div className="flex gap-4 items-center">
                         <div className="w-40">
                             <Dropdown
                                 data={accountTypes}
                                 setSelectedOption={setAccountType}
                                 selectedOption={accountType}
+                            />
+                        </div>
+                        <div className="w-96">
+                            <Dropdown
+                                data={cosos}
+                                setSelectedOption={setSelectedCoso}
+                                selectedOption={selectedCoso}
+                                optionALL
 
                             />
                         </div>
@@ -182,20 +210,14 @@ function TaiKhoan({ site }) {
                             Xem <FaEye />
                         </button>
                         <div className="flex gap-4">
-                            <input
-                                type="text"
-                                className="border w-56 px-2 py-0.5 outline-none"
-                                placeholder="Nhập mã, tên, ..."
-                                value={searchTerm}
-                                spellCheck="false"
-                                onChange={handleSearch}
-                            />
+                           
 
                             <div className="w-96">
                                 <Dropdown
                                     data={khoaphongs}
                                     selectedOption={selectedKP}
                                     setSelectedOption={setSelectedKP}
+                                    searchable
                                     optionALL
                                     chooseIndex={1}
                                     memoized
@@ -207,6 +229,7 @@ function TaiKhoan({ site }) {
                                     selectedOption={selectedNhomnv}
                                     setSelectedOption={selectNhomnv}
                                     optionALL
+                                    searchable
                                     chooseIndex={1}
 
                                 />
@@ -218,10 +241,20 @@ function TaiKhoan({ site }) {
                             >Lọc</button>
                         </div>
                     </div>
+                    <div className="p-2">
+                        <div className="w-1/3">
+                        <SearchBar
+                            placeholder='Tìm kiếm'
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                        />
+                        </div>
+                       
+                    </div>
                 </div>
 
-                <div className=" px-3 mt-14 overflow-y-auto h-[750px] w-full flex flex-col ">
-                    <table className="table-auto w-full">
+                <div className="min-h-96 px-4">
+                    <table>
                         <thead className="sticky top-0 bg-white ">
                             <tr className="">
                                 <th className="py-1 text-center w-10">STT</th>

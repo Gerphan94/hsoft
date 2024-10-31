@@ -7,11 +7,11 @@ from .db import get_cursor, schema_now, schema_mutil
 noitru = Blueprint('noitru', __name__)
 
 
-@noitru.route('/noitru/dskhoa/<site>', methods=['GET'])
-def noitru_dskhoa(site):
+@noitru.route('/noitru/dskhoa/<site>/<khu>', methods=['GET'])
+def noitru_dskhoa(site, khu):
     cursor = get_cursor(site)
     result = []
-    stm = 'SELECT * FROM BTDKP_BV WHERE LOAI = 0 AND KHAMBENH = 0'
+    stm = f'SELECT * FROM BTDKP_BV WHERE LOAI = 0 AND KHAMBENH = 0  AND KHU = {khu}'
     khoas = cursor.execute(stm).fetchall()
     for khoa in khoas:
         result.append({

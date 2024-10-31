@@ -113,8 +113,8 @@ def get_nhom_nhanvien(site):
     nhom_nhan_vien_list = [{"id": row[0], "name": row[1]} for row in results]
     return jsonify(nhom_nhan_vien_list), 200
 
-@dm.route('/danhmuc/taikhoan-hsoft/<site>', methods=['GET'])
-def danhmuc_taikhoan(site):
+@dm.route('/danhmuc/taikhoan-hsoft/<site>/<khu>', methods=['GET'])
+def danhmuc_taikhoan(site, khu):
     """
     Get Tài khoản Hsoft
     ---
@@ -146,16 +146,16 @@ def danhmuc_taikhoan(site):
     
     stm = f'''
         WITH DMNV AS (
-        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI, C.CHUNGTHUSO, C.PIN, A.KHOAKYRV
-        FROM DMBS A 
-        LEFT JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
-        LEFT JOIN DMBS_SIGNATURE C ON A.MA = C.MANV
-        WHERE A.NHOM <> 9
+          SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI, C.CHUNGTHUSO, C.PIN, A.KHOAKYRV
+          FROM DMBS A 
+          LEFT JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
+          LEFT JOIN DMBS_SIGNATURE C ON A.MA = C.MANV
+          WHERE A.NHOM <> 9 AND C.KHU = '{khu}'
         )
         SELECT A.ID, A.USERID, A.PASSWORD_,A.HOTEN AS TENTAIKHOAN, A.MANHOM, A.MAKP, B.*
         FROM DLOGIN A
         INNER JOIN DMNV B ON A.MABS = B.MA
-        WHERE A.HIDE = 0
+        WHERE A.HIDE = 0  AND A.KHU LIKE '%{khu}%'
         ORDER BY A.ID 
     '''
     taikhoans = cursor.execute(stm).fetchall()
