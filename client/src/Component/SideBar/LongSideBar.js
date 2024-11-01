@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 
-function LongSideBar({ data, isShortSideBar, setIsShortSideBar, site, setShowChooseSite }) {
+function LongSideBar({ data, isShortSideBar, setIsShortSideBar, site, setShowChooseSite, area }) {
     console.log('site LongSideBar', site)
 
 
@@ -23,7 +23,7 @@ function LongSideBar({ data, isShortSideBar, setIsShortSideBar, site, setShowCho
         <>
             <div className={`w-56 bg-[#031C30] relative text-white h-screen overflow-visible`}>
                 <span
-                    className="absolute flex items-center justify-center bg-[#031C30] rounded-full size-6 right-0 top-6 transform -translate-y-1/2 translate-x-1/2 cursor-pointer "
+                    className="absolute flex items-center justify-center bg-[#031C30] rounded-full size-6 right-0 top-6 transform -translate-y-1/2 translate-x-1/2 cursor-pointer z-[100]"
                     onClick={() => setIsShortSideBar(!isShortSideBar)}
                 >
                     <FaAngleLeft />
@@ -33,7 +33,7 @@ function LongSideBar({ data, isShortSideBar, setIsShortSideBar, site, setShowCho
                         className="w-full bg-[#384B70] border border-white rounded-lg p-1"
                         onClick={() => setShowChooseSite(true)}
 
-                    > {site}</button>
+                    > {site} - {area}</button>
                 </div>
 
                 <ul className="p-4 mt-10 w-full space-y-1 select-none">

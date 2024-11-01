@@ -8,11 +8,15 @@ import { useSearchParams } from 'react-router-dom';
 import { FaGrip } from "react-icons/fa6";
 import TaiKhoaKpModal from "./Modal/TaiKhoaKpModal";
 import SearchBar from "../Common/SearchBar";
+import { useAppContext } from "../Store/AppContext";
 
-function TaiKhoan({ site }) {
+function TaiKhoan() {
 
     console.log('rending tai khoan')
     const apiURL = process.env.REACT_APP_API_URL;
+
+    const { site, setSelectedSideBar } = useAppContext();
+
 
     const accountTypes = [
         { id: 'hsoft', name: 'Hsoft' },
@@ -86,6 +90,11 @@ function TaiKhoan({ site }) {
         };
         fetchDSKhoa();
         fetchData();
+        setData([]);
+        setViewDatas([]);
+        setDataInPage([]);
+        setTotalPage(0);
+
     }, [site]);
 
 
@@ -199,7 +208,7 @@ function TaiKhoan({ site }) {
                                 data={cosos}
                                 setSelectedOption={setSelectedCoso}
                                 selectedOption={selectedCoso}
-                                optionALL
+                                
 
                             />
                         </div>
@@ -210,8 +219,6 @@ function TaiKhoan({ site }) {
                             Xem <FaEye />
                         </button>
                         <div className="flex gap-4">
-                           
-
                             <div className="w-96">
                                 <Dropdown
                                     data={khoaphongs}

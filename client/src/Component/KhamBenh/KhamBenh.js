@@ -13,12 +13,15 @@ import SideMenu from "../SideMenu";
 import Pagination from "../Common/Pagination";
 import { SuccessAlert } from "../Common/Alert";
 
+import { useAppContext } from "../Store/AppContext";
+
 function KhamBenh() {
 
     const apiURL = process.env.REACT_APP_API_URL;
-    const site = localStorage.getItem('site');
 
     const [searchTerm, setSearchTerm] = useState('');
+
+    const { site } = useAppContext();
 
     const [viewDate, setViewDate] = useState(new Date());
     const [initData, setInitData] = useState([]);

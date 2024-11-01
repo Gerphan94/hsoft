@@ -16,7 +16,7 @@ import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 
 function SideBar() {
 
-    const { site, setSite, selectedSideBar } = useAppContext();
+    const { site, setSite, selectedSideBar, area } = useAppContext();
 
     const navigate = useNavigate();
 

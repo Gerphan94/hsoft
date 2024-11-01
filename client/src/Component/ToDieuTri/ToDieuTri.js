@@ -1,39 +1,49 @@
 import React, { useState, useEffect } from "react";
 
 import PageHeader from "../PageHeader";
+import { useAppContext } from "../Store/AppContext";
 
-function ToDieuTri({ site }) {
+function ToDieuTri() {
 
     const apiURL = process.env.REACT_APP_API_URL;
-    console.log(site)
 
-    const [selectedOption, setSelectedOption] = useState({ id: 0, name: '' })
+    const { site, setSelectedSideBar } = useAppContext();
 
-    const menuData = [
-        { id: 'toamau', name: 'Toa mẫu', borderTop: false },
+    const [khoas, setKhoas] = useState([]);
+    const [selectedKhoa, setSelectedKhoa] = useState({ id: null, name: '' });
+    const [hiendiens, setHiendiens] = useState([]);
+    const [viewData, setViewData] = useState([]);
 
-    ]
+    const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '' , mavv:'', ngayvk:'' });
 
     useEffect(() => {
-        const fetchData = async () => {
+        if (!site) {
+            return
+        }
+        const fetchDanhsachKhoa = async () => {
             try {
-                const fetchURL = apiURL + "/tdt";
-                const response = await fetch(fetchURL);
+                const fecthURL = apiURL + "/noitru/dskhoa/" + site;
+                const response = await fetch(fecthURL);
                 const data = await response.json();
-                console.log('data', data)
-
+                setKhoas(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-        };
-        fetchData();
-    }, []);
+        }
+        setSelectedSideBar('noitru');
+        if (site) {
+            fetchDanhsachKhoa();
+            setSelectedKhoa({ id: null, name: '' });
 
+        }
+    }, [site]);
+   
     return (
         <>
             <div className="w-full flex flex-col">
                 <PageHeader title="Tờ điều trị" >
                 </PageHeader>
+                
             </div>
 
 

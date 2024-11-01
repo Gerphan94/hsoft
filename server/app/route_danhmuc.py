@@ -127,6 +127,12 @@ def danhmuc_taikhoan(site, khu):
         required: true
         description: Site (HCM_DEV, HN_DEV,...)
         default: HCM_DEV
+      - name: khu
+        in: path
+        type: string
+        required: true
+        description: Quận Tân Bình, Quận 8, Quận 7
+        default: 1
     responses:
       200:
         description: Success

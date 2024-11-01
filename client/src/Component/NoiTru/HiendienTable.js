@@ -69,6 +69,8 @@ function Hiendien({ data, selected, setSelected }) {
                             </tr>
                         </thead>
                         <tbody>
+                            {data.length === 0 && <tr><td colSpan={11} className="text-center bg-gray-200 py-1 italic">Không có dữ liệu</td></tr>}
+
                             {dataInPage.map((ele, index) => (
                                 <tr
                                     key={ele.id}

@@ -34,7 +34,7 @@ function NoiTru() {
 
     const [selectedButton, setSelectedButton] = useState({ id: '', name: '' });
 
-    const { site, setSelectedSideBar } = useAppContext();
+    const { site, setSelectedSideBar, area } = useAppContext();
 
     const [selectedBTN, setSelectedBNT] = useState(1);
 
@@ -65,10 +65,11 @@ function NoiTru() {
         }
         const fetchDanhsachKhoa = async () => {
             try {
-                const fecthURL = apiURL + "/noitru/dskhoa/" + site;
+                const fecthURL = apiURL + "/noitru/dskhoa/" + site + "/" + area;
                 const response = await fetch(fecthURL);
                 const data = await response.json();
                 setKhoas(data);
+                setSelectedKhoa({ id: data[0].id, name: data[0].name });
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -79,7 +80,7 @@ function NoiTru() {
             setSelectedKhoa({ id: null, name: '' });
 
         }
-    }, [site]);
+    }, [area]);
 
     const gethiendien = async () => {
         try {

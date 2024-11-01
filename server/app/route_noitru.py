@@ -11,12 +11,13 @@ noitru = Blueprint('noitru', __name__)
 def noitru_dskhoa(site, khu):
     cursor = get_cursor(site)
     result = []
-    stm = f'SELECT * FROM BTDKP_BV WHERE LOAI = 0 AND KHAMBENH = 0  AND KHU = {khu}'
+    stm = f'SELECT MAKP, TENKP FROM BTDKP_BV WHERE LOAI = 0 AND KHAMBENH = 0 AND KHU = {khu}'
     khoas = cursor.execute(stm).fetchall()
     for khoa in khoas:
         result.append({
             'id': khoa[0],
             'name': khoa[1]
+            
         })
     return jsonify(result)
 
