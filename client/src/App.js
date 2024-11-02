@@ -43,27 +43,28 @@ function App() {
     { id: "notfound", path: "*", title: 'Not Found', component: <NotFound /> }
   ]
 
-
   return (
     <div className="App">
       <HelmetProvider>
         <div className='flex h-screen overflow-y-hidden'>
-          <SideBar />
-          <div className='overflow-y-auto w-full z-40'>
-            <Routes >
-              {Pages.map((page) => (
-                <Route key={page.id} path={page.path}
-                  element={
-                    <>
-                      <Helmet>
-                        <title>{page.title}</title>
-                      </Helmet>
-                      {page.component}
-                    </>
-                  } />
-              ))}
-            </Routes>
-          </div>
+            <SideBar />
+            <div className='overflow-y-auto w-full z-40'>
+              <Routes >
+                {Pages.map((page) => (
+                  <Route key={page.id} path={page.path}
+                    element={
+                      <>
+                        <Helmet>
+                          <title>{page.title}</title>
+                        </Helmet>
+                        {page.component}
+                      </>
+                    } />
+                ))}
+              </Routes>
+            </div>
+          
+         
 
         </div>
       </HelmetProvider>

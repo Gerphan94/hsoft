@@ -41,15 +41,10 @@ function Duoc() {
                             selectedMenu={selectedMenu}
                             setSelectedMenu={setSelectedMenu}
                         />
-                   
                         <ButtonChucNang
                         setShowDMDuocKP={setShowDMDuocKP}
-
-                        
                         />
                     </div>
-                        
-
                     </>
 
                 </PageHeader>

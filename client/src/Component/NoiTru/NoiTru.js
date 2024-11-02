@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 // import Dropdown from "../Dropdown";
 
 import Dropdown from "../Common/Dropdown";
+
+import PageHeader from "../PageHeader";
+
 import ThuocModal from "./Thuoc/ThuocModal";
 import DichVuModal from "./DichVu/DichVuModal";
 import MauModal from "./Mau/MauModal";
@@ -17,6 +20,7 @@ import SearchBar from "../Common/SearchBar";
 
 import ButtonChucNang from "./ButtonChucNang";
 import ButtonTienIch from "./ButtonTienIch";
+
 
 import { FaAngleDown } from "react-icons/fa6";
 
@@ -138,7 +142,7 @@ function NoiTru() {
     return (
         <>
             <div className="w-full">
-                <div className="px-4 py-2 text-left flex gap-4 border-b shadow-md font-bold">Nội trú</div>
+                <PageHeader title="Nội trú" />
                 <div className="flex items-center px-4 justify-between">
                     <div className="flex p-2 gap-2 items-center">
 

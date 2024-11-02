@@ -38,6 +38,7 @@ function TonTheoKho({ site }) {
         { id: 'hoichan', name: 'Hội chẩn', value: false },
         { id: 'luuy', name: 'Lưu ý', value: false }
     ])
+
     const [tyleBH, setTyleBH] = useState({ id: '100', name: '100' });
 
 
@@ -267,9 +268,7 @@ function TonTheoKho({ site }) {
                         setFilters={setFilterList}
                         onClick={handleFilter}
                     />
-                </div>
-                
-            
+                </div>      
             </div>
             <div className="p-4">
                 {isDetail ?
