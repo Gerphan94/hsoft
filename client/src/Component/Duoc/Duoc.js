@@ -4,9 +4,9 @@ import Dropdown from "../Common/Dropdown";
 import TonBHYT from "./TonBHYT";
 import TonKho from "./TonKho";
 import TonKhoKeToa from "./TonKhoKeToa";
-import TonTheoKho from "./TonTheoKho";
+import TonKhoTongHop from "./TonKhoTongHop";
 import Dmbd from "./Dmbd";
-import TonTuTruc from "./TonTuTruc";
+import TonTuTrucTongHop from "./TonTuTrucTongHop";
 import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
 import PageHeader from "../PageHeader";
@@ -18,49 +18,38 @@ function Duoc() {
 
     const { site, area } = useAppContext();
 
-    const [selectedMenu, setSelectedMenu] = useState({id:'tonkho_theokho', name: 'Tồn Theo kho'})
+    const [selectedMenu, setSelectedMenu] = useState({ id: 'tonkho_tonghop', name: 'Tồn kho - tổng hợp' })
 
     const [showDMDuocKP, setShowDMDuocKP] = useState(false);
 
     const menuData = [
-        { id: 'tonkho_theokho', name: 'Tồn Theo kho' },
-        { id: 'tontutruc', name: 'Tồn tủ trực' },
+        { id: 'tonkho_tonghop', name: 'Tồn kho - tổng hợp' },
+        { id: 'tonkho_chitiet', name: 'Tồn kho - chi tiết' },
+        { id: 'tontutruc_tonghop', name: 'Tồn tủ trực - tổng hợp' },
         { id: 'tonkho_ketoa_bhyt', name: 'Tồn kho - kê toa BHYT' },
         { id: 'tonkho_ketoa_nhathuoc', name: 'Tồn kho - kê toa NT' },
         { id: 'tonkho_tonbhyt', name: 'Tồn BHYT' }
     ]
 
+    useEffect(() => {
+        document.title = selectedMenu.name;
+    }, [selectedMenu.id])
+
     return (
         <>
             <div className="w-full flex flex-col">
-                <PageHeader title="Dược" >
-                    <>
-                    <div className="flex">
-                        <ButtonMenu
-                            menuData={menuData}
-                            selectedMenu={selectedMenu}
-                            setSelectedMenu={setSelectedMenu}
-                        />
-                        <ButtonChucNang
-                        setShowDMDuocKP={setShowDMDuocKP}
-                        />
-                    </div>
-                    </>
-
-                </PageHeader>
-                
+                <PageHeader title="Dược" />
                 <div className="overflow-hidden">
-                    {selectedMenu && selectedMenu.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
+                    {selectedMenu && selectedMenu.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} />}
                     {selectedMenu && selectedMenu.id === 'tonkho_tonbhyt' && <TonBHYT site={site} />}
-                    {selectedMenu && selectedMenu.id === 'tonkho_theokho' && <TonTheoKho site={site} />}
-                    {selectedMenu && selectedMenu.id === 'tontutruc' && <TonTuTruc site={site} area={area}  />}
+                    {selectedMenu && selectedMenu.id === 'tonkho_tonghop' && <TonKhoTongHop menuData={menuData} selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />}
+                    {selectedMenu && selectedMenu.id === 'tontutruc_tonghop' && <TonTuTrucTongHop menuData={menuData} selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />}
                     {selectedMenu && selectedMenu.id === 'dmbd' && <Dmbd site={site} />}
                 </div>
 
             </div>
 
-            {showDMDuocKP && 
-
+            {showDMDuocKP &&
                 <DanhMucDuocKPModal
                     site={site}
                     setShowModal={setShowDMDuocKP}

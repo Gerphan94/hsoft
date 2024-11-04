@@ -45,7 +45,7 @@ function LongSideBar({ data, isShortSideBar, setIsShortSideBar, site, setShowCho
                         >
                             <span><item.icon /></span>
                             {item.name}
-                        </li>
+                        </li> 
                     ))}
                 </ul>
             </div>

@@ -6,11 +6,14 @@ import Table from "./Table";
 import TableDetail from "./TableDetail";
 import Toggle from "../Common/ToggleSwitch";
 import SearchBar from "../Common/SearchBar";
+import ButtonMenu from "./ButtonMenu";
+
 import { useAppContext } from "../Store/AppContext";
 
-function TonTuTruc( {site, area}  ) {
+function TonTuTrucTongHop({ menuData, selectedMenu, setSelectedMenu }) {
 
 
+    const { site, area } = useAppContext();
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [selecteLoaiKP, setSelecteLoaiKP] = useState('khoa');
@@ -106,8 +109,8 @@ function TonTuTruc( {site, area}  ) {
     const getData = async () => {
         if (!selectedTuTruc.id) return;
         const fetchUrl = isDetail ?
-            `${apiURL}duoc/tutruc/tontutruc-chitiet/${site}/${selectedTuTruc.id}` :
-            `${apiURL}duoc/tutruc/tontutruc/${site}/${selectedTuTruc.id}`;
+            `${apiURL}duoc/tutruc/TonTuTrucTongHop-chitiet/${site}/${selectedTuTruc.id}` :
+            `${apiURL}duoc/tutruc/TonTuTrucTongHop/${site}/${selectedTuTruc.id}`;
 
         try {
             const response = await fetch(fetchUrl);
@@ -144,7 +147,7 @@ function TonTuTruc( {site, area}  ) {
         return data.filter((item) => item.mabd.toLowerCase().includes(seachValue.toLowerCase()) || item.tenbd.toLowerCase().includes(seachValue.toLowerCase()));
     }
 
-   
+
     const handleSearch = () => {
         if (timeoutId) {
             clearTimeout(timeoutId);
@@ -211,68 +214,77 @@ function TonTuTruc( {site, area}  ) {
     // /duoc/tonkho/theokho/dskho/<site>
     return (
         <div className="px-4">
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 p-2 gap-y-2">
-                <div className="flex items-center gap-2 px-2">
-                <select 
-                    onChange={(e) => setSelecteLoaiKP(e.target.value)}
-                    className="border px-2 py-1"
-                    >
-                        <option  value="khoa">Khoa</option>
-                        <option  value="capcuu">Cấp cứu</option>
-                        <option value="phongkham">Phòng khám</option>
-                    </select>
-                    {/* <label className="w-10 text-left font-bold">KP</label> */}
-                    <div className="w-full">
-                        <Dropdown
-                            data={khoaphongList}
-                            setSelectedOption={setSelectedKhoaphong}
-                            selectedOption={selectedKhoaphong}
-                            chooseIndex={1}
-                            placeholder="Chọn khoa/phòng "
+            <div className="flex gap-2">
+                <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-y-2">
+                    <div className="flex items-center gap-2">
+                        <select
+                            onChange={(e) => setSelecteLoaiKP(e.target.value)}
+                            className="border px-2 py-1"
+                        >
+                            <option value="khoa">Khoa</option>
+                            <option value="capcuu">Cấp cứu</option>
+                            <option value="phongkham">Phòng khám</option>
+                        </select>
+                        {/* <label className="w-10 text-left font-bold">KP</label> */}
+                        <div className="w-full">
+                            <Dropdown
+                                data={khoaphongList}
+                                setSelectedOption={setSelectedKhoaphong}
+                                selectedOption={selectedKhoaphong}
+                                chooseIndex={1}
+                                placeholder="Chọn khoa/phòng "
+                            />
+
+                        </div>
+                    </div>
+                    <div className=" flex items-center gap-2">
+
+                        <label className="w-20 text-left font-bold select-none">Tủ trực:</label>
+                        <div className="w-full">
+                            <Dropdown
+                                data={tuTrucList}
+                                setSelectedOption={setSelectedTuTruc}
+                                placeholder="Chọn tủ trực"
+                                chooseIndex={1}
+                                searchable={false}
+                                selectedOption={selectedTuTruc}
+                            />
+                        </div>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                        <Toggle
+                            idname="ton-chitiet"
+                            enabled={isDetail}
+                            setEnabled={setIsDetail}
+                            displayName="Tồn chi tiết"
+                        />
+
+                        <ViewButton onClick={onClick} />
+                    </div>
+
+                    <div className=" flex items-center gap-2 px-2">
+                        <label className="w-10 text-left font-bold"></label>
+                        <SearchBar
+                            placeholder='Nhập Mã, Tên, HC'
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                            handleSearch={handleSearch}
                         />
 
                     </div>
+                    
                 </div>
-                <div className=" flex items-center gap-2 px-2">
-                   
-                    <label className="w-20 text-left font-bold select-none">Tủ trực:</label>
-                    <div className="w-full">
-                        <Dropdown
-                            data={tuTrucList}
-                            setSelectedOption={setSelectedTuTruc}
-                            placeholder="Chọn tủ trực"
-                            chooseIndex={1}
-                            searchable={false}
-                            selectedOption={selectedTuTruc}
-                        />
-                    </div>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <Toggle
-                        idname="ton-chitiet"
-                        enabled={isDetail}
-                        setEnabled={setIsDetail}
-                        displayName="Tồn chi tiết"
+                <div>
+                <ButtonMenu
+                        menuData={menuData}
+                        selectedMenu={selectedMenu}
+                        setSelectedMenu={setSelectedMenu}
                     />
-
-                    <ViewButton onClick={onClick} />
                 </div>
-
-                <div className=" flex items-center gap-2 px-2">
-                    <label className="w-10 text-left font-bold"></label>
-
-                    <SearchBar
-                        placeholder='Nhập Mã, Tên, HC'
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        handleSearch={handleSearch}
-                    />
-
-                </div>
+               
             </div>
 
 
-            {/* Table */}
 
             <div>
                 {isDetail ?
@@ -299,4 +311,4 @@ function TonTuTruc( {site, area}  ) {
         </div>
     );
 }
-export default TonTuTruc;
+export default TonTuTrucTongHop;

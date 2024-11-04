@@ -7,10 +7,14 @@ import TableDetail from "./TableDetail";
 import styles from "../styles.module.css";
 import SearchBar from "../Common/SearchBar";
 import Toggle from "../Common/ToggleSwitch";
+import ButtonChucNang from "./ButtonChucNang";
+import ButtonMenu from "./ButtonMenu";
 
 import { useAppContext } from "../Store/AppContext";
 
-function TonTheoKho({ site }) {
+function TonKhoTongHop({ menuData, selectedMenu, setSelectedMenu }) {
+
+    const { site } = useAppContext();
 
     console.count('rending tồn kho theo kho', site)
     // const cousite = localStorage.getItem('site');
@@ -45,12 +49,9 @@ function TonTheoKho({ site }) {
 
     useEffect(() => {
         if (!site) return; // Skip fetch if `site` is not valid or undefined
-
         console.count("Số lần Callback trong useEffect chạy");
-
         const controller = new AbortController(); // Create a new AbortController
         const signal = controller.signal; // Get the signal to pass to fetch
-
         const fetchData = async () => {
             try {
                 const fetchURL = apiURL + "/duoc/danhsach-kho/" + site;
@@ -73,10 +74,9 @@ function TonTheoKho({ site }) {
             }
         };
         fetchData();
+        
         return () => controller.abort();
     }, [site]);
-
-
 
     const filter = (iData) => {
         const filterData = iData.filter((item) => {
@@ -222,53 +222,64 @@ function TonTheoKho({ site }) {
         <div className="">
             <div className="flex items-center gap-4 px-4">
                 <div className="flex items-center gap-2">
-                    <label className="font-bold">Kho: </label>
-                    <div className="w-96 px-4 py-2">
-
-                        <select
-                            className="border px-2 py-1 w-full outline-none"
-                            value={selectedKhoId}
-                            onChange={(event) => setSelectedKhoId(event.target.value)} // Corrected the onChange handler
-                        >
-                            {khoList.map((kho) => (
-                                <option key={kho.id} value={kho.id}>{kho.name}</option>
-                            ))}
-                        </select>
-
+                    <div className="flex gap-1 items-center">
+                        <label className="font-bold">Kho: </label>
+                        <div className="w-96 px-4 py-2">
+                            <select
+                                className="border px-2 py-1 w-full outline-none"
+                                value={selectedKhoId}
+                                onChange={(event) => setSelectedKhoId(event.target.value)} // Corrected the onChange handler
+                            >
+                                {khoList.map((kho) => (
+                                    <option key={kho.id} value={kho.id}>{kho.name}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                    <Toggle
-                        idname={'is-detail'}
+
+                    <div><Toggle
+                        idname='is-detail'
                         displayName="Tồn chi tiết"
                         setEnabled={setIsDetail}
                         enabled={isDetail}
                     />
-                </div>
-                    <button 
-                        type="button" 
-                        className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded"
+                    </div>
+                    <button
+                        className="btn btn-view"
+                        type="button"
                         onClick={onClick}
-                        >
+                    >
                         Xem
                     </button>
+                    <div>
+                        <SearchBar
+                            placeholder='Nhập Mã, Tên, HC'
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                            handleSearch={handleSearch}
+                        />
+                    </div>
+                    <div className="w-96">
+                        <Filter3
+                            idkho={selectedKhoId}
+                            site={site}
+                            filters={filterList}
+                            setFilters={setFilterList}
+                            onClick={handleFilter}
+                        />
+                    </div>
+
+
                 </div>
-                <div>
-                    <SearchBar
-                        placeholder='Nhập Mã, Tên, HC'
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        handleSearch={handleSearch}
+
+                <div className="flex">
+                    <ButtonMenu
+                        menuData={menuData}
+                        selectedMenu={selectedMenu}
+                        setSelectedMenu={setSelectedMenu}
                     />
                 </div>
-                <div className="w-96">
-                    <Filter3
-                        idkho={selectedKhoId}
-                        site={site}
-                        filters={filterList}
-                        setFilters={setFilterList}
-                        onClick={handleFilter}
-                    />
-                </div>      
+
             </div>
             <div className="p-4">
                 {isDetail ?
@@ -289,4 +300,4 @@ function TonTheoKho({ site }) {
         </div >
     );
 }
-export default TonTheoKho;
+export default TonKhoTongHop;

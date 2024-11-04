@@ -75,7 +75,7 @@ def noitru_hiendien(site, makp):
     cursor = get_cursor(site)
     result = []
     
-    col_names = ['id', 'mavaovien', 'maql', 'mabn', 'hoten', 'phai', 
+    col_names = ['id', 'mavaovien', 'maql', 'mabn', 'hoten', 'phai', 'ngaysinh',
                  'namsinh', 'ngayvv', 'ngayvk', 'maicd', 'madoituong', 'doituong', 'sothe', 'mau_abo', 'mau_rh']
     
     stm = f'''
@@ -95,6 +95,7 @@ def noitru_hiendien(site, makp):
             A.MABN,
             B.HOTEN,
             B.PHAI,
+            TO_CHAR(B.NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH,
             B.NAMSINH,
             A.NGAYVV,
             A.NGAY AS NGAYVK,

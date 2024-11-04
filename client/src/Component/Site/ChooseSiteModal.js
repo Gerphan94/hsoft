@@ -5,7 +5,6 @@ import { useAppContext } from "../Store/AppContext";
 function ChooseSiteModal({ setShowModal }) {
 
     const { setSite , setSiteName, setArea } = useAppContext();
-
     const sites = [
         { id: 'HCM_DEV', name: 'Bệnh Viện Đa Khoa Tâm Anh TP. Hồ Chí Minh', area: 1 },
         { id: 'HCM_DEV', name: 'Bệnh Viện Đa Khoa Tâm Anh Quận 8', area: 2 },

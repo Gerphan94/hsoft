@@ -87,7 +87,7 @@ function Hiendien({ data, selected, setSelected }) {
                                     data-maql={ele.maql}
                                 >
                                     <td className="text-center"><div className=" py-1 text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</div></td>
-                                    <td >
+                                    <td className="w-32">
                                         <div className="flex gap-2 items-center flex-row-reverse group">
                                             <div name="mabn" className="text-right pr-2 hover:underline hover:text-blue-500 cursor-pointer">
                                                 {ele.mabn}
@@ -104,7 +104,10 @@ function Hiendien({ data, selected, setSelected }) {
                                             {ele.hoten}
                                         </div>
                                     </td>
-                                    <td><div className="text-center">{ele.namsinh}</div></td>
+                                    <td><div className="text-center">
+                                        {ele.ngaysinh  ? ele.ngaysinh : ele.namsinh}
+                                        
+                                       </div></td>
                                     <td><div className="text-right">{moment(ele.ngayvv).utc().format('DD/MM/YYYY HH:mm')}</div></td>
                                     <td><div className="text-right">{moment(ele.ngayvk).utc().format('DD/MM/YYYY HH:mm')}</div></td>
                                     <td><div className="text-center px-2">{ele.doituong}</div></td>
@@ -116,14 +119,15 @@ function Hiendien({ data, selected, setSelected }) {
 
                         </tbody>
                     </table>
+                    <Pagination
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        totalPage={totalPage}
+                        itemsPerPage={itemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
+                    />
                 </div>
-                <Pagination
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    totalPage={totalPage}
-                    itemsPerPage={itemsPerPage}
-                    setItemsPerPage={setItemsPerPage}
-                />
+
             </div>
 
 

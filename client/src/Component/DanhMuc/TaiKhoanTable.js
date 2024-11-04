@@ -11,11 +11,8 @@ function TaiKhoanTable({ data }) {
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
 
-
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
-
-
 
     const constDataInPage = (iPage, iData) => {
         const indexOfLastItem = iPage * itemsPerPage;
@@ -24,10 +21,13 @@ function TaiKhoanTable({ data }) {
     }
 
     useEffect(() => {
-
         setTotalPage(Math.ceil(data.length / itemsPerPage));
         setDataInPage(constDataInPage(currentPage, data));
     }, [data, itemsPerPage]);
+
+    useEffect(() => {
+        setDataInPage(constDataInPage(currentPage, data));
+    }, [currentPage]);
 
     const handleCopyPwd = (pwd) => {
         if (!pwd) {

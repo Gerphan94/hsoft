@@ -51,7 +51,7 @@ const ButtonChucNang = ({
 
 
                 {isDropdownOpen && (
-                    <div className="origin-top-left absolute mt-2 right-0 w-60 max-h-96 shadow-lg shadow-gray-300 border border-gray-400 bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
+                    <div className="origin-top-right absolute mt-2 left-0 w-60 max-h-96 shadow-lg shadow-gray-300 border border-gray-400 bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             <li>
                                 <button
