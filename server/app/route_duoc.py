@@ -162,7 +162,7 @@ def duoc_tonkho_theokho(site, idkho):
 def duoc_tonkho_theokho_chitiet(site, idkho):
     cursor =get_cursor(site)
     result = []
-    cols = ['stt', 'idbd', 'mabd', 'tenbd', 'tenhc', 'dvt', 'dvd', 'duongdung', 'duongdungmorong','dd_count','bhyt', 'hsd', 'losx','tondau', 'slnhap', 'slxuat', 'toncuoi']
+    cols = ['stt', 'idbd', 'mabd', 'tenbd', 'tenhc', 'dvt', 'dvd', 'duongdung', 'duongdungmorong','dd_count','bhyt', 'handung', 'losx','tondau', 'slnhap', 'slxuat', 'toncuoi']
     query = f'''
         SELECT 
             A.STT, 

@@ -7,18 +7,28 @@ import { GiPoisonBottle } from "react-icons/gi";
 import { GoReport } from "react-icons/go";
 import { IoMdWarning } from "react-icons/io";
 
-
 import Pagination from "../Common/Pagination";
-
 import ItemComponent from "./TableIconComponent";
-function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) {
 
-    console.log(data)
+function InventoryTableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(25);
-    const [totalPage, setTotalPage] = useState(0);
+    const itemsPerPage = 25;
+    const [totalPage, setTotalPage] = useState(1);
     const [dataInPage, setDataInPage] = useState([]);
+
+    
+
+    const formatDateString = (dateString) => {
+        if (!dateString || dateString.length !== 6) {
+          return dateString;
+        }
+        const day = dateString.slice(0, 2);   
+        const month = dateString.slice(2, 4);  
+        const year = '20' + dateString.slice(4, 6); 
+      
+        return `${day}/${month}/${year}`;
+      };
 
     const constDataInPage = (iPage, iData) => {
         const indexOfLastItem = iPage * itemsPerPage;
@@ -27,14 +37,16 @@ function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) 
     }
 
     useEffect(() => {
+        console.log('rending when change data')
         setDataInPage(constDataInPage(1, data));
         setTotalPage(Math.ceil(data.length / itemsPerPage));
-    }, [data, itemsPerPage]);
+    }, [data]);
 
     useEffect(() => {
+        console.log('rending when change page', currentPage)
         setDataInPage(constDataInPage(currentPage, data));
-    }, [currentPage]);
 
+    }, [currentPage]);
 
     const onClickPharmar = (pharmarid) => {
         setSelectedPharmarId(pharmarid);
@@ -54,18 +66,15 @@ function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) 
                                 <th><div className="w-36">Hoạt chất</div></th>
                                 <th><div className="text-left w-20">DVD</div></th>
                                 <th><div className="w-28">Đường dùng</div></th>
-                                <th><div className="w-28">ATC</div></th>
                                 <th><div className="w-18">BHYT</div></th>
+                                <th><div className="w-28">Lô</div></th>
+                                <th><div className="text-right w-20">Hạn dùng</div></th>
                                 <th><div className="text-right w-20">Tồn đầu</div></th>
                                 <th><div className="text-right w-20">Nhập</div></th>
                                 <th><div className="text-right w-20">Xuất</div></th>
                                 <th><div className="text-right w-20">Tồn cuối</div></th>
-                                {isTonAo &&
-                                    <>
-                                        <th><div className="text-right w-20">SLYC</div></th>
-                                        <th><div className="text-right w-20 pr-4">SLKD</div></th>
-                                    </>
-                                }
+
+                                {/* <th><div className="text-center w-20">TồnBH</div></th> */}
                             </tr>
                         </thead>
 
@@ -73,7 +82,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) 
                             {data.length === 0 && <tr><td colSpan={15} className="text-center bg-gray-200 py-1">Không có kết quả</td></tr>}
 
                             {dataInPage.map((item, index) => (
-                                <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200 text-sm" >
+                                <tr key={item.stt} className="even:bg-gray-100 hover:bg-blue-200 text-sm" >
                                     <td>
                                         <div className="flex items-center gap-0.5 px-1 py-1">
                                             {item.dalieu === 1 && <FaBottleDroplet className="text-green-700" />}
@@ -98,7 +107,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) 
                                                 onClick={() => onClickPharmar(item.id)}
 
                                             > {item.tenbd}
-                                                {item.soluongdvsd > 0 ? <span className="italic text-zinc-500"> ({item.soluongdvsd} {item.dvd})</span> : ''}
+                                                {item.sluongdvbsd > 0 ? <span className="italic text-zinc-500"> ({item.sluongdvbsd} {item.dvd})</span> : ''}
                                             </div>
                                             {/* <span className="italic text-zinc-500">{item.tenhc}</span> */}
                                         </div>
@@ -114,25 +123,15 @@ function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) 
                                             {item.dd_count} - {item.duongdung}
                                         </div>
                                     </td>
-                                    <td className="text-center">
-                                        {item.maatc !== null && item.maatc !== undefined && item.maatc.trim() !== '' ?
-                                            <div className={`${item.maatc.trim() !== item.maatc ? 'text-red-500' : ''}`}>
-                                                {item.maatc}
-                                            </div>
-                                            : ''
-                                        }
-                                    </td>
+                                   
                                     <td>{item.bhyt}</td>
+                                    <td className="text-right">{item.losx}</td>
+                                    <td className="text-center">{formatDateString(item.handung)}</td>
                                     <td className="text-right px-1">{Number(item.tondau).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
-                                    <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
-                                    {isTonAo &&
-                                        <>
-                                            <td className="text-right px-1">{Number(item.slyeucau).toLocaleString('en-US')}</td>
-                                            <td className="text-right px-1 pr-4">{Number(item.tonkhadung).toLocaleString('en-US')}</td>
-                                        </>
-                                    }
+                                    <td className={`text-right px-1 pr-2 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
+
                                 </tr>
                             ))}
                         </tbody>
@@ -144,8 +143,6 @@ function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) 
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     totalPage={totalPage}
-                    itemsPerPage={itemsPerPage}
-                    setItemsPerPage={setItemsPerPage}
                 />
             </div >
 
@@ -154,4 +151,4 @@ function Table({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) 
 
 
 }
-export default Table;
+export default InventoryTableDetail;

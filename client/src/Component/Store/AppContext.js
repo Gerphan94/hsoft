@@ -13,12 +13,12 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const tmp_site = sessionStorage.getItem('site');
     const tmp_siteName = sessionStorage.getItem('sitename');
-
     const tmp_area = sessionStorage.getItem('area');
 
     if (!tmp_site) {
       sessionStorage.setItem('site', 'HCM_DEV');
       sessionStorage.setItem('area', 1);
+      sessionStorage.setItem('sitename', 'Bệnh Viện Đa Khoa Tâm Anh TP. Hồ Chí Minh');
       setSite('HCM_DEV');
       setSiteName('Bệnh Viện Đa Khoa Tâm Anh TP. Hồ Chí Minh');
       setArea(1);

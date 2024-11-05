@@ -2,9 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import PharmarDetailModal from "./PharmarDetailModal";
 // import Filter from "./Filter";
 import Filter3 from "./Filter3";
-import Table from "./Table";
-import TableDetail from "./TableDetail";
-import styles from "../styles.module.css";
+import TonKhoTongHopTable from "./TonKhoTongHopTable";
 import SearchBar from "../Common/SearchBar";
 import Toggle from "../Common/ToggleSwitch";
 import ButtonChucNang from "./ButtonChucNang";
@@ -12,7 +10,7 @@ import ButtonMenu from "./ButtonMenu";
 
 import { useAppContext } from "../Store/AppContext";
 
-function TonKhoTongHop({ menuData, selectedMenu, setSelectedMenu }) {
+function TonKhoTongHop({ menuData, selectedMenu, setSelectedMenu, setHeaderTitle }) {
 
     const { site } = useAppContext();
 
@@ -75,6 +73,7 @@ function TonKhoTongHop({ menuData, selectedMenu, setSelectedMenu }) {
         };
         fetchData();
         
+
         return () => controller.abort();
     }, [site]);
 
@@ -237,13 +236,6 @@ function TonKhoTongHop({ menuData, selectedMenu, setSelectedMenu }) {
                         </div>
                     </div>
 
-                    <div><Toggle
-                        idname='is-detail'
-                        displayName="Tồn chi tiết"
-                        setEnabled={setIsDetail}
-                        enabled={isDetail}
-                    />
-                    </div>
                     <button
                         className="btn btn-view"
                         type="button"
@@ -282,20 +274,11 @@ function TonKhoTongHop({ menuData, selectedMenu, setSelectedMenu }) {
 
             </div>
             <div className="p-4">
-                {isDetail ?
-                    <TableDetail
-                        data={viewDatas}
-                        setIsShowModal={setIsShowModal}
-                        setSelectedPharmarId={setSelectedPharmarId} />
-                    :
-                    <Table
-                        data={viewDatas}
-                        setIsShowModal={setIsShowModal}
-                        setSelectedPharmarId={setSelectedPharmarId} />
-                }
-
+                <TonKhoTongHopTable
+                    data={viewDatas}
+                    setIsShowModal={setIsShowModal}
+                    setSelectedPharmarId={setSelectedPharmarId} />
             </div>
-
             {isShowModal && <PharmarDetailModal site={site} pharmarId={selectedPharmarId} setModalShow={setIsShowModal} />}
         </div >
     );

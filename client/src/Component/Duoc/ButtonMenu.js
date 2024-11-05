@@ -43,14 +43,13 @@ const ButtonMenu = ({ selectedMenu, menuData, setSelectedMenu }) => {
                     className={`flex items-center justify-between gap-2 w-full h-full p-1 whitespace-nowrap  px-2 border bg-[#667BC6] text-white font-bold select-none disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed outline-none'}`}
                     onClick={toggleDropdown}
                 >
-                    {/* {selectedMenu && selectedMenu.name} */}
                     Tồn kho
                     <span><FaAngleDown /></span>
                 </button>
 
 
                 {isDropdownOpen && (
-                    <div className="origin-top-right absolute mt-2 w-60 max-h-96 shadow-lg shadow-gray-300 border border-gray-400 bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
+                    <div className="origin-top-left absolute right-0 mt-2 w-60 max-h-96 shadow-lg shadow-gray-300 border border-gray-400 bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             {menuData.map((item) => (
                                 <li key={item.id}>

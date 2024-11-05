@@ -14,7 +14,7 @@ function PageHeader({ title }) {
                     className="px-4 italic text-gray-500 hover:underline hover:text-[#000B58]"
                     onClick={() => setShowChooseSiteModal(true)}
                 >
-                    {siteName}
+                    {siteName !== '' ? siteName : 'No site found'}
                 </button>
 
             </div>
