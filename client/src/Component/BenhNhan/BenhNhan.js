@@ -1,53 +1,53 @@
 import React, { useState } from "react";
 import PageHeader from "../PageHeader";
+import { useAppContext } from "../Store/AppContext";
+import BenhNhanComponent from "./BenhNhanComponent";
+
+import Loading from "../Loading";
 function BenhNhan() {
-    const monthNow = new Date().getMonth() + 1;
 
 
-    const [month, setMonth] = useState(new Date().getMonth() + 1);
-    const [year, setYear] = useState(new Date().getFullYear());
+    const { site } = useAppContext();
+
+    const apiURL = process.env.REACT_APP_API_URL;
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [persons, setPersons] = useState([]);
+
+    const handleRandom = async () => {
+        setIsLoading(true);
+        try {
+            const fecthURL = apiURL + "benhnhan/get-random-benhnhan/" + site;
+            const response = await fetch(fecthURL);
+            const data = await response.json();
+            setPersons(data);
+        } catch (error) {
+            console.log(error);
+        }
+        setIsLoading(false);
+    }
+    
 
     return (
         <>
             <div className="w-full">
                 <PageHeader title="Random Bệnh nhân" />
-                <div className="p-4 flex gap-4">
-                    <div className="flex gap-2 items-center">
-                        <label>Tháng</label>
-                        <select
-                            value={month}
-                            className="px-2 py-0.5 border outline-none disabled:opacity-50 disabled:text-gray-200"
-                            onChange={(e) => setMonth(e.target.value)}
-                        >
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
-                                <option
-                                    key={item}
-                                    value={item}
-                                    disabled={item > monthNow}
-                                >
-                                    {item}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="flex gap-2 items-center">
-                        <label>Năm: </label>
-                        <select
-                            value={year}
-                            className="px-2 py-0.5 border outline-none"
-                            onChange={(e) => setYear(e.target.value)}
-                        >
-                            <option>2024</option>
-                        </select>
-                    </div>
+                <div className="px-20 py-4 flex gap-4">
                     <button
                         className="btn btn-view"
+                        onClick={handleRandom}
+                    >RANDOM</button>
+                </div>
+                <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 p-20 gap-10">
+                    {persons.map((person) => (
+                        <BenhNhanComponent person={person} />
+                    ))}
 
-                    >GET</button>
                 </div>
             </div>
 
-
+            {isLoading && <Loading />}
         </>
     )
 

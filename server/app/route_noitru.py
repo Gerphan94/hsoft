@@ -281,7 +281,7 @@ def get_thuoc_danhsach_phieudalap(site, makp, string_ngay):
         in: path
         type: string
         required: true
-        description:
+        description: vd 20241106
     responses:
       200:
         description: Success
@@ -315,9 +315,7 @@ def get_thuoc_danhsach_phieudalap(site, makp, string_ngay):
             JOIN {schema}.D_DUTRULL B ON A.ID = B.ID
             JOIN D_DMKHO C ON A.MAKHO = C.ID
             WHERE B.IDDUYET IN (SELECT ID FROM ApprovedIDs)
-            
             UNION ALL
-            
             SELECT DISTINCT
                 B.IDDUYET,
                 A.MAKHO,
@@ -328,7 +326,7 @@ def get_thuoc_danhsach_phieudalap(site, makp, string_ngay):
             WHERE B.IDDUYET IN (SELECT ID FROM ApprovedIDs)
         )
         SELECT
-            A.ID AS IDDUYET,
+            TO_CHAR(A.ID) AS IDDUYET,
             B.TEN AS TENPHIEU,
             C.TEN AS TENKHOADUOC,
             D.TEN AS TENTT ,

@@ -60,8 +60,19 @@ function Duoc() {
                                 isDetail
                             />}
 
-                        {selectedMenu.id === 'tontutruc_tonghop' && <TonTuTruc menuData={menuData} selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />}
-                        {selectedMenu.id === 'dmbd' && <Dmbd site={site} />}
+                        {selectedMenu.id === 'tontutruc_tonghop' &&
+                            <TonTuTruc
+                                menuData={menuData}
+                                selectedMenu={selectedMenu}
+                                setSelectedMenu={setSelectedMenu}
+                            />}
+                        {selectedMenu.id === 'tontutruc_chitiet' &&
+                            <TonTuTruc
+                                menuData={menuData}
+                                selectedMenu={selectedMenu}
+                                setSelectedMenu={setSelectedMenu}
+                                isDetail
+                            />}
                     </div>
                 )}
             </div>

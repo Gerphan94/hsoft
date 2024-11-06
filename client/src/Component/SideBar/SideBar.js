@@ -17,9 +17,10 @@ import { IoFileTrayFullSharp, IoNewspaperOutline } from "react-icons/io5";
 import { FaBook, FaBed } from "react-icons/fa";
 import { MdAttachMoney } from "react-icons/md";
 
+
 function SideBar() {
 
-    const { site, setSite , area, setArea } = useAppContext();
+    const { site, setSite , area, setArea, longSideBar } = useAppContext();
 
     const navigate = useNavigate();
 
@@ -51,21 +52,21 @@ function SideBar() {
 
     return (
         <>
-            {isShortSideBar ?
-                <ShortSideBar
-                    data={funcs}
-                    isShortSideBar={isShortSideBar}
-                    setIsShortSideBar={setIsShortSideBar}
-                    site={site}
-                    setShowChooseSite={setShowChooseSite}
-                />
-                :
+            {longSideBar ?
                 <LongSideBar
                     data={funcs}
                     isShortSideBar={isShortSideBar}
                     setIsShortSideBar={setIsShortSideBar}
                     site={site}
                     area={area}
+                    setShowChooseSite={setShowChooseSite}
+                />
+                :
+                <ShortSideBar
+                    data={funcs}
+                    isShortSideBar={isShortSideBar}
+                    setIsShortSideBar={setIsShortSideBar}
+                    site={site}
                     setShowChooseSite={setShowChooseSite}
                 />
 

@@ -7,6 +7,7 @@ export const AppProvider = ({ children }) => {
   const [site, setSite] = useState('');
   const [area, setArea] = useState(0);
   const [siteName, setSiteName] = useState('');
+  const [longSideBar, setLongSideBar] = useState(true);
   
   const [selectedSideBar, setSelectedSideBar] = useState('');
 
@@ -37,7 +38,8 @@ export const AppProvider = ({ children }) => {
       site, setSite,
       area, setArea,
       siteName, setSiteName,
-      selectedSideBar, setSelectedSideBar
+      selectedSideBar, setSelectedSideBar,
+      longSideBar, setLongSideBar
     }}>
       {children}
     </AppContext.Provider>

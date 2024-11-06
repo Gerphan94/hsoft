@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, Blueprint
 from .db import get_cursor
+import random
 
 benhnhan = Blueprint('benhnhan', __name__)
 
@@ -29,20 +30,20 @@ def benhnhan_get_random_benhnhan(site):
                   type: string
                   example: ok
     """
-    year_ar == [23, 24]
+    year_ar = [23, 24]
     random_year = random.choice(year_ar)
-    
     cursor = get_cursor(site)
+    stm = f'''
     
-    stm = '''
+    
         SELECT
-            A.MABN
+            A.MABN, A.HOTEN
         FROM
             BTDBN A
         INNER JOIN DIENTHOAI B ON
             A.MABN = B.MABN
         WHERE
-            A.MABN LIKE '23%'
+            A.MABN LIKE '{random_year}%'
             AND LENGTH(B.DIDONG) > 9
             AND HOTEN NOT LIKE '%TEST%'
             AND A.MANN IS NOT NULL
@@ -50,7 +51,10 @@ def benhnhan_get_random_benhnhan(site):
         ORDER BY
             DBMS_RANDOM.VALUE,
             A.MABN
-        FETCH FIRST 20 ROWS ONLY;
+        FETCH FIRST 20 ROWS ONLY
     '''
-    results = cursor.execute(stm).fetchall()
-    return jsonify(results)
+    benhnhans = cursor.execute(stm).fetchall()
+    results = []
+    for benhnhan in benhnhans:
+        results.append({'mabn': benhnhan[0], 'hoten':  benhnhan[1]})
+    return jsonify(results), 200

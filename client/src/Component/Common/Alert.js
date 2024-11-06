@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BsInfoCircle } from "react-icons/bs";
 
+
+
+
 export const SuccessAlert = ( { visible, setVisible, message } ) => {
 
   const hideAlert = () => setVisible(false);
@@ -13,7 +16,7 @@ export const SuccessAlert = ( { visible, setVisible, message } ) => {
   }, [visible]);
 
   return (
-    <div className='absolute top-4 right-4'>
+    <div className='absolute top-4 right-4 z-[1000]'>
       <div
         className={`bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md transition-opacity duration-500 ease-in-out ${visible ? 'opacity-100' : 'opacity-0'}`}
         role="alert"

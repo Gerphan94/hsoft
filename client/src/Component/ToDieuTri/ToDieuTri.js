@@ -16,33 +16,15 @@ function ToDieuTri() {
 
     const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '' , mavv:'', ngayvk:'' });
 
-    useEffect(() => {
-        if (!site) {
-            return
-        }
-        const fetchDanhsachKhoa = async () => {
-            try {
-                const fecthURL = apiURL + "/noitru/dskhoa/" + site;
-                const response = await fetch(fecthURL);
-                const data = await response.json();
-                setKhoas(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-        setSelectedSideBar('noitru');
-        if (site) {
-            fetchDanhsachKhoa();
-            setSelectedKhoa({ id: null, name: '' });
-
-        }
-    }, [site]);
+    
    
     return (
         <>
             <div className="w-full flex flex-col">
                 <PageHeader title="Tờ điều trị" >
                 </PageHeader>
+
+
                 
             </div>
 

@@ -45,22 +45,12 @@ function ShortSideBar({ data, isShortSideBar, setIsShortSideBar, site }) {
 
     return (
         <>
-            <div className={`w-16 bg-[#031C30] relative text-white h-screen overflow-visible`}>
-                <span
-                    className="absolute flex items-center justify-center bg-[#031C30] rounded-full size-6 right-0 top-6 transform -translate-y-1/2 translate-x-1/2 cursor-pointer z-[1000]"
-                    onClick={() => setIsShortSideBar(!isShortSideBar)}
-                >
-                    <FaAngleRight />
-                </span>
-                <div className='h-10 w-full flex items-center justify-left px-5 py-1'>
-                    <div className="w-full bg-[#384B70]"></div>
-                </div>
-
+            <div className={`w-16 bg-[#031C30]  text-white h-screen overflow-visible`}>
                 <ul className="p-2 mt-10 w-full space-y-1 ">
                     {data.map((func, index) => (
                         <Tooltip text={func.name} key={index}>
                             <li
-                                className={` gap-2 block p-2 cursor-pointer hover:bg-gray-700 rounded-lg border-white  ${pathName === func.path ? 'border opacity-100' : 'opacity-75'}`}
+                                className={` gap-2 w-full inline-block p-2 cursor-pointer hover:bg-gray-700 rounded-lg border-white  ${pathName === func.path ? 'border opacity-100' : 'opacity-75'}`}
                                 key={index}
                                 onClick={() => handleClick(func.id, func.path)}
                             >
