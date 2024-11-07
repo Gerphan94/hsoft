@@ -487,10 +487,10 @@ def noitru_get_thucxuat_by_id(site, id):
             A.MAKHO,
             D.TEN AS TENKHO
         FROM
-            HSOFTTAMANH1024.D_THUCXUAT A
+            {schema_now()}.D_THUCXUAT A
         INNER JOIN D_DMBD B ON
             A.MABD = B.ID
-        LEFT JOIN HSOFTTAMANH1024.D_THEODOI C ON
+        LEFT JOIN  {schema_now()}.D_THEODOI C ON
             A.STTT = C.ID
         INNER JOIN D_DMKHO D ON A.MAKHO = D.ID
         INNER JOIN D_DOITUONG E ON A.MADOITUONG = E.MADOITUONG 

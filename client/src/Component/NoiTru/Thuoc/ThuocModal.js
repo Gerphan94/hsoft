@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles.module.css"
 import ThuocDetail from "./ThuocModalDetail";
-import CouponList from "./CouponList";
+import PhieuDanhSach from "./PhieuDanhSach";
 import moment from "moment";
-import ChitietThuoc from "./ChitietThuoc";
+import PhieuDetail from "./PhieuDetail";
 import ChitietXuatThuoc from "./ChitietXuatThuoc";
 
 function ThuocModal({ site, selected, setModalShow }) {
@@ -13,11 +13,12 @@ function ThuocModal({ site, selected, setModalShow }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [dutrull, setDutrull] = useState([]);
-    const [chitiet, setChitiet] = useState([]);
+    const [detail, setDetail] = useState({'detail': {}, 'thuoc':[]});
+    const [danhSachThuoc, setDanhSachThuoc] = useState([]);
     const [thucxuat, setThucxuat] = useState([]);
 
 
-    const [selectedCoupon, setSelectedCoupon] = useState({ id: null, name: '', type: '', ngay: '' });
+    const [selectedCoupon, setSelectedCoupon] = useState({ id: null, name: '', type: '', thangnam: '' });
     const [medicineDetail, setMedicineDetail] = useState([]);
     const [dutrullDetail, setDutrullDetail] = useState({});
     const [tabNumber, setTabNumber] = useState(1);
@@ -49,36 +50,36 @@ function ThuocModal({ site, selected, setModalShow }) {
 
     const onClickReload = () => {
         setMedicineDetail([]);
-
         fetchDutrull();
     }
     // useEffect(() => {
     //     setGroupedData(dutrull);
     // }, [dutrull]);
 
-
     useEffect(() => {
-        const fetchUrl = apiURL + "/noitru/thuoc-chitiet/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id;
-
-        const fetchMedicineDetail = async () => {
-            const response = await fetch(fetchUrl);
-            const data = await response.json();
-            console.log(data)
-            setMedicineDetail(data);
-        }
         const fetchDetail = async () => {
-            const fetchURL2 = apiURL + "noitru/thuoc-dutrull-thongtin/" + site + "/" + selectedCoupon.type + "/" + selectedCoupon.id + "/" + selectedCoupon.ngay;
-
+            const fetchUrl = selectedCoupon.type === 2 ?
+                `${apiURL}noitru/thuoc-xtutrucct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}` :
+                `${apiURL}noitru/thuoc-dutruct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}`
             try {
-                const response = await fetch(fetchURL2);
-                const data = await response.json();
-                console.log('data', data)
-                setChitiet(data);
+                console.log(fetchUrl)
+                const response = await fetch(fetchUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                    setDetail(data);
+                }
             }
             catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
+      
         const getThucxuat = async () => {
             const fetchurl = apiURL + "duoc/get-thucxuat-benhnhan-by-id/" + site + "/" + selectedCoupon.id;
             const response = await fetch(fetchurl);
@@ -90,7 +91,6 @@ function ThuocModal({ site, selected, setModalShow }) {
         if (selectedCoupon && selectedCoupon.id) {
             getThucxuat();
             fetchDetail();
-            fetchMedicineDetail();
         }
     }, [selectedCoupon.id])
 
@@ -104,12 +104,11 @@ function ThuocModal({ site, selected, setModalShow }) {
                             {title}
                         </div>
                         {/* BODY */}
-                        <div className="flex h-full p-4 overflow-hidden ">
-                            <div className="h-full w-1/3">
-                                <div className="text-left bg-slate-200 py-0.5">Danh sách</div>
-                                <div className=" flex-grow h-full text-left overflow-y-auto ">
+                        <div className="flex h-full p-4 overflow-hidden gap-6">
+                            <div className="h-full w-1/3 border p-2 rounded-lg shadow-lg">
+                                <div className=" flex-grow h-full text-left overflow-y-scroll p-3">
                                     {Object.keys(dutrull).map((date) => (
-                                        <CouponList
+                                        <PhieuDanhSach
                                             date={date}
                                             entries={dutrull[date]}
                                             setDutrullDetail={setDutrullDetail}
@@ -118,59 +117,34 @@ function ThuocModal({ site, selected, setModalShow }) {
                                         />
                                     ))}
                                 </div>
+
                             </div>
 
-                            <div className="w-2/3 h-full">
-                                <div className="flex-grow px-4 w-full h-full overflow-y-auto" >
-                                    <div className="flex border">
-                                        <div className="w-56 flex border bg-white">
-                                            <button
-                                                className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 1 ? 'bg-blue-500 text-white' : ''}`}
-                                                onClick={() => setTabNumber(1)}
-                                            >Chi tiết</button>
-                                            <button
-                                                className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 2 ? 'bg-blue-500 text-white' : ''}`}
-                                                onClick={() => setTabNumber(2)}
-                                            >Thông tin xuất</button>
-                                        </div>
-                                        <div className="w-full flex justify-between border bg-white px-2 ">
-                                            <div className="font-medium">
-                                                {chitiet && chitiet.ten ? chitiet.ten : '...'}
-                                            </div>
-                                            <div>{selectedCoupon && selectedCoupon.id}</div>
-                                        </div>
-                                    </div>
+                            <div className="w-2/3 h-full border p-3 rounded-lg shadow-lg">
+                                <div className="flex-grow px-4 w-full h-full overflow-y-scroll" >
                                     {selectedCoupon && selectedCoupon.id &&
-                                        <>
-                                            {tabNumber === 1 ?
-                                                <ChitietThuoc
-                                                    detail={dutrullDetail}
-                                                    data={medicineDetail}
-                                                    couponType={selectedCoupon.type}
-                                                />
-                                                :
-                                                <ChitietXuatThuoc
-                                                    thucxuat={thucxuat}
+                                        <PhieuDetail
+                                            selectedCoupon={selectedCoupon}
+                                            detail={detail}
+                                            couponType={selectedCoupon.type}
+                                        />}
 
-                                                />
-                                            }
 
-                                        </>
-                                    }
+
                                 </div>
                             </div>
                         </div>
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
                             <button
-                                className={`${styles.btn} ${styles.btnNew}`}
+                                className="btn btn-view"
                                 onClick={onClickReload}
                             >
                                 Xem
                             </button>
 
                             <button
-                                className={`${styles.btn} ${styles.btnClose}`}
+                                className="btn btn-close"
                                 type="button"
                                 onClick={() => setModalShow(false)}
                             >

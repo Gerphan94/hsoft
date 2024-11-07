@@ -121,13 +121,6 @@ function BHYTModal({ site, setModalShow, selected }) {
                 },
                 body: JSON.stringify(formJson),
             });
-            // const updateDoituong = await fetch(apiURL + 'noi-tru/update-doituong/' + site, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(formJson),
-            // });
             if (insertBHYT.ok) {
                 const data = await insertBHYT.json();
                 console.log(data);

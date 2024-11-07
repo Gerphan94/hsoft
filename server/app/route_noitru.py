@@ -251,8 +251,6 @@ def noitru_insertbhyt(site):
             cursor.connection.commit()
             return jsonify({'message': 'Thêm BHYT thành công'}), 200
         except Exception as e:
-            
-            print(str(e))
             return jsonify({'error':'Không thêm được BHYT'}), 500
     else:
         return jsonify({'error':'Bệnh nhân đã có thẻ'}), 500
@@ -418,30 +416,235 @@ def noitru_phieu_info(site,type, id, ngay):
     result['dst'] = { 'mach': detail[4], 'nhietdo': detail[5], 'huyetap': detail[6], 'nhiptho': detail[7], 'cannang': detail[8], 'chieucao': detail[9] }
     return jsonify(result), 200
 
-@noitru.route('/noitru/thuoc-chitiet/<site>/<type>/<id>', methods=['GET'])
-def noitru_dutru_ct(site,type, id):
+@noitru.route('/noitru/thuoc-dutruct', methods=['GET'])
+def noitru_dutruct():
+    """
+    Dự trù CT
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: id
+        in: query
+        type: string
+        required: true
+        description: ID Phiếu
+      - name: thangnam
+        in: query
+        type: string
+        required: true
+        description: MMYY
+        default: 1124
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    site = request.args.get('site', 'HCM_DEV')
+    id = request.args.get('id')
+    thangnam = request.args.get('thangnam')
+    schema = 'HSOFTTAMANH' + thangnam
+    cursor = get_cursor(site)
+    def get_chandoan_dst():
+        stm = f'''
+                SELECT
+                    A.ID,
+                    D.MAICD,
+                    D.CHANDOAN,
+                    D.MACH,
+                    D.NHIETDO,
+                    D.HUYETAP,
+                    D.NHIPTHO,
+                    D.CANNANG,
+                    D.CHIEUCAO
+                FROM
+                    {schema}.D_DUTRULL A
+                INNER JOIN {schema}.D_DUYET B ON
+                    A.IDDUYET = B.ID
+                LEFT JOIN {schema}.D_DAUSINHTON D ON
+                    D.IDDUTRU = A.ID
+                WHERE
+                    A.ID = :id
+        '''
+        detail = cursor.execute(stm, {'id': id}).fetchone()
+        return {
+            'id': detail[0],
+            'maicd': detail[1],
+            'chandoan': detail[2],
+            'dst': {
+                'mach': detail[3],
+                'nhietdo': detail[4],
+                'huyetap': detail[5],
+                'nhiptho': detail[6],
+                'cannang': detail[7],
+                'chieucao': detail[8]
+            }
+        }
+
+    def get_thuoc():
+        result = []
+        col_names = ['stt_index', 'tt', 'doituong','idbd', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 
+                    'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi', 'giobd', 
+                    'giodung ','lieudungthuoc', 'tocdo', 'cachdung','dalieu', 'ghichu', 
+                    'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'dalieu', 'usingdvsd']
+        stm = f'''
+            SELECT
+                A.STT AS STT_INDEX,
+                A.TT,
+                B.DOITUONG,
+                A.MABD AS IDBD,
+                C.MA AS MABD,
+                (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG,
+                C.DANG,
+                C.DONVIDUNG,
+                A.DUONGDUNG,
+                A.SOLAN ,
+                A.LAN ,
+                A.SLYEUCAU AS SOLUONG,
+                A.N1 AS SANG,
+                A.N2 AS TRUA,
+                A.N3 AS CHIEU,
+                A.BS AS TOI,
+                A.GIOBD,
+                A.GIODUNG,
+                A.LIEUDUNGTHUOC,
+                A.TOCDO,
+                A.CACHDUNG,
+                A.DALIEU,
+                A.GHICHU,
+                A.L1,
+                A.L2,
+                A.L3,
+                A.L4,
+                A.L5,
+                A.L6,
+                A.DALIEU,
+                A.DVSD AS USINGDVSD
+            FROM
+                {schema}.D_DUTRUCT A
+            INNER JOIN D_DOITUONG B ON
+                B.MADOITUONG = A.MADOITUONG
+            INNER JOIN D_DMBD C ON
+                C.ID = A.MABD
+            WHERE
+                A.ID = :id
+            ORDER BY
+                A.TT ASC
+        '''
+        dutruct = cursor.execute(stm, {'id': id}).fetchall()
+        for dutru in dutruct:
+            result.append(dict(zip(col_names, dutru)))
+        return result
+   
+    return jsonify({'detail': get_chandoan_dst(), 'thuoc': get_thuoc()}), 200
+
+@noitru.route('/noitru/thuoc-xtutrucct', methods=['GET'])
+def noitru_xtutrucct():
+    """
+    Xuất tủ trực CT
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: id
+        in: query
+        type: string
+        required: true
+        description: ID Phiếu
+      - name: thangnam
+        in: query
+        type: string
+        required: true
+        description: MMYY
+        default: 1124
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    site = request.args.get('site', 'HCM_DEV')
+    id = request.args.get('id')
+    thangnam = request.args.get('thangnam')
+    schema = 'HSOFTTAMANH' + thangnam
     cursor = get_cursor(site)
     result = []
-    col_names = ['stt_index', 'tt', 'doituong','idbd', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi', 'giobd', 'giodung ','lieudungthuoc', 'tocdo', 'cachdung','dalieu', 'ghichu', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'dalieu', 'usingdvsd']
-    d_table = ''
-    print("type is" , type)
-    if type == '2':
-        d_table = 'D_XTUTRUCCT'
-    else:
-        d_table = 'D_DUTRUCT'
+    col_names = ['stt_index', 'tt', 'doituong','idbd', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 
+                 'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi', 'giobd', 
+                 'giodung ','lieudungthuoc', 'tocdo', 'cachdung','dalieu', 'ghichu', 
+                 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'dalieu', 'usingdvsd']
     stm = f'''
-        SELECT A.STT AS STT_INDEX, A.TT, B.DOITUONG, A.MABD AS IDBD, C.MA AS MABD, (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG, C.DANG, C.DONVIDUNG, A.DUONGDUNG,
-        A.SOLAN , A.LAN ,  A.SLYEUCAU AS SOLUONG,
-        A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI, A.GIOBD, A.GIODUNG, A.LIEUDUNGTHUOC, A.TOCDO, A.CACHDUNG, A.DALIEU, A.GHICHU, A.L1, A.L2, A.L3, A.L4, A.L5, A.L6, A.DALIEU, A.DVSD AS USINGDVSD
-        FROM {schema_now()}.{d_table} A
-        INNER JOIN D_DOITUONG B ON B.MADOITUONG = A.MADOITUONG
-        INNER JOIN D_DMBD C ON C.ID = A.MABD 
-        WHERE A.ID = '{id}'
-        ORDER BY A.TT ASC
+        SELECT
+            A.STT AS STT_INDEX,
+            A.TT,
+            B.DOITUONG,
+            A.MABD AS IDBD,
+            C.MA AS MABD,
+            (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG,
+            C.DANG,
+            C.DONVIDUNG,
+            A.DUONGDUNG,
+            A.SOLAN ,
+            A.LAN ,
+            A.SLYEUCAU AS SOLUONG,
+            A.N1 AS SANG,
+            A.N2 AS TRUA,
+            A.N3 AS CHIEU,
+            A.BS AS TOI,
+            A.GIOBD,
+            A.GIODUNG,
+            A.LIEUDUNGTHUOC,
+            A.TOCDO,
+            A.CACHDUNG,
+            A.DALIEU,
+            A.GHICHU,
+            A.L1,
+            A.L2,
+            A.L3,
+            A.L4,
+            A.L5,
+            A.L6,
+            A.DALIEU,
+            A.DVSD AS USINGDVSD
+        FROM
+            {schema}.D_XTUTRUCCT A
+        INNER JOIN D_DOITUONG B ON
+            B.MADOITUONG = A.MADOITUONG
+        INNER JOIN D_DMBD C ON
+            C.ID = A.MABD
+        WHERE
+            A.ID = :id
+        ORDER BY
+            A.TT ASC
     '''
-    dutruct = cursor.execute(stm).fetchall()
-    for dutru in dutruct:
-        result.append(dict(zip(col_names, dutru)))
+    xtutrucct = cursor.execute(stm, {'id': id}).fetchall()
+    for xtutruc in xtutrucct:
+        result.append(dict(zip(col_names, xtutruc)))
     return jsonify(result), 200
 
 

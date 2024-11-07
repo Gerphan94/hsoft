@@ -8,7 +8,7 @@ import { BsFillSendFill } from "react-icons/bs";
 import { RiNumbersFill } from "react-icons/ri";
 import { IoCheckbox } from "react-icons/io5";
 
-function CouponComponent({ item, selectedCoupon, setMedicineDetail, setSelectedCoupon }) {
+function Phieu({ item, selectedCoupon, setMedicineDetail, setSelectedCoupon }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
 
@@ -49,12 +49,12 @@ function CouponComponent({ item, selectedCoupon, setMedicineDetail, setSelectedC
             id: id,
             type: type,
             name: name,
-            ngay: ngay
+            thangnam: moment.utc(ngay).format('MMYY')
         })
     }
     return (
         <>
-            <div key={item.id} className="py-4">
+            <div key={item.id} className="py-4 select-none">
                 <div
                     className={`relative border rounded-md p-2 hover:bg-[#EEEDEB] cursor-pointer ${item.id === selectedCoupon.id ? color.border : ''} ${item.id === selectedCoupon.id ? 'bg-[#EEEDEB]' : ''}`}
                     onClick={() => onClick(item.id, item.loaiphieu, item.tenphieu, item.ngaytao)}
@@ -78,19 +78,14 @@ function CouponComponent({ item, selectedCoupon, setMedicineDetail, setSelectedC
                                     <RiNumbersFill />
                                 )
                             }
-                            <div className="text-left">{item.tenphieu}</div>
+                            <div className="text-left select-none">{item.tenphieu}</div>
                         </div>
                         <div className="italic text-sm">{moment(item.ngaytao).utc().format("DD/MM/YYYY HH:mm")} {item.giotao}</div>
-                       
                     </div>
                 </div>
-
-                <div className="hidden">{item.id}</div>
-
-
             </div>
         </>
     )
 
 }
-export default CouponComponent;
+export default Phieu;

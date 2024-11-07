@@ -4,10 +4,7 @@ import moment from "moment";
 function ChiTietThuocComponent({ item, couponType }) {
     return (
 
-        <div key={item.stt_index} className="relative border rounded-md mb-3 text-left p-2" >
-           
-
-            <span className="absolute top-0 text-[10px] text-center right-0 w-10 rounded-md">{item.stt_index}</span>
+        <div key={item.stt_index} className="relative border rounded-md mb-3 text-left p-2" data-id={item.stt_index} >
             <div className="flex justify-between">
                 <div className="flex gap-2 items-center">
                     <span className="size-6 rounded-full bg-[#379777] border text-sm flex items-center justify-center">
@@ -44,7 +41,7 @@ function ChiTietThuocComponent({ item, couponType }) {
                         <label htmlFor="isdvsd">isDVSD</label>
                     </div>
                 </div>
-                <div className={`text-sm rounded-xl px-0.5 py-0.5 text-white select-none ${item.doituong === 'BHYT' ? 'bg-[#4535C1]' : item.doituong === 'Thu phí' ? 'bg-[#E76F51]' : 'bg-[#379777]'} `}>
+                <div className={`text-sm flex items-center rounded-xl px-2 py-0.5 text-white select-none ${item.doituong === 'BHYT' ? 'bg-[#4535C1]' : item.doituong === 'Thu phí' ? 'bg-[#E76F51]' : 'bg-[#379777]'} `}>
                     {item.doituong}
                 </div>
             </div>
