@@ -1,22 +1,26 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { GiEarbuds, GiAlarmClock } from "react-icons/gi";
+
+import { useAppContext } from '../Store/AppContext';
+import ChooseSiteModal from "../Site/ChooseSiteModal";
+
+import LongSideBar from "./LongSideBar";
+import ShortSideBar from "./ShortSideBar";
+// IMPORT ICON
+import { GiEarbuds } from "react-icons/gi";
+import { GoPersonFill } from "react-icons/go";
 import { TbCategoryFilled } from "react-icons/tb";
 import { CiPill } from "react-icons/ci";
 import { PiFileSqlDuotone } from "react-icons/pi";
 import { IoFileTrayFullSharp, IoNewspaperOutline } from "react-icons/io5";
 import { FaBook, FaBed } from "react-icons/fa";
 import { MdAttachMoney } from "react-icons/md";
-import { useAppContext } from '../Store/AppContext';
-import ChooseSiteModal from "../Site/ChooseSiteModal";
 
-import LongSideBar from "./LongSideBar";
-import ShortSideBar from "./ShortSideBar";
 
 function SideBar() {
 
-    const { site, setSite, setArea } = useAppContext();
+    const { site, setSite , area, setArea, longSideBar } = useAppContext();
 
     const navigate = useNavigate();
 
@@ -28,6 +32,7 @@ function SideBar() {
     const [isShortSideBar, setIsShortSideBar] = useState(false);
 
     const funcs = [
+        { id: 'benhnhan', name: 'Bệnh nhân', icon: GoPersonFill, path: '/benh-nhan' },
         { id: 'hosobenhan', name: 'Hồ sơ bệnh án', icon: IoFileTrayFullSharp, path: '/hosobenhan' },
         { id: 'khambenh', name: 'Khám bệnh', icon: GiEarbuds, path: '/kham-benh' },
         { id: 'phongluu', name: 'Phòng lưu', icon: GiEarbuds, path: '/phong-luu' },
@@ -47,16 +52,17 @@ function SideBar() {
 
     return (
         <>
-            {isShortSideBar ?
-                <ShortSideBar
+            {longSideBar ?
+                <LongSideBar
                     data={funcs}
                     isShortSideBar={isShortSideBar}
                     setIsShortSideBar={setIsShortSideBar}
                     site={site}
+                    area={area}
                     setShowChooseSite={setShowChooseSite}
                 />
                 :
-                <LongSideBar
+                <ShortSideBar
                     data={funcs}
                     isShortSideBar={isShortSideBar}
                     setIsShortSideBar={setIsShortSideBar}

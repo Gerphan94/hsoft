@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 // import Dropdown from "../Dropdown";
 
 import Dropdown from "../Common/Dropdown";
+
+import PageHeader from "../PageHeader";
+
 import ThuocModal from "./Thuoc/ThuocModal";
 import DichVuModal from "./DichVu/DichVuModal";
 import MauModal from "./Mau/MauModal";
@@ -17,6 +20,7 @@ import SearchBar from "../Common/SearchBar";
 
 import ButtonChucNang from "./ButtonChucNang";
 import ButtonTienIch from "./ButtonTienIch";
+
 
 import { FaAngleDown } from "react-icons/fa6";
 
@@ -34,7 +38,7 @@ function NoiTru() {
 
     const [selectedButton, setSelectedButton] = useState({ id: '', name: '' });
 
-    const { site, setSelectedSideBar } = useAppContext();
+    const { site, setSelectedSideBar, area } = useAppContext();
 
     const [selectedBTN, setSelectedBNT] = useState(1);
 
@@ -43,7 +47,7 @@ function NoiTru() {
     const [hiendiens, setHiendiens] = useState([]);
     const [viewData, setViewData] = useState([]);
 
-    const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '' , mavv:'' });
+    const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '' , mavv:'', ngayvk:'' });
 
     const [showMedicineModal, setShowMedicineModal] = useState(false);
     const [showServiceModal, setShowServiceModal] = useState(false);
@@ -65,10 +69,11 @@ function NoiTru() {
         }
         const fetchDanhsachKhoa = async () => {
             try {
-                const fecthURL = apiURL + "/noitru/dskhoa/" + site;
+                const fecthURL = apiURL + "/noitru/dskhoa/" + site + "/" + area;
                 const response = await fetch(fecthURL);
                 const data = await response.json();
                 setKhoas(data);
+                setSelectedKhoa({ id: data[0].id, name: data[0].name });
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -79,7 +84,7 @@ function NoiTru() {
             setSelectedKhoa({ id: null, name: '' });
 
         }
-    }, [site]);
+    }, [area]);
 
     const gethiendien = async () => {
         try {
@@ -137,7 +142,7 @@ function NoiTru() {
     return (
         <>
             <div className="w-full">
-                <div className="px-4 py-2 text-left flex gap-4 border-b shadow-md font-bold">Nội trú</div>
+                <PageHeader title="Nội trú" />
                 <div className="flex items-center px-4 justify-between">
                     <div className="flex p-2 gap-2 items-center">
 

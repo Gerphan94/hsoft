@@ -1,18 +1,25 @@
 import React from "react";
-import styles from "../styles.module.css"; // Assuming you are using this styles file
+import { useAppContext } from "../Store/AppContext";
 
-function ChooseSiteModal({ setShowModal, setSite, setArea }) {
+
+function ChooseSiteModal({ setShowModal }) {
+
+    const { setSite , setSiteName, setArea } = useAppContext();
     const sites = [
-        { id: 'HCM_DEV', name: 'HCM - DEV', area: 1 },
-        { id: 'HN_DEV', name: 'HN - DEV', area: 6 },
+        { id: 'HCM_DEV', name: 'Bệnh Viện Đa Khoa Tâm Anh TP. Hồ Chí Minh', area: 1 },
+        { id: 'HCM_DEV', name: 'Bệnh Viện Đa Khoa Tâm Anh Quận 8', area: 2 },
+        { id: 'HCM_DEV', name: 'Phòng khám Đa Khoa Tâm Anh Quận 7', area: 3 },
+        { id: 'HN_DEV', name: 'Bệnh Viện Đa Khoa Tâm Anh Hà Nội', area: 6 },
     ];
 
     const handleClick = (iSite) => {
         sessionStorage.setItem('site', iSite.id);
+        sessionStorage.setItem('sitename', iSite.name);
         sessionStorage.setItem('area', iSite.area);
 
         setShowModal(false);
         setSite(iSite.id);
+        setSiteName(iSite.name);
         setArea(iSite.area);
     };
 
@@ -20,12 +27,12 @@ function ChooseSiteModal({ setShowModal, setSite, setArea }) {
         <>
             <div>111
                 <div className="fixed inset-0 z-[888] outline-none focus:outline-none">
-                    <div className="relative lg:w-1/3 md:w-2/3 top-1/4 w-full my-6 mx-auto max-w-3xl bg-white text-4xl font-bold rounded-xl">
-                        <div className="grid grid-cols-2 p-10 gap-3">
+                    <div className="relative lg:w-2/3 md:w-1/2 top-10 w-full my-6 mx-auto max-w-2xl bg-white text-2xl font-bold rounded-xl ">
+                        <div className="grid grid-cols-1 p-10 gap-3">
                             {sites.map((site) => (
                                 <div 
                                     key={site.id} // Ensure each item has a unique key
-                                    className="border rounded-xl p-3 h-40 flex items-center justify-center text-[#1E3E62] hover:bg-[#9BB0C1] hover:text-white cursor-pointer"
+                                    className="border rounded-xl p-6  text-center  text-[#1E3E62] hover:bg-[#9BB0C1] hover:text-white cursor-pointer"
                                     onClick={() => handleClick(site)}
                                 >
                                     {site.name}

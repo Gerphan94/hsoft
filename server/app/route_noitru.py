@@ -7,16 +7,17 @@ from .db import get_cursor, schema_now, schema_mutil
 noitru = Blueprint('noitru', __name__)
 
 
-@noitru.route('/noitru/dskhoa/<site>', methods=['GET'])
-def noitru_dskhoa(site):
+@noitru.route('/noitru/dskhoa/<site>/<khu>', methods=['GET'])
+def noitru_dskhoa(site, khu):
     cursor = get_cursor(site)
     result = []
-    stm = 'SELECT * FROM BTDKP_BV WHERE LOAI = 0 AND KHAMBENH = 0'
+    stm = f'SELECT MAKP, TENKP FROM BTDKP_BV WHERE LOAI = 0 AND KHAMBENH = 0 AND KHU = {khu}'
     khoas = cursor.execute(stm).fetchall()
     for khoa in khoas:
         result.append({
             'id': khoa[0],
             'name': khoa[1]
+            
         })
     return jsonify(result)
 
@@ -73,41 +74,60 @@ def noitru_hiendien(site, makp):
     """
     cursor = get_cursor(site)
     result = []
+    
+    col_names = ['id', 'mavaovien', 'maql', 'mabn', 'hoten', 'phai', 'ngaysinh',
+                 'namsinh', 'ngayvv', 'ngayvk', 'maicd', 'madoituong', 'doituong', 'sothe', 'mau_abo', 'mau_rh']
+    
     stm = f'''
         WITH tmp_bhyt AS (
-            SELECT TO_CHAR(MAQL) AS MAQL , SOTHE FROM BHYT WHERE SUDUNG = 1 
+            SELECT
+                TO_CHAR(MAQL) AS MAQL ,
+                SOTHE
+            FROM
+                BHYT
+            WHERE
+                SUDUNG = 1 
         )
-        SELECT TO_CHAR(A.ID), TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN, TO_CHAR(A.MAQL), A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE, B.MAU_ABO, B.MAU_RH
-        FROM HIENDIEN A
-        INNER JOIN BTDBN B ON A.MABN = B.MABN
-        INNER JOIN ICD10 C ON A.MAICD = C.CICD10
-        left JOIN BENHANDT D ON A.MAVAOVIEN = D.MAVAOVIEN AND A.MAQL = D.MAQL
-        INNER JOIN DOITUONG E ON D.MADOITUONG = E.MADOITUONG
-        LEFT JOIN tmp_bhyt F ON A.MAQL = F.MAQL
-        WHERE A.MAKP = {makp} AND A.NHAPKHOA = 1 
-        ORDER BY A.NGAY DESC
+        SELECT
+            TO_CHAR(A.ID),
+            TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN,
+            TO_CHAR(A.MAQL),
+            A.MABN,
+            B.HOTEN,
+            B.PHAI,
+            TO_CHAR(B.NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH,
+            B.NAMSINH,
+            A.NGAYVV,
+            A.NGAY AS NGAYVK,
+            A.MAICD,
+            D.MADOITUONG ,
+            E.DOITUONG,
+            F.SOTHE,
+            B.MAU_ABO,
+            B.MAU_RH
+        FROM
+            HIENDIEN A
+        INNER JOIN BTDBN B ON
+            A.MABN = B.MABN
+        INNER JOIN ICD10 C ON
+            A.MAICD = C.CICD10
+        LEFT JOIN BENHANDT D ON
+            A.MAVAOVIEN = D.MAVAOVIEN
+            AND A.MAQL = D.MAQL
+        INNER JOIN DOITUONG E ON
+            D.MADOITUONG = E.MADOITUONG
+        LEFT JOIN tmp_bhyt F ON
+            A.MAQL = F.MAQL
+        WHERE
+            A.MAKP = {makp}
+            AND A.NHAPKHOA = 1
+        ORDER BY
+            A.NGAY DESC
     '''
     data_list = cursor.execute(stm).fetchall()
     
     for data in data_list:
-        result.append({
-            'id': data[0],
-            'mavaovien': data[1],
-            'maql': data[2],
-            'mabn': data[3],
-            'hoten': data[4],
-            'phai': data[5],
-            'namsinh': data[6],
-            'ngayvv': data[7].strftime("%d/%m/%Y %H:%M"),
-            'ngayvk': data[8].strftime("%d/%m/%Y %H:%M"),
-            'maicd': data[9],
-            'madoituong': data[10],
-            'doituong': data[11],
-            'sothe': data[12],
-            'mauabo': data[13],
-            'maurh': data[14]
-        })
-    
+         result.append(dict(zip(col_names, data)))
     return jsonify(result), 200
 @noitru.route('/noitru/hiendien-phongluu/<site>/<mmyy>', methods=['GET'])
 def noitru_hiendienphongluu(site, mmyy):
@@ -261,7 +281,7 @@ def get_thuoc_danhsach_phieudalap(site, makp, string_ngay):
         in: path
         type: string
         required: true
-        description:
+        description: vd 20241106
     responses:
       200:
         description: Success
@@ -295,9 +315,7 @@ def get_thuoc_danhsach_phieudalap(site, makp, string_ngay):
             JOIN {schema}.D_DUTRULL B ON A.ID = B.ID
             JOIN D_DMKHO C ON A.MAKHO = C.ID
             WHERE B.IDDUYET IN (SELECT ID FROM ApprovedIDs)
-            
             UNION ALL
-            
             SELECT DISTINCT
                 B.IDDUYET,
                 A.MAKHO,
@@ -308,7 +326,7 @@ def get_thuoc_danhsach_phieudalap(site, makp, string_ngay):
             WHERE B.IDDUYET IN (SELECT ID FROM ApprovedIDs)
         )
         SELECT
-            A.ID AS IDDUYET,
+            TO_CHAR(A.ID) AS IDDUYET,
             B.TEN AS TENPHIEU,
             C.TEN AS TENKHOADUOC,
             D.TEN AS TENTT ,
@@ -424,4 +442,85 @@ def noitru_dutru_ct(site,type, id):
     dutruct = cursor.execute(stm).fetchall()
     for dutru in dutruct:
         result.append(dict(zip(col_names, dutru)))
+    return jsonify(result), 200
+
+
+@noitru.route('/noitru/get-chidinh-by-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
+def noitru_getchidinhbyidkhoa(site, idkhoa):
+    """
+    Danh sách chỉ định dịch vụ
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: idkhoa
+        in: path
+        type: string
+        required: true
+        description: IDNHAPKHOA
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    cursor = get_cursor(site)
+    result = []
+    
+    ngaynhapkhoa = cursor.execute(f'SELECT NGAY FROM NHAPKHOA WHERE ID = {idkhoa}').fetchone()[0]
+    iNow = datetime.now()  
+    schema_ar = list(schema_mutil(ngaynhapkhoa, iNow))
+    
+    col_names = ['id','ngay', 'doituong', 'tendichvu', 'soluong', 'dongia', 'idchidinh', 'ghichu', 'thuchien', 'ngayylenh', 'ngaythuchien', 'maphieu', 'benhpham', 'idloai', 'idnhom', 'loaiba']
+    for schema in reversed(schema_ar):
+        stm = f'''
+            SELECT
+                A.ID,
+                TO_CHAR(A.NGAY, 'dd/MM/yyyy') AS NGAY,
+                C.DOITUONG,
+                B.TEN,
+                A.SOLUONG,
+                A.DONGIA,
+                TO_CHAR(A.IDCHIDINH) AS IDCHIDINH,
+                A.GHICHU,
+                A.THUCHIEN,
+                TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI') AS NGAYYLENH,
+                TO_CHAR(A.NGAYTHUCHIEN, 'dd/MM/yyyy HH24:MI') AS NGAYTHUCHIEN,
+                A.MAPHIEU,
+                D.TEN AS BENHPHAM,
+                E.ID AS IDLOAI,
+                E.ID_NHOM AS IDNHOM,
+                A.LOAIBA
+            FROM
+                {schema}.V_CHIDINH A
+            INNER JOIN V_GIAVP B ON
+                B.ID = A.MAVP
+            INNER JOIN DOITUONG C ON
+                C.MADOITUONG = A.MADOITUONG
+            INNER JOIN DMBENHPHAM D ON
+                D.ID = A.BENHPHAM
+            INNER JOIN V_LOAIVP E ON
+                B.ID_LOAI = E.ID
+            WHERE
+                A.IDKHOA = '{idkhoa}'
+                AND A.MADOITUONG <> 3
+            ORDER BY
+                NGAY DESC,
+                NGAYYLENH ASC
+        '''
+        chidinh = cursor.execute(stm).fetchall()
+        for chidinh in chidinh:
+            result.append(dict(zip(col_names, chidinh)))
     return jsonify(result), 200

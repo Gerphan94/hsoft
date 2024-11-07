@@ -9,6 +9,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useAppContext } from './Component/Store/AppContext';
 
 import DashBoard from './Component/DashBoard';
+import BenhNhan from './Component/BenhNhan/BenhNhan';
+
 import NotFound from './Page/404';
 import KhamBenh from './Component/KhamBenh/KhamBenh';
 import PhongLuu from './Component/NoiTru/PhongLuu';
@@ -28,7 +30,7 @@ function App() {
 
   const Pages = [
     { id: "dashboard", path: "/", title: 'Dash Board', component: <DashBoard /> },
-    // { id: "mainpage", path: "/", title: 'Main Pgae', component: <MainPage /> },
+    { id: "benhnhan", path: "/benh-nhan", title: 'Random Bệnh nhân', component: <BenhNhan /> },
     { id: "khambenh", path: "/kham-benh", title: 'Khám bệnh', component: <KhamBenh /> },
     { id: "phongluu", path: "/phong-luu", title: 'Phòng lưu', component: <PhongLuu /> },
 
@@ -43,27 +45,28 @@ function App() {
     { id: "notfound", path: "*", title: 'Not Found', component: <NotFound /> }
   ]
 
-
   return (
     <div className="App">
       <HelmetProvider>
         <div className='flex h-screen overflow-y-hidden'>
-          <SideBar />
-          <div className='overflow-y-auto w-full z-40'>
-            <Routes >
-              {Pages.map((page) => (
-                <Route key={page.id} path={page.path}
-                  element={
-                    <>
-                      <Helmet>
-                        <title>{page.title}</title>
-                      </Helmet>
-                      {page.component}
-                    </>
-                  } />
-              ))}
-            </Routes>
-          </div>
+            <SideBar />
+            <div className='overflow-y-auto w-full z-40'>
+              <Routes >
+                {Pages.map((page) => (
+                  <Route key={page.id} path={page.path}
+                    element={
+                      <>
+                        <Helmet>
+                          <title>{page.title}</title>
+                        </Helmet>
+                        {page.component}
+                      </>
+                    } />
+                ))}
+              </Routes>
+            </div>
+          
+         
 
         </div>
       </HelmetProvider>

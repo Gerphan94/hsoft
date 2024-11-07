@@ -7,6 +7,61 @@ from .db import get_cursor, schema_now
 
 duoc = Blueprint('duoc', __name__)
 
+@duoc.route('/duoc/danhsach-duockp/<site>', methods=['GET'])
+def duoc_danhsachduockp(site):
+    """
+    Danh sách Dược khoa phòng
+    ---
+    tags:
+      - Dược
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: Site (HCM_DEV, HN_DEV,...)
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    cursor =get_cursor(site)
+    result = []
+    
+    stm = '''
+        SELECT
+            A.ID,
+            A.MA AS MADUOCKP,
+            A.TEN AS TENDUOCKP,
+            B.MAKP AS MAKHOA,
+            B.TENKP AS TENKP,
+            A.MAKHO,
+            A.TUTRUC,
+            A.KHU
+        FROM
+            D_DUOCKP A
+        LEFT JOIN BTDKP_BV B ON
+            A.MAKP = B.MAKP
+        WHERE A.NHOM IS NOT NULL
+        ORDER BY
+            B.MAKP ASC
+    '''
+    col_names = ['id', 'maduockp', 'tenduockp', 'makhoa', 'tenkp', 'makho', 'tutruc', 'khu']
+
+    duocbvs = cursor.execute(stm).fetchall()
+    for duocbv in duocbvs:
+        result.append(dict(zip(col_names, duocbv)))
+    
+    return jsonify(result), 200
+
 @duoc.route('/duoc/dm_duocbv/<site>', methods=['GET'])
 def duoc_dm_duocbv(site):
     cursor =get_cursor(site)
@@ -107,7 +162,7 @@ def duoc_tonkho_theokho(site, idkho):
 def duoc_tonkho_theokho_chitiet(site, idkho):
     cursor =get_cursor(site)
     result = []
-    cols = ['stt', 'idbd', 'mabd', 'tenbd', 'tenhc', 'dvt', 'dvd', 'duongdung', 'duongdungmorong','dd_count','bhyt', 'hsd', 'losx','tondau', 'slnhap', 'slxuat', 'toncuoi']
+    cols = ['stt', 'idbd', 'mabd', 'tenbd', 'tenhc', 'dvt', 'dvd', 'duongdung', 'duongdungmorong','dd_count','bhyt', 'handung', 'losx','tondau', 'slnhap', 'slxuat', 'toncuoi']
     query = f'''
         SELECT 
             A.STT, 

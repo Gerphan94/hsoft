@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
 import ViewButton from "../Button/ViewButton";
 import PharmarDetailModal from "./PharmarDetailModal";
-import Table from "./Table";
+import InventoryTable from "./InventoryTable";
+import InventoryTableDetail from "./InventoryTableDetail";
+
 import TableDetail from "./TableDetail";
 import Toggle from "../Common/ToggleSwitch";
 import SearchBar from "../Common/SearchBar";
+import ButtonMenu from "./ButtonMenu";
+
 import { useAppContext } from "../Store/AppContext";
 
-function TonTuTruc( {site, area}  ) {
+function TonTuTruc({ menuData, selectedMenu, setSelectedMenu, isDetail = false }) {
 
 
+    const { site, area } = useAppContext();
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [selecteLoaiKP, setSelecteLoaiKP] = useState('khoa');
@@ -29,8 +34,6 @@ function TonTuTruc( {site, area}  ) {
     const [timeoutId, setTimeoutId] = useState(null);
 
     const [viewDatas, setViewDatas] = useState([]);
-
-    const [isDetail, setIsDetail] = useState(false);
 
     const [filterList, setFilterList] = useState([
         { id: 'dalieu', name: 'Đa liều', value: false },
@@ -127,7 +130,9 @@ function TonTuTruc( {site, area}  ) {
         }
     }
 
-    const onClick = () => {
+    const handleView = () => {
+        console.log('handleView')
+
         getData();
     }
 
@@ -144,7 +149,7 @@ function TonTuTruc( {site, area}  ) {
         return data.filter((item) => item.mabd.toLowerCase().includes(seachValue.toLowerCase()) || item.tenbd.toLowerCase().includes(seachValue.toLowerCase()));
     }
 
-   
+
     const handleSearch = () => {
         if (timeoutId) {
             clearTimeout(timeoutId);
@@ -210,80 +215,81 @@ function TonTuTruc( {site, area}  ) {
 
     // /duoc/tonkho/theokho/dskho/<site>
     return (
-        <div className="px-4">
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 p-2 gap-y-2">
-                <div className="flex items-center gap-2 px-2">
-                <select 
-                    onChange={(e) => setSelecteLoaiKP(e.target.value)}
-                    className="border px-2 py-1"
-                    >
-                        <option  value="khoa">Khoa</option>
-                        <option  value="capcuu">Cấp cứu</option>
-                        <option value="phongkham">Phòng khám</option>
-                    </select>
-                    {/* <label className="w-10 text-left font-bold">KP</label> */}
-                    <div className="w-full">
-                        <Dropdown
-                            data={khoaphongList}
-                            setSelectedOption={setSelectedKhoaphong}
-                            selectedOption={selectedKhoaphong}
-                            chooseIndex={1}
-                            placeholder="Chọn khoa/phòng "
+        <div className="px-4 py-2">
+            <div className="flex justify-between">
+                <div className="grid gap-2 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-y-2">
+                    <div className="flex items-center gap-2">
+                        <select
+                            onChange={(e) => setSelecteLoaiKP(e.target.value)}
+                            className="border px-2 py-1"
+                        >
+                            <option value="khoa">Khoa</option>
+                            <option value="capcuu">Cấp cứu</option>
+                            <option value="phongkham">Phòng khám</option>
+                        </select>
+                        {/* <label className="w-10 text-left font-bold">KP</label> */}
+                        <div className="w-96">
+                            <Dropdown
+                                data={khoaphongList}
+                                setSelectedOption={setSelectedKhoaphong}
+                                selectedOption={selectedKhoaphong}
+                                chooseIndex={1}
+                                placeholder="Chọn khoa/phòng "
+                            />
+
+                        </div>
+                    </div>
+                    <div className=" flex items-center gap-2">
+                        <label className="w-20 text-left font-bold select-none">Tủ trực:</label>
+                        <div className="w-full">
+                            <Dropdown
+                                data={tuTrucList}
+                                setSelectedOption={setSelectedTuTruc}
+                                placeholder="Chọn tủ trực"
+                                chooseIndex={1}
+                                searchable={false}
+                                selectedOption={selectedTuTruc}
+                            />
+                        </div>
+                    </div>
+                    <div className=" flex items-center gap-2">
+                        <button
+                            className="btn btn-view"
+                            onClick={() => handleView()}
+
+                        >Xem</button>
+                    </div>
+                    <div className=" flex items-center gap-2 ">
+                        <SearchBar
+                            placeholder='Nhập Mã, Tên, HC'
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                            handleSearch={handleSearch}
                         />
 
                     </div>
                 </div>
-                <div className=" flex items-center gap-2 px-2">
-                   
-                    <label className="w-20 text-left font-bold select-none">Tủ trực:</label>
-                    <div className="w-full">
-                        <Dropdown
-                            data={tuTrucList}
-                            setSelectedOption={setSelectedTuTruc}
-                            placeholder="Chọn tủ trực"
-                            chooseIndex={1}
-                            searchable={false}
-                            selectedOption={selectedTuTruc}
-                        />
-                    </div>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <Toggle
-                        idname="ton-chitiet"
-                        enabled={isDetail}
-                        setEnabled={setIsDetail}
-                        displayName="Tồn chi tiết"
+                <div>
+                    <ButtonMenu
+                        menuData={menuData}
+                        selectedMenu={selectedMenu}
+                        setSelectedMenu={setSelectedMenu}
                     />
-
-                    <ViewButton onClick={onClick} />
-                </div>
-
-                <div className=" flex items-center gap-2 px-2">
-                    <label className="w-10 text-left font-bold"></label>
-
-                    <SearchBar
-                        placeholder='Nhập Mã, Tên, HC'
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        handleSearch={handleSearch}
-                    />
-
                 </div>
             </div>
 
 
-            {/* Table */}
 
             <div>
                 {isDetail ?
-                    <TableDetail
+                    <InventoryTableDetail
                         data={viewDatas}
                         setIsShowModal={setIsShowModal}
                         setSelectedPharmarId={setSelectedPharmarId}
                     />
 
                     :
-                    <Table
+                    <InventoryTable
                         data={viewDatas}
                         setIsShowModal={setIsShowModal}
                         setSelectedPharmarId={setSelectedPharmarId}

@@ -11,13 +11,17 @@ import ButtonMenu from "../ButtonMenu";
 import ViewButton from "../Button/ViewButton";
 import SideMenu from "../SideMenu";
 import Pagination from "../Common/Pagination";
+import { SuccessAlert } from "../Common/Alert";
+
+import { useAppContext } from "../Store/AppContext";
 
 function KhamBenh() {
 
     const apiURL = process.env.REACT_APP_API_URL;
-    const site = localStorage.getItem('site');
 
     const [searchTerm, setSearchTerm] = useState('');
+
+    const { site } = useAppContext();
 
     const [viewDate, setViewDate] = useState(new Date());
     const [initData, setInitData] = useState([]);
@@ -28,14 +32,14 @@ function KhamBenh() {
     const [dichvuShow, setDichvuShow] = useState(false);
     const [thuocShow, setThuocShow] = useState(false);
 
-    const [noticeshow, setNoticeShow] = useState(false);
-    const [noticeMessage, setNoticeMessage] = useState('');
-    const [noticeType, setNoticeType] = useState('');
+
 
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(20);
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
+
+    const [showAlert, setShowAlert] = useState(false);
 
     const constDataInPage = (iPage, iData) => {
         const indexOfLastItem = iPage * itemsPerPage;
@@ -90,12 +94,10 @@ function KhamBenh() {
 
     const handleClickPID = (pid) => {
         navigator.clipboard.writeText(pid).then(() => {
-            setNoticeMessage('Đã copy ' + pid);
-            setNoticeType('success');
+            setShowAlert(true);
         }).catch(err => {
             console.error('Failed to copy text: ', err);
         });
-        setNoticeShow(true);
     }
 
     useEffect(() => {
@@ -104,10 +106,7 @@ function KhamBenh() {
 
     return (
         <>
-            {noticeshow &&
-                <Notice message={noticeMessage} setModalshow={setNoticeShow} type={noticeType} />
-            }
-
+           
 
             <div className="w-full">
                 <div className="flex items-center gap-10 w-full h-12 border-b p-2">
@@ -198,6 +197,13 @@ function KhamBenh() {
             {thuocShow &&
                 <ThuocModal setModalShow={setThuocShow} />
             }
+
+            {showAlert &&
+                <SuccessAlert
+                    visible={showAlert}
+                    setVisible={setShowAlert}
+                    message={'Đã sao chép PID thành công!'}
+                />}
 
         </>
     )

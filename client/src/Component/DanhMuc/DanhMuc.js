@@ -5,6 +5,7 @@ import GiaVP from "./GiaVP";
 import { FcManager, FcCurrencyExchange, FcConferenceCall } from "react-icons/fc";
 import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
+import PageHeader from "../PageHeader";
 
 function DanhMuc() {
     console.log('-----DanhMuc');
@@ -20,16 +21,15 @@ function DanhMuc() {
 
     return (
 
-        <div className="w-full flex flex-col overflow-y-auto">
-            <header className="p-2 sticky top-0 flex justify-between items-center border-b bg-white">
-                <h1 className="text-xl font-bold text-left px-4">Danh mục</h1>
-                <div className="grid gap-2 grid-flow-col justify-start">
+        <div className="w-full">
+            <PageHeader title="Danh mục" />
+            <div className="p-4">
+                <div className="flex justify-start">
                     {menuList.map((menu) => (
                         <button
                             key={menu.id}
-                            className={`items-center text-left border select-none outline-none h-full w-full py-1 px-3 text-[#0C1844] hover:border-[#667BC6] hover:shadow-md rounded-lg shadow-[#667BC6] ${selectedMenu === menu.id ? 'shadow-md  border-[#667BC6]' : ''}`}
+                            className={`items-center text-left border select-none outline-none whitespace-nowrap h-full  py-1 px-3 text-[#0C1844] hover:border-[#667BC6] hover:shadow-md shadow-[#667BC6] ${selectedMenu === menu.id ? 'shadow-md  border-[#667BC6]' : ''}`}
                             onClick={() => setSelectedMenu(menu.id)}
-
                         >
                             <div className='flex gap-1 items-center'>
                                 <span>{menu.icon}</span>
@@ -37,10 +37,15 @@ function DanhMuc() {
                             </div>
                         </button>
                     ))}
+                    <div className="w-full bg-gray-300"></div>
                 </div>
-            </header>
-            {selectedMenu === 'taikhoan' && <TaiKhoan site={site} />}
-            {selectedMenu === 'giavp' && <GiaVP site={site} />}
+                <div>
+                {selectedMenu === 'taikhoan' && <TaiKhoan site={site} />}
+                {selectedMenu === 'giavp' && <GiaVP site={site} />}
+                </div>
+              
+            </div>
+
         </div>
     );
 }

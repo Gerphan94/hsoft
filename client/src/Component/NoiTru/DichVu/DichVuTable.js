@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SiOxygen } from "react-icons/si";
+import { GiTestTubes, GiMedicines } from "react-icons/gi";
 
 function DichvuTable( { data=[] } ) {
     return (
@@ -23,7 +24,7 @@ function DichvuTable( { data=[] } ) {
                     </thead>
                     <tbody>
                         {data.map((item, index) => (
-                            <tr key={index}>
+                            <tr key={item.id}>
                                 <td>
 
                                 </td>
@@ -32,7 +33,7 @@ function DichvuTable( { data=[] } ) {
                                 <td className="text-left">
                                     <div className="flex gap-2 items-center">
                                         <div>
-                                        <SiOxygen className="size-3 text-blue-500"  />
+                                        <GiTestTubes className="size-3 text-blue-500"  />
                                         </div>
                                         {item.tendichvu}
                                         </div>

@@ -23,11 +23,40 @@ def get_danhmuc():
     """
     return jsonify({"message": "ok"}), 200
 
-# stm = '''
-#         SELECT ID, TEN
-#         FROM NHOMNHANVIEN 
-#         ORDER BY ID ASC
-#     '''
+
+@dm.route('/danhmuc/danhmuc-coso-tamanh/<site>', methods=['GET'])
+def danhmuc_coso_tamanh(site):
+  """
+    Danh mục Cơ s BV TÂM ANH
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  
+  
+  cursor = get_cursor(site)
+  stm = 'SELECT ID, TEN FROM DMKHUDT'
+  cosos = cursor.execute(stm).fetchall()
+  return jsonify([{"id": row[0], "name": row[1]} for row in cosos]), 200
+
 
 @dm.route('/danhmuc/danhmuc-khoaphong-in/<site>/<khoaphong_string>', methods=['GET'])
 def danhmuc_khoaphong_in(site, khoaphong_string):
@@ -84,8 +113,8 @@ def get_nhom_nhanvien(site):
     nhom_nhan_vien_list = [{"id": row[0], "name": row[1]} for row in results]
     return jsonify(nhom_nhan_vien_list), 200
 
-@dm.route('/danhmuc/taikhoan-hsoft/<site>', methods=['GET'])
-def danhmuc_taikhoan(site):
+@dm.route('/danhmuc/taikhoan-hsoft/<site>/<khu>', methods=['GET'])
+def danhmuc_taikhoan(site, khu):
     """
     Get Tài khoản Hsoft
     ---
@@ -98,6 +127,12 @@ def danhmuc_taikhoan(site):
         required: true
         description: Site (HCM_DEV, HN_DEV,...)
         default: HCM_DEV
+      - name: khu
+        in: path
+        type: string
+        required: true
+        description: Quận Tân Bình, Quận 8, Quận 7
+        default: 1
     responses:
       200:
         description: Success
@@ -117,16 +152,16 @@ def danhmuc_taikhoan(site):
     
     stm = f'''
         WITH DMNV AS (
-        SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI, C.CHUNGTHUSO, C.PIN, A.KHOAKYRV
-        FROM DMBS A 
-        LEFT JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
-        LEFT JOIN DMBS_SIGNATURE C ON A.MA = C.MANV
-        WHERE A.NHOM <> 9
+          SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI, C.CHUNGTHUSO, C.PIN, A.KHOAKYRV
+          FROM DMBS A 
+          LEFT JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
+          LEFT JOIN DMBS_SIGNATURE C ON A.MA = C.MANV
+          WHERE A.NHOM <> 9 AND C.KHU = '{khu}'
         )
         SELECT A.ID, A.USERID, A.PASSWORD_,A.HOTEN AS TENTAIKHOAN, A.MANHOM, A.MAKP, B.*
         FROM DLOGIN A
         INNER JOIN DMNV B ON A.MABS = B.MA
-        WHERE A.HIDE = 0
+        WHERE A.HIDE = 0  AND A.KHU LIKE '%{khu}%'
         ORDER BY A.ID 
     '''
     taikhoans = cursor.execute(stm).fetchall()

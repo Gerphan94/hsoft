@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Dropdown from "../Common/Dropdown";
 import PharmarDetailModal from "./PharmarDetailModal";
-import Filter from "./Filter";
+// import Filter from "./Filter";
 import Filter3 from "./Filter3";
-import Table from "./Table";
-import styles from "../styles.module.css";
+import TonKhoTongHopTable from "./TonKhoTongHopTable";
 import SearchBar from "../Common/SearchBar";
-import Pagination from "../Common/Pagination";
+import Toggle from "../Common/ToggleSwitch";
+import ButtonChucNang from "./ButtonChucNang";
+import ButtonMenu from "./ButtonMenu";
 
 import { useAppContext } from "../Store/AppContext";
 
-function TonTheoKhoChiTiet({ site }) {
+function TonKhoTongHop({ menuData, selectedMenu, setSelectedMenu, setHeaderTitle }) {
+
+    const { site } = useAppContext();
 
     console.count('rending tồn kho theo kho', site)
     // const cousite = localStorage.getItem('site');
@@ -26,6 +28,8 @@ function TonTheoKhoChiTiet({ site }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [viewDatas, setViewDatas] = useState([]);
 
+    const [isDetail, setIsDetail] = useState(false);
+
     // FILTER
     const [filterList, setFilterList] = useState([
         { id: 'dalieu', name: 'Đa liều', value: false },
@@ -36,18 +40,16 @@ function TonTheoKhoChiTiet({ site }) {
         { id: 'hoichan', name: 'Hội chẩn', value: false },
         { id: 'luuy', name: 'Lưu ý', value: false }
     ])
+
     const [tyleBH, setTyleBH] = useState({ id: '100', name: '100' });
 
 
 
     useEffect(() => {
         if (!site) return; // Skip fetch if `site` is not valid or undefined
-
         console.count("Số lần Callback trong useEffect chạy");
-
         const controller = new AbortController(); // Create a new AbortController
         const signal = controller.signal; // Get the signal to pass to fetch
-
         const fetchData = async () => {
             try {
                 const fetchURL = apiURL + "/duoc/danhsach-kho/" + site;
@@ -70,10 +72,10 @@ function TonTheoKhoChiTiet({ site }) {
             }
         };
         fetchData();
+        
+
         return () => controller.abort();
     }, [site]);
-
-
 
     const filter = (iData) => {
         const filterData = iData.filter((item) => {
@@ -105,7 +107,7 @@ function TonTheoKhoChiTiet({ site }) {
                     matchesAllFilters = matchesAllFilters && item.adr === 1;
                 }
                 if (filter.id === 'sldvsd' && filter.value === true) {
-                    matchesAllFilters = matchesAllFilters && item.sluongdvbsd > 0;
+                    matchesAllFilters = matchesAllFilters && item.soluongdvsd > 0;
                 }
                 if (filter.id === 'luuy' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.luuy !== null;
@@ -138,13 +140,30 @@ function TonTheoKhoChiTiet({ site }) {
                 const data = await response.json();
                 setPharmars(data);
                 setViewDatas(data);
-                
+
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        const fetchTonKhoChiTiet = async () => {
+            try {
+                const fecthURL = apiURL + "duoc/tonkho/theokho-chitiet/" + site + "/" + selectedKhoId;
+                const response = await fetch(fecthURL);
+                const data = await response.json();
+                setPharmars(data);
+                setViewDatas(data);
+
 
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
-        fetchTonKho();
+        if (isDetail) {
+            fetchTonKhoChiTiet();
+        } else {
+            fetchTonKho();
+        }
     }
 
     // useEffect(() => {
@@ -166,7 +185,6 @@ function TonTheoKhoChiTiet({ site }) {
 
     // Search
     const handleSearch = () => {
-       
         if (timeoutId) {
             clearTimeout(timeoutId);
         }
@@ -194,65 +212,75 @@ function TonTheoKhoChiTiet({ site }) {
         };
     }, [timeoutId]);
 
+    useEffect(() => {
+        setViewDatas([]);
+        setPharmars([]);
+    }, [isDetail])
+
     return (
         <div className="">
             <div className="flex items-center gap-4 px-4">
                 <div className="flex items-center gap-2">
-                    <label className="font-bold">Kho: </label>
-                    <div className="w-96 px-4 py-2">
-                        {/* <Dropdown
-                            data={khoList}
-                            setSelectedOption={handleSetSelectedKho}
-                            selectedOption={selectedKho}
-                            chooseIndex={1}
-                        /> */}
-                        <select
-                            className="border px-2 py-1 w-full outline-none"
-                            value={selectedKhoId}
-                            onChange={(event) => setSelectedKhoId(event.target.value)} // Corrected the onChange handler
-                        >
-                            {khoList.map((kho) => (
-                                <option key={kho.id} value={kho.id}>{kho.name}</option>
-                            ))}
-                        </select>
-
+                    <div className="flex gap-1 items-center">
+                        <label className="font-bold">Kho: </label>
+                        <div className="w-96 px-4 py-2">
+                            <select
+                                className="border px-2 py-1 w-full outline-none"
+                                value={selectedKhoId}
+                                onChange={(event) => setSelectedKhoId(event.target.value)} // Corrected the onChange handler
+                            >
+                                {khoList.map((kho) => (
+                                    <option key={kho.id} value={kho.id}>{kho.name}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
-                    <button className={`${styles.btn} ${styles.btnNew}`} onClick={onClick} >
+
+                    <button
+                        className="btn btn-view"
+                        type="button"
+                        onClick={onClick}
+                    >
                         Xem
                     </button>
+                    <div>
+                        <SearchBar
+                            placeholder='Nhập Mã, Tên, HC'
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                            handleSearch={handleSearch}
+                        />
+                    </div>
+                    <div className="w-96">
+                        <Filter3
+                            idkho={selectedKhoId}
+                            site={site}
+                            filters={filterList}
+                            setFilters={setFilterList}
+                            onClick={handleFilter}
+                        />
+                    </div>
 
-                   
-                    
+
                 </div>
-                <div>
-                    <SearchBar
-                        placeholder='Nhập Mã, Tên, HC'
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        handleSearch={handleSearch}
-                        
-                         />
-                </div>
-                <div className="w-96">
-                    <Filter3
-                        idkho={selectedKhoId}
-                        site={site}
-                        filters={filterList}
-                        setFilters={setFilterList}
-                        onClick={handleFilter}
+
+                <div className="flex">
+                    <ButtonMenu
+                        menuData={menuData}
+                        selectedMenu={selectedMenu}
+                        setSelectedMenu={setSelectedMenu}
                     />
                 </div>
+
             </div>
             <div className="p-4">
-                <Table
+                <TonKhoTongHopTable
                     data={viewDatas}
                     setIsShowModal={setIsShowModal}
                     setSelectedPharmarId={setSelectedPharmarId} />
-
             </div>
-
             {isShowModal && <PharmarDetailModal site={site} pharmarId={selectedPharmarId} setModalShow={setIsShowModal} />}
         </div >
     );
 }
-export default TonTheoKhoChiTiet;
+export default TonKhoTongHop;

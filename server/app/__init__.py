@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flasgger import Swagger
 
 # from .route_main import main
+from .route_benhnhan import benhnhan
 from .route_danhmuc import dm
 from .route_duoc import duoc
 from .route_noitru import noitru
@@ -27,7 +28,7 @@ def create_app():
         "version": "1.0.0"
     }
 })
-
+    app.register_blueprint(benhnhan)
     app.register_blueprint(dm)
     app.register_blueprint(duoc)
     app.register_blueprint(noitru)

@@ -103,7 +103,7 @@ function PhongLuu() {
                         <label>Tháng</label>
                         <select
                             value={month}
-                            className="px-2 py-0.5 border outline-none"
+                            className="px-2 py-0.5 border outline-none disabled:opacity-50 disabled:text-gray-200" 
                             onChange={(e) => setMonth(e.target.value)}
                         >
                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
