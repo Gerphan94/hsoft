@@ -89,6 +89,7 @@ const Dropdown = memo(({
                         className={`font-medium text-left flex items-center justify-between border select-none outline-none h-full w-full py-1 px-2 text-[#0C1844] group-hover:border-blue-200  ${disabled ? 'cursor-not-allowed bg-gray-200 text-gray-400' : 'cursor-pointer'}`}
                         onClick={toggleDropdown}
                         disabled={disabled}
+                        type='button'
                     >
                         <div
                             className="truncate"
@@ -120,7 +121,9 @@ const Dropdown = memo(({
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             {viewData.length === 0 ? (
                                 <li>
-                                    <button className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-gray-100 select-none">
+                                    <button 
+                                    type='button'
+                                    className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-gray-100 select-none">
                                         None
                                     </button>
                                 </li>
@@ -129,6 +132,7 @@ const Dropdown = memo(({
                                     {viewData.map(item => (
                                         <li key={item.id}>
                                             <button
+                                                type='button'
                                                 data-id={item.id}
                                                 className={`w-full text-left block px-4 py-2 text-sm select-none text-[#0C1844] hover:bg-[#667BC6] hover:text-white ${selectedOption.id === item.id ? 'bg-[#667BC6] text-white' : ''}`}
                                                 onClick={() => handleClick(item.id, item.name)}

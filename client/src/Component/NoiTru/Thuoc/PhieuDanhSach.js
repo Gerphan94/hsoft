@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import CouponComponent from "./CouponComponent";
+import Phieu from "./Phieu";
 
-function CouponList({ date, entries, setMedicineDetail, setDutrullDetail, selectedCoupon, setSelectedCoupon }) {
+function PhieuDanhSach({ date, entries, setMedicineDetail, setDutrullDetail, selectedCoupon, setSelectedCoupon }) {
 
     const formatDate = (date) => {
         const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -19,18 +19,18 @@ function CouponList({ date, entries, setMedicineDetail, setDutrullDetail, select
 
     return (
         <div>
-            <div key={date}>
+            <div key={date} className="">
                 <div className="">
                     <div
                         onClick={() => setShow(!show)}
                         className="w-full px-2 py-1 bg-slate-200 mb-2 flex items-center justify-between"
                     >
                         <div className="select-none"> Ngày: {date}</div>
-                        <span className="px-2 font-bold">{entries.length}</span>
+                        <span className="px-2 font-bold select-none">{entries.length}</span>
                     </div>
                 </div>
                 {show && entries.map(item => (
-                    <CouponComponent
+                    <Phieu
                         item={item}
                         setMedicineDetail={setMedicineDetail}
                         selectedCoupon={selectedCoupon}
@@ -43,4 +43,4 @@ function CouponList({ date, entries, setMedicineDetail, setDutrullDetail, select
     );
 }
 
-export default CouponList;
+export default PhieuDanhSach;

@@ -1,14 +1,18 @@
 import React from "react";
 
 
-function PhaTiem( {data} ) {
+function PhaTiem({ data }) {
     return (
         <>
-         <div className="border rounded-md p-2 mt-4">
-
-         </div>
+            {data && data.length > 0 ?
+                <div className="border rounded-md p-2 mt-4">
+                </div>
+                :
+                <div>KHÔNG CÓ PHA TIÊM</div>
+            }
         </>
+
     )
-}   
+}
 
 export default PhaTiem;

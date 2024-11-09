@@ -78,13 +78,6 @@ function BHYTModal({ site, setModalShow, selected }) {
                 console.log(data.madoituong)
                 setSelectedDT({ id: data.madoituong, name: data.doituong });
                 Gerenrate();
-                // setFormData({
-                //     doituong: selectedDT,
-                //     sothe: 'GD4' + generateRandomString() + '79669',
-                //     fromDate: new Date(),
-                //     toDate: new Date()
-
-                // });
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -121,13 +114,6 @@ function BHYTModal({ site, setModalShow, selected }) {
                 },
                 body: JSON.stringify(formJson),
             });
-            // const updateDoituong = await fetch(apiURL + 'noi-tru/update-doituong/' + site, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(formJson),
-            // });
             if (insertBHYT.ok) {
                 const data = await insertBHYT.json();
                 console.log(data);
