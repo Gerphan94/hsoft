@@ -4,7 +4,7 @@ import moment from "moment";
 function ChiTietThuocComponent({ item, couponType }) {
     return (
 
-        <div key={item.stt_index} className="relative border rounded-md mb-3 text-left p-2" data-id={item.stt_index} >
+        <div key={item.stt_index} className="relative border rounded-md mb-3 text-left p-2 select-none" data-id={item.stt_index} >
             <div className="flex justify-between">
                 <div className="flex gap-2 items-center">
                     <span className="size-6 rounded-full bg-[#379777] border text-sm flex items-center justify-center">

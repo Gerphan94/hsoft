@@ -78,13 +78,6 @@ function BHYTModal({ site, setModalShow, selected }) {
                 console.log(data.madoituong)
                 setSelectedDT({ id: data.madoituong, name: data.doituong });
                 Gerenrate();
-                // setFormData({
-                //     doituong: selectedDT,
-                //     sothe: 'GD4' + generateRandomString() + '79669',
-                //     fromDate: new Date(),
-                //     toDate: new Date()
-
-                // });
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

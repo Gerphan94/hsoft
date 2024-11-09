@@ -727,3 +727,85 @@ def noitru_getchidinhbyidkhoa(site, idkhoa):
         for chidinh in chidinh:
             result.append(dict(zip(col_names, chidinh)))
     return jsonify(result), 200
+
+
+
+@noitru.route('/noitru/get-sodokcb-in-hieiden', methods=['GET'])
+def noitru_get_sodokcb_in_hieiden():
+    """
+    Danh sách chỉ định dịch vụ
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: maql
+        in: query
+        type: string
+        required: true
+        description:
+      - name: mavaovien
+        in: query
+        type: string
+        required: true
+        description:
+      - name: idkhoa
+        in: query
+        type: string
+        required: true
+        description:
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    site = request.args.get('site', 'HCM_DEV')
+    maql = request.args.get('maql')
+    mavaovien = request.args.get('mavaovien')
+    idkhoa = request.args.get('idkhoa')
+    cursor = get_cursor(site)
+    
+    def get_start_khoadieutri():
+        stm = f'''
+            SELECT A.ID, B.MAKP, B.TENKP FROM NHAPKHOA A
+            INNER JOIN BTDKP_BV B ON A.MAKP = B.MAKP
+            WHERE A.MAQL = :maql AND A.IDCHUYEN IS NULL
+        '''
+        return cursor.execute(stm, maql=maql).fetchone()
+    
+    
+    def get_next_khoadieutri(idkhoachuyen):
+        stm = f'''
+            SELECT A.ID, B.MAKP, B.TENKP FROM NHAPKHOA A
+            INNER JOIN BTDKP_BV B ON A.MAKP = B.MAKP
+            WHERE A.MAQL = :maql AND A.IDCHUYEN = :idkhoachuyen
+        '''
+        next_khoadieutri = cursor.execute(stm, maql=maql, idkhoachuyen=idkhoachuyen).fetchone()
+        return next_khoadieutri
+    
+    khoadieutri_list = [] 
+    start_khoadieutri = get_start_khoadieutri()
+    icheck = False
+    idkhoachuyen = start_khoadieutri[0]
+    # while icheck is False:
+    #     next_khoadieutri = get_next_khoadieutri(idkhoachuyen)
+    #     if 
+        
+        
+    khoadieutri_list.append(start_khoadieutri)
+    
+    
+    print(start_khoadieutri)
+    return jsonify({'message': 'ok'}), 200

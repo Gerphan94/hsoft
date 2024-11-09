@@ -26,15 +26,18 @@ function PhieuDetail({ selectedCoupon, detail, data, couponType }) {
                         <strong>{selectedCoupon.name} </strong>
                         ( <i>{selectedCoupon.id}</i> )
                         </div>
-
                     <div className="flex">
                         <button
                             className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 1 ? 'bg-blue-500 text-white' : ''}`}
                             onClick={() => setTabNumber(1)}
                         >Chi tiết</button>
-                        <button
+                         <button
                             className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 2 ? 'bg-blue-500 text-white' : ''}`}
                             onClick={() => setTabNumber(2)}
+                        >Pha tiêm</button>
+                        <button
+                            className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 3 ? 'bg-blue-500 text-white' : ''}`}
+                            onClick={() => setTabNumber(3)}
                         >Thông tin xuất</button>
                     </div>
                 </div>
@@ -44,7 +47,11 @@ function PhieuDetail({ selectedCoupon, detail, data, couponType }) {
                 <div className="flex justify-between text-left bg-slate-300 px-2 py-1">
                     <div className="w-full ">
                         <label className="w-24 text-left inline-block">ICD:</label>
-                        <input type="text" className="w-1/3 border outline-none px-0.5 py-0.5" readOnly={true} value={detail && detail.maicd} />
+                        <input 
+                        type="text" 
+                        className="w-1/3 border outline-none px-0.5 py-0.5" 
+                        readOnly={true} 
+                        value={detail && detail.detail && detail.detail.maicd} />
                     </div>
                     <span className="flex items-center w-10">
                         {showChandoan ?
@@ -62,7 +69,7 @@ function PhieuDetail({ selectedCoupon, detail, data, couponType }) {
                             type="text"
                             className="w-full h-24 border outline-none p-1"
                             readOnly={true}
-                            value={detail && mutileLineChandoan(detail.chandoan)}
+                            value={detail && detail.detail && mutileLineChandoan(detail.detail.chandoan)}
                         />
                         <div className='w-[450px]  p-2 text-left border rounded-md '>
                             <div className="table w-full">

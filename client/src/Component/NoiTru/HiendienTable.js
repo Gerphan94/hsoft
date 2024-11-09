@@ -58,7 +58,7 @@ function Hiendien({ data, selected, setSelected }) {
                                 <th className="text-center"><div className=" py-1 text-center">STT</div></th>
                                 <th className=""><div className="">PID</div></th>
                                 <th className=""><div>Họ tên</div></th>
-                                <th className="w-12"><div>NS</div></th>
+                                <th className="w-12"><div>Ngày sinh</div></th>
                                 <th><div className="text-center">Ngày VV</div></th>
                                 <th><div className="text-center">Ngày VK</div></th>
                                 <th><div>Đối tượng</div></th>
