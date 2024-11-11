@@ -2,14 +2,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import PharmarDetailModal from "./PharmarDetailModal";
 // import Filter from "./Filter";
 import Filter3 from "./Filter3";
-import TonKhoTongHopTable from "./TonKhoTongHopTable";
 import SearchBar from "../Common/SearchBar";
 import Toggle from "../Common/ToggleSwitch";
 import ButtonChucNang from "./ButtonChucNang";
 import ButtonMenu from "./ButtonMenu";
 import InventoryTable from "./InventoryTable";
 import InventoryTableDetail from "./InventoryTableDetail";
-
 import TonKhoTableDetail from "./TonKhoTableDetail";
 
 import { useAppContext } from "../Store/AppContext";
