@@ -31,7 +31,6 @@ function BHYTModal({ site, setModalShow, selected }) {
 
     // fetchCOSO_KCB
     const fetchCOSO_KCB = async () => {
-
         try {
             const fetchUrl = apiURL + "/danh-muc/coso-kcb-of-tinhthanh/" + site + "/" + selectedTinhthanh.id;
             const response = await fetch(fetchUrl);
@@ -65,12 +64,10 @@ function BHYTModal({ site, setModalShow, selected }) {
             fromDate: today,
             toDate: nextYear
         });
-        console.log("Generate...." + tmp_sothe)
     }
 
     useEffect(() => {
         const fetchDoituong = async () => {
-
             try {
                 const fetchUrl = apiURL + "/noi-tru/get-benhandt-doituong/" + site + "/" + selected.maql;
                 const response = await fetch(fetchUrl);

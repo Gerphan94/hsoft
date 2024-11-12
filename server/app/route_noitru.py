@@ -733,7 +733,7 @@ def noitru_getchidinhbyidkhoa(site, idkhoa):
 @noitru.route('/noitru/get-sodokcb-in-hiendien', methods=['GET'])
 def noitru_get_sodokcb_in_hiendien():
     """
-    Danh sách chỉ định dịch vụ
+    Khám chữa bệnh theo hiện diện
     ---
     tags:
       - Nội trú
@@ -761,37 +761,60 @@ def noitru_get_sodokcb_in_hiendien():
                   type: string
                   example: ok
     """
-    
     site = request.args.get('site', 'HCM_DEV')
     cursor = get_cursor(site)
     mabn = request.args.get('mabn')
-   
     def get_hiendien():
       stm = "SELECT ID, MAVAOVIEN, MAQL, TO_CHAR(NGAYVV, 'MMYY') AS THANGNAM FROM HIENDIEN  WHERE mabn = :pid"
       return cursor.execute(stm, pid=mabn).fetchone()
     
-    def get_khoadieutri(maql):
-      schema = ""
-      stm = '''
+    def get_khoadieutri(maql, mavv):
+      print(maql, mavv)
+      stm = f'''
           SELECT
-          A.ID AS IDKHOA,
+          TO_CHAR(A.ID) AS IDKHOA,
+          TO_CHAR({mavv}) AS MAVAOVIEN,
+          TO_CHAR(A.MAQL) AS MAQL,
           B.MAKP,
           B.TENKP,
-          A.IDCHUYEN,
-          A.NGAY,
-          A.MABN
+          A.NGAY AS NGAYVAO,
+          C.NGAY AS NGAYRA,
+          C.KETQUA
         FROM
           NHAPKHOA A
         INNER JOIN BTDKP_BV B ON
           A.MAKP = B.MAKP
+        LEFT JOIN XUATKHOA C ON
+          A.ID = C.ID
         WHERE
-          A.MAQL = :maql
+          A.MAQL = {maql}
         ORDER BY
           A.NGAY ASC
       '''
-      return cursor.execute(stm, maql=maql).fetchall()
+      
+      return cursor.execute(stm).fetchall()
+    
+    def get_previous(mavv, thangnam):
+      schema = "HSOFTTAMANH" + thangnam
+      stm_cc = f"SELECT '', MAVAOVIEN, MAQL FROM {schema}.BENHANCC WHERE MAVAOVIEN = :mavv"
+      benhancc = cursor.execute(stm_cc, mavv=mavv).fetchone()
+      
+      return benhancc
+    
     hiendien = get_hiendien()
-    khoadieutris = get_khoadieutri(hiendien[2])
-    for khoa in khoadieutris:
-      print(khoa)
-    return jsonify({'message': 'ok'}), 200
+    idkhoa = hiendien[0]
+    mavv = hiendien[1]
+    maql = hiendien[2]
+    thangnam = hiendien[3]
+    result = []
+    type = 0
+    col_names = ['idkhoa', 'mavaovien', 'maql', 'makp', 'tenkp', 'ngayvao', 'ngayra', 'ketqua']
+    previous = get_previous(mavv, thangnam)
+    
+    khoadieutris = get_khoadieutri(maql, mavv)
+    print(list(khoadieutris))
+    for khoadieutri in khoadieutris:
+        result.append(dict(zip(col_names, khoadieutri)))
+  
+
+    return jsonify(result), 200
