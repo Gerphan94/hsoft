@@ -44,10 +44,8 @@ function SideBar() {
         { id: 'sql', name: 'SQL', icon: PiFileSqlDuotone, path: 'https://aged-trader-e9b.notion.site/SQL-1150ea29bab180eeb4d6c8ad8290221b?pvs=4' },
         { id: 'document', name: 'Documents', icon: FaBook, path: '/document' }
     ];
-
     const handleClick = (id, path) => {
         navigate(path);
-
     };
 
     return (

@@ -51,7 +51,7 @@ function Hiendien({ data, selected, setSelected }) {
     return (
         <>
             <div className=" flex flex-col">
-                <div className="mt-2 px-4 flex-grow w-full h-full overflow-y-auto text-md" >
+                <div className="mt-2 px-4 flex-grow w-full h-full overflow-auto text-md" >
                     <table className="w-full">
                         <thead>
                             <tr>
@@ -63,7 +63,9 @@ function Hiendien({ data, selected, setSelected }) {
                                 <th><div className="text-center">Ngày VK</div></th>
                                 <th><div>Đối tượng</div></th>
                                 <th><div className="text-center ">BHYT</div></th>
-                                <th><div className="text-center">Nhóm máu</div></th>
+                                <th><div className="text-center">N.Máu</div></th>
+                                <th><div className="text-center">Phòng</div></th>
+                                <th><div className="text-center">Giường</div></th>
                                 <th><div className="text-center">Số ngày ĐT</div></th>
                                 <th><div className="text-center w-32">...</div></th>
                             </tr>
@@ -112,7 +114,10 @@ function Hiendien({ data, selected, setSelected }) {
                                     <td><div className="text-right">{moment(ele.ngayvk).utc().format('DD/MM/YYYY HH:mm')}</div></td>
                                     <td><div className="text-center px-2">{ele.doituong}</div></td>
                                     <td><div className="">{ele.sothe}</div></td>
-                                    <td><div className="">{ele.mauabo}{ele.maurh}</div></td>
+                                    <td><div className="">{ele.mau_abo}{ele.mau_rh}</div></td>
+                                    <td><div>{ele.phong}</div></td>
+                                    <td><div>{ele.giuong}</div></td>
+
                                     <td><div className="">{ele.songaydt}</div></td>
                                     <td><div className="">{ele.ghichu}</div></td>
                                 </tr>))}

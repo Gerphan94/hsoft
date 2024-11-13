@@ -40,8 +40,8 @@ def get_khoaphong(site):
     ]
     return jsonify(result)
 
-@noitru.route('/noitru/hiendien/<site>/<makp>', methods=['GET'])
-def noitru_hiendien(site, makp):
+@noitru.route('/noitru/hiendien', methods=['GET'])
+def noitru_hiendien():
     """
     Get Danh sách hiện diện BN
     ---
@@ -49,16 +49,17 @@ def noitru_hiendien(site, makp):
       - Nội trú
     parameters:
       - name: site
-        in: path
+        in: query
         type: string
         required: true
         description: The site identifier
         default: HCM_DEV
       - name: makp
-        in: path
+        in: query
         type: string
         required: true
         description: Mã Khoa Phòng
+        default: 048
      
     responses:
       200:
@@ -72,12 +73,23 @@ def noitru_hiendien(site, makp):
                   type: string
                   example: ok
     """
+    site = request.args.get('site')
+    makp = request.args.get('makp')
     cursor = get_cursor(site)
+    def get_phong_giuong(idkhoa):
+      stm = f'''
+        SELECT C.TEN AS TENPHONG, B.TEN AS TENGIUONG 
+        FROM THEODOIGIUONG A
+        INNER JOIN DMGIUONG B ON A.IDGIUONG = B.ID
+        INNER JOIN DMPHONG C ON B.IDPHONG = C.ID
+        WHERE A.IDKHOA = {idkhoa}
+      '''
+      giuong = cursor.execute(stm).fetchone()
+      return {'phong': giuong[0] if giuong else '', 'giuong': giuong[1] if giuong else ''}
+  
     result = []
-    
     col_names = ['id', 'mavaovien', 'maql', 'mabn', 'hoten', 'phai', 'ngaysinh',
                  'namsinh', 'ngayvv', 'ngayvk', 'maicd', 'madoituong', 'doituong', 'sothe', 'mau_abo', 'mau_rh']
-    
     stm = f'''
         WITH tmp_bhyt AS (
             SELECT
@@ -125,9 +137,11 @@ def noitru_hiendien(site, makp):
             A.NGAY DESC
     '''
     data_list = cursor.execute(stm).fetchall()
-    
     for data in data_list:
-         result.append(dict(zip(col_names, data)))
+        giuong = get_phong_giuong(data[0])
+        obj = dict(zip(col_names, data))
+        obj.update(giuong)
+        result.append(obj)
     return jsonify(result), 200
 @noitru.route('/noitru/hiendien-phongluu/<site>/<mmyy>', methods=['GET'])
 def noitru_hiendienphongluu(site, mmyy):

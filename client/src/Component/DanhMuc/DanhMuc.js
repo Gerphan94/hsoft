@@ -2,10 +2,15 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import TaiKhoan from "./TaiKhoan";
 import GiaVP from "./GiaVP";
+import PhongGiuong from "./PhongGiuong";
+
 import { FcManager, FcCurrencyExchange, FcConferenceCall } from "react-icons/fc";
+import { IoBed } from "react-icons/io5";
+
 import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
 import PageHeader from "../PageHeader";
+import ButtonMenu from "./ButtonMenu";
 
 function DanhMuc() {
     console.log('-----DanhMuc');
@@ -16,14 +21,16 @@ function DanhMuc() {
     const menuList = useMemo(() => [
         { id: 'taikhoan', name: 'Tài khoản', icon: <FcManager /> },
         { id: 'nhanvien', name: 'Nhân viên', icon: <FcConferenceCall /> },
-        { id: 'giavp', name: 'Giá viện phí', icon: <FcCurrencyExchange /> }
+        { id: 'giavp', name: 'Giá viện phí', icon: <FcCurrencyExchange /> },
+        { id: 'phonggiuong', name: 'Phòng/Giường', icon: <IoBed className="text-blue-600" /> }
     ], []);
 
     return (
 
         <div className="w-full">
             <PageHeader title="Danh mục" />
-            <div className="p-4">
+            <div className="p-4 ">
+                <div className="flex justify-between">
                 <div className="flex justify-start">
                     {menuList.map((menu) => (
                         <button
@@ -40,8 +47,17 @@ function DanhMuc() {
                     <div className="w-full bg-gray-300"></div>
                 </div>
                 <div>
-                {selectedMenu === 'taikhoan' && <TaiKhoan site={site} />}
-                {selectedMenu === 'giavp' && <GiaVP site={site} />}
+                    <ButtonMenu 
+                    selectedMenu={selectedMenu} 
+                    menuData={menuList} 
+                    setSelectedMenu={setSelectedMenu} />
+                </div>
+                </div>
+                <div>
+                {selectedMenu && selectedMenu.id === 'taikhoan' && <TaiKhoan site={site} />}
+                {selectedMenu && selectedMenu.id === 'giavp' && <GiaVP site={site} />}
+                {selectedMenu && selectedMenu.id === 'phonggiuong' && <PhongGiuong />}
+
                 </div>
               
             </div>

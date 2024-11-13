@@ -88,7 +88,7 @@ function Pagination({ currentPage, setCurrentPage, totalPage, itemsPerPage = 20,
             </div>
 
             <select
-                className="px-2 border border-gray-300 rounded-md hover:bg-gray-100 disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed outline-none"
+                className="px-2 border border-gray-300 rounded-md hover:bg-gray-100 disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:cursor-not-allowed outline-none select-none"
                 value={itemsPerPage}
                 onChange={(e) => setItemsPerPage(e.target.value)}>
                 <option value="10">10</option>

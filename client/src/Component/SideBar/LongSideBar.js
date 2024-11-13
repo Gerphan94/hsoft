@@ -19,10 +19,7 @@ function LongSideBar({ data, setShowChooseSite, area }) {
 
     return (
         <>
-            <div className={`w-56 bg-[#031C30] relative text-white h-screen overflow-visible`}>
-               
-               
-
+            <div className={`w-56 bg-[#031C30] relative text-white h-screen overflow-y-auto`}>
                 <ul className="p-4 mt-10 w-full space-y-1 select-none">
                     {data.map((item, index) => (
                         <li

@@ -43,7 +43,7 @@ const ButtonMenu = ({ selectedMenu, menuData, setSelectedMenu }) => {
                     className={`flex items-center justify-between gap-2 w-full h-full p-1 whitespace-nowrap  px-2 border bg-[#667BC6] text-white font-bold select-none disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed outline-none'}`}
                     onClick={toggleDropdown}
                 >
-                    Tồn kho
+                    Danh mục
                     <span><FaAngleDown /></span>
                 </button>
 
@@ -60,7 +60,7 @@ const ButtonMenu = ({ selectedMenu, menuData, setSelectedMenu }) => {
                                             setIsDropdownOpen(!isDropdownOpen);
                                         }}
                                     >
-                                        
+                                        {item.icon}
                                         {item.name}
                                     </button>
                                 </li>

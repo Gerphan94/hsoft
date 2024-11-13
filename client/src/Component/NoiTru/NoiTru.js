@@ -88,7 +88,8 @@ function NoiTru() {
 
     const gethiendien = async () => {
         try {
-            const fecthURL = apiURL + "noitru/hiendien/" + site + "/" + selectedKhoa.id;
+            // const fecthURL = apiURL + "noitru/hiendien/" + site + "/" + selectedKhoa.id;
+            const fecthURL = `${apiURL}noitru/hiendien?site=${site}&makp=${selectedKhoa.id}`
             console.log(fecthURL)
             const response = await fetch(fecthURL);
             const data = await response.json();

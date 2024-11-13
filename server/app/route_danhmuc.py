@@ -58,6 +58,139 @@ def danhmuc_coso_tamanh(site):
   return jsonify([{"id": row[0], "name": row[1]} for row in cosos]), 200
 
 
+@dm.route('/danhmuc/khoa', methods=['GET'])
+def danhmuc_khoaphong():
+    """
+    Get Danh mục Khoa Phòng
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: khu
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: 1
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    site = request.args.get('site', 'HCM_DEV')
+    khu = request.args.get('khu', '1')
+    cursor = get_cursor(site)
+    stm = '''
+      SELECT
+        MAKP,
+        TENKP
+      FROM
+        BTDKP_BV
+      WHERE
+        LOAI = 0
+        AND MABA IS NOT NULL
+        AND KHU = :khu
+        AND KHAMBENH = 0
+        AND CAPCUU = 0
+    '''
+    khoas = cursor.execute(stm, khu=khu).fetchall()
+    result = [{"id": khoa[0], "name": khoa[1]} for khoa in khoas]
+    return jsonify(result), 200
+  
+@dm.route('/danhmuc/phong-in-khoa', methods=['GET'])
+def danhmuc_phong_in_khoa():
+    """
+    Get Danh mục Phòng In Khoa
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: makp
+        in: query
+        type: string
+        required: true
+        description: Mã khoa
+        default: 048
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    site = request.args.get('site', 'HCM_DEV')
+    makp = request.args.get('makp', '048')
+    cursor = get_cursor(site)
+    stm = 'SELECT ID, TEN FROM DMPHONG WHERE MAKP = :makp'
+    phongs = cursor.execute(stm, makp=makp).fetchall()
+    return jsonify([{"id": phong[0], "name": phong[1]} for phong in phongs]), 200
+  
+@dm.route('/danhmuc/giuong-in-phong', methods=['GET'])
+def danhmuc_giuong_in_phong():
+  """
+    Get Danh mục Giuong in Phòng
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: idphong
+        in: query
+        type: string
+        required: true
+        description: ID Phòng
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  site = request.args.get('site', 'HCM_DEV')
+  idphong = request.args.get('idphong')
+  cursor = get_cursor(site)
+  col_names = ['id', 'ma', 'ten', 'hide', 'codegiuongnt']
+  stm = 'SELECT ID, MA, TEN, HIDE, CODEGIUONGNT FROM DMGIUONG WHERE IDPHONG = :idphong ORDER BY STT'
+  giuongs = cursor.execute(stm, idphong=idphong).fetchall()
+  return jsonify([dict(zip(col_names, giuong)) for giuong in giuongs]), 200
+  
+    
+        
+    
 @dm.route('/danhmuc/danhmuc-khoaphong-in/<site>/<khoaphong_string>', methods=['GET'])
 def danhmuc_khoaphong_in(site, khoaphong_string):
     """
