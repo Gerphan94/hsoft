@@ -48,6 +48,14 @@ function Hiendien({ data, selected, setSelected }) {
         setShowAlert(true);
     };
 
+    const songaydieutri = (ingay) => {
+        if (!ingay) return 0;
+        const today = moment(new Date()).format('YYYY-MM-DD');
+        const ngayvk = moment(ingay).format('YYYY-MM-DD');
+        const songay = moment(today).diff(ngayvk, 'days');
+        return songay > 0 ? songay : 1;
+    }
+
     return (
         <>
             <div className=" flex flex-col">
@@ -71,7 +79,7 @@ function Hiendien({ data, selected, setSelected }) {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.length === 0 && <tr><td colSpan={11} className="text-center bg-gray-200 py-1 italic">Không có dữ liệu</td></tr>}
+                            {data.length === 0 && <tr><td colSpan={13} className="text-center bg-gray-200 py-1 italic">Không có dữ liệu</td></tr>}
 
                             {dataInPage.map((ele, index) => (
                                 <tr
@@ -118,7 +126,7 @@ function Hiendien({ data, selected, setSelected }) {
                                     <td><div>{ele.phong}</div></td>
                                     <td><div>{ele.giuong}</div></td>
 
-                                    <td><div className="">{ele.songaydt}</div></td>
+                                    <td><div className="">{songaydieutri(ele.ngayvk)}</div></td>
                                     <td><div className="">{ele.ghichu}</div></td>
                                 </tr>))}
 

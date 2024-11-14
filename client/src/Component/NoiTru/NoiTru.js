@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-// import Dropdown from "../Dropdown";
+
+
+import { useAppContext } from "../Store/AppContext";
 
 import Dropdown from "../Common/Dropdown";
 
 import PageHeader from "../PageHeader";
-
+// Import modal
 import ThuocModal from "./Thuoc/ThuocModal";
 import DichVuModal from "./DichVu/DichVuModal";
 import MauModal from "./Mau/MauModal";
@@ -12,8 +14,9 @@ import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
 import TreatmentSheetModal from "./ToDieuTri/ToDieuTrIModal";
 import PhieuCongKhaiModal from "./Emr/PhieuCongKhaiModal";
+import QuanLyGiuongModal from "./QLGiuong/QuanLyGiuongModal";
 
-import { useAppContext } from "../Store/AppContext";
+
 import TuTrucModal from "./TuTruc/TuTrucModal";
 import DanhSachPhieuModal from "./Thuoc/DanhSachPhieuModal";
 import SearchBar from "../Common/SearchBar";
@@ -21,13 +24,9 @@ import SearchBar from "../Common/SearchBar";
 import ButtonChucNang from "./ButtonChucNang";
 import ButtonTienIch from "./ButtonTienIch";
 
-
-import { FaAngleDown } from "react-icons/fa6";
-
 function NoiTru() {
 
     const apiURL = process.env.REACT_APP_API_URL;
-    console.log('render noi tru');
 
     const ButtonList = [
         { id: "bhyt", name: "BHYT" },
@@ -37,10 +36,7 @@ function NoiTru() {
     ]
 
     const [selectedButton, setSelectedButton] = useState({ id: '', name: '' });
-
     const { site, setSelectedSideBar, area } = useAppContext();
-
-    const [selectedBTN, setSelectedBNT] = useState(1);
 
     const [khoas, setKhoas] = useState([]);
     const [selectedKhoa, setSelectedKhoa] = useState({ id: null, name: '' });
@@ -58,8 +54,12 @@ function NoiTru() {
     const [showPhieuCongKhai, setShowPhieuCongKhai] = useState(false);
     const [showCabinetModal, setShowCabinetModal] = useState(false);
 
+    // TIỆN ÍCH
     const [showDSPhieuModal, setShowDSPhieuModal] = useState(false);
+    const [showQLGiuongModal, setShowQLGiuongModal] = useState(false);
 
+    // --------------------------------------------------------------
+ 
     const [searchTerm, setSearchTerm] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
 
@@ -74,6 +74,8 @@ function NoiTru() {
                 const data = await response.json();
                 setKhoas(data);
                 setSelectedKhoa({ id: data[0].id, name: data[0].name });
+                setHiendiens([]);
+                setViewData([]);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -146,7 +148,6 @@ function NoiTru() {
                 <PageHeader title="Nội trú" />
                 <div className="flex items-center px-4 justify-between">
                     <div className="flex p-2 gap-2 items-center">
-
                         <label className="font-bold">Khoa: </label>
                         <div className="w-[600px]">
                             <Dropdown
@@ -201,6 +202,7 @@ function NoiTru() {
                         <ButtonTienIch
                             setShowCabinetModal={setShowCabinetModal}
                             setShowDSPhieuModal={setShowDSPhieuModal}
+                            setShowQLGiuongModal={setShowQLGiuongModal}
 
 
                         />
@@ -272,6 +274,13 @@ function NoiTru() {
                 <DanhSachPhieuModal
                     site={site}
                     setShowModal={setShowDSPhieuModal}
+                    khoa={selectedKhoa}
+                />}
+
+            {showQLGiuongModal &&
+                <QuanLyGiuongModal
+                    site={site}
+                    setShowModal={setShowQLGiuongModal}
                     khoa={selectedKhoa}
                 />}
         </>

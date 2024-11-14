@@ -40,6 +40,72 @@ def get_khoaphong(site):
     ]
     return jsonify(result)
 
+@noitru.route('/noitru/quanlygiuong', methods=['GET'])
+def noitru_quanlygiuong():
+  """
+    Quản lý giường nội trú
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: makp
+        in: query
+        type: string
+        required: true
+        description: Mã Khoa Phòng
+        default: 048
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  site = request.args.get('site')
+  makp = request.args.get('makp')
+  cursor = get_cursor(site)
+  stm  = f'''
+      SELECT
+        A.ID,
+        A.MA,
+        A.TEN AS TENGIUONG,
+        A.MABH,
+        A.HIDE,
+        A.CODEGIUONGNT,
+        A.MABN,
+        C.HOTEN,
+        A.TINHTRANG,
+        B.TEN AS TENPHONG
+      FROM
+        DMGIUONG A
+      INNER JOIN DMPHONG B ON
+        A.IDPHONG = B.ID
+      LEFT JOIN BTDBN C ON
+        A.MABN = C.MABN
+      WHERE
+        B.MAKP = {makp}
+      ORDER BY
+        A.STT ASC
+    '''
+  col_names = ['id', 'ma', 'tengiuong', 'mabh', 'hide', 'codegiuongnt', 'mabn', 'hoten', 'tinhtrang', 'tenphong']
+  result = []
+  giuongs = cursor.execute(stm).fetchall()
+  for giuong in giuongs:
+    result.append(dict(zip(col_names, giuong)))
+  return jsonify(result), 200
+  
+  
 @noitru.route('/noitru/hiendien', methods=['GET'])
 def noitru_hiendien():
     """
@@ -60,7 +126,6 @@ def noitru_hiendien():
         required: true
         description: Mã Khoa Phòng
         default: 048
-     
     responses:
       200:
         description: Success
@@ -76,71 +141,73 @@ def noitru_hiendien():
     site = request.args.get('site')
     makp = request.args.get('makp')
     cursor = get_cursor(site)
-    def get_phong_giuong(idkhoa):
-      stm = f'''
-        SELECT C.TEN AS TENPHONG, B.TEN AS TENGIUONG 
-        FROM THEODOIGIUONG A
-        INNER JOIN DMGIUONG B ON A.IDGIUONG = B.ID
-        INNER JOIN DMPHONG C ON B.IDPHONG = C.ID
-        WHERE A.IDKHOA = {idkhoa}
-      '''
-      giuong = cursor.execute(stm).fetchone()
-      return {'phong': giuong[0] if giuong else '', 'giuong': giuong[1] if giuong else ''}
-  
+    
     result = []
     col_names = ['id', 'mavaovien', 'maql', 'mabn', 'hoten', 'phai', 'ngaysinh',
-                 'namsinh', 'ngayvv', 'ngayvk', 'maicd', 'madoituong', 'doituong', 'sothe', 'mau_abo', 'mau_rh']
+                 'namsinh', 'ngayvv', 'ngayvk', 'maicd', 'madoituong', 'doituong', 'sothe', 'mau_abo', 'mau_rh', 'phong', 'giuong']
     stm = f'''
-        WITH tmp_bhyt AS (
-            SELECT
-                TO_CHAR(MAQL) AS MAQL ,
-                SOTHE
-            FROM
-                BHYT
-            WHERE
-                SUDUNG = 1 
-        )
+        WITH BED AS (
+          SELECT 
+            A.PID,
+            B.NAME AS TENPHONG,
+            A.NAME AS TENGIUONG,
+            ROW_NUMBER() OVER (PARTITION BY A.PID ORDER BY A.ID) AS RN
+          FROM ITTAHCM_BED.DM_GIUONG A
+          INNER JOIN ITTAHCM_BED.DM_PHONG B ON A.PHONG_ID = B.ID
+          WHERE A.PID IS NOT NULL
+          ORDER BY A.PID 
+        ),
+        tmp_bhyt AS (
         SELECT
-            TO_CHAR(A.ID),
-            TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN,
-            TO_CHAR(A.MAQL),
-            A.MABN,
-            B.HOTEN,
-            B.PHAI,
-            TO_CHAR(B.NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH,
-            B.NAMSINH,
-            A.NGAYVV,
-            A.NGAY AS NGAYVK,
-            A.MAICD,
-            D.MADOITUONG ,
-            E.DOITUONG,
-            F.SOTHE,
-            B.MAU_ABO,
-            B.MAU_RH
+          TO_CHAR(MAQL) AS MAQL ,
+          SOTHE
         FROM
-            HIENDIEN A
-        INNER JOIN BTDBN B ON
-            A.MABN = B.MABN
-        INNER JOIN ICD10 C ON
-            A.MAICD = C.CICD10
-        LEFT JOIN BENHANDT D ON
-            A.MAVAOVIEN = D.MAVAOVIEN
-            AND A.MAQL = D.MAQL
-        INNER JOIN DOITUONG E ON
-            D.MADOITUONG = E.MADOITUONG
-        LEFT JOIN tmp_bhyt F ON
-            A.MAQL = F.MAQL
+          BHYT
         WHERE
-            A.MAKP = {makp}
-            AND A.NHAPKHOA = 1
+          SUDUNG = 1 
+                )
+                SELECT
+          TO_CHAR(A.ID),
+          TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN,
+          TO_CHAR(A.MAQL),
+          A.MABN,
+          B.HOTEN,
+          B.PHAI,
+          TO_CHAR(B.NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH,
+          B.NAMSINH,
+          A.NGAYVV,
+          A.NGAY AS NGAYVK,
+          A.MAICD,
+          D.MADOITUONG ,
+          E.DOITUONG,
+          F.SOTHE,
+          B.MAU_ABO,
+          B.MAU_RH,
+          BED.TENPHONG,
+          BED.TENGIUONG
+        FROM
+          HIENDIEN A
+        INNER JOIN BTDBN B ON
+          A.MABN = B.MABN
+        INNER JOIN ICD10 C ON
+          A.MAICD = C.CICD10
+        LEFT JOIN BENHANDT D ON
+          A.MAVAOVIEN = D.MAVAOVIEN
+          AND A.MAQL = D.MAQL
+        INNER JOIN DOITUONG E ON
+          D.MADOITUONG = E.MADOITUONG
+        LEFT JOIN tmp_bhyt F ON
+          A.MAQL = F.MAQL
+        LEFT JOIN BED ON A.MABN = BED.PID AND BED.RN = 1
+        WHERE
+          A.MAKP = {makp}
+          AND A.NHAPKHOA = 1
         ORDER BY
-            A.NGAY DESC
+          A.NGAY DESC
     '''
     data_list = cursor.execute(stm).fetchall()
     for data in data_list:
-        giuong = get_phong_giuong(data[0])
         obj = dict(zip(col_names, data))
-        obj.update(giuong)
         result.append(obj)
     return jsonify(result), 200
 @noitru.route('/noitru/hiendien-phongluu/<site>/<mmyy>', methods=['GET'])

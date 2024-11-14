@@ -6,7 +6,8 @@ import { BiSolidShieldPlus } from "react-icons/bi";
 
 const ButtonTienIch = ({
     setShowCabinetModal,
-    setShowDSPhieuModal
+    setShowDSPhieuModal,
+    setShowQLGiuongModal
 }) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -70,6 +71,16 @@ const ButtonTienIch = ({
                                 >
                                     <BiSolidShieldPlus className='text-green-500' />
                                     Danh sách phiếu đã lập
+                                </button>
+                                <button
+                                    className="w-full text-left flex gap-1 items-center px-4 py-2 hover:bg-gray-300 select-none"
+                                    onClick={() => {
+                                        setShowQLGiuongModal(true);
+                                        setIsDropdownOpen(!isDropdownOpen);
+                                    }}
+                                >
+                                    <BiSolidShieldPlus className='text-green-500' />
+                                    Quản lý giường
                                 </button>
 
 
