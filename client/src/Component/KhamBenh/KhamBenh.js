@@ -6,10 +6,8 @@ import moment from 'moment';
 import DichVuModal from "./DichvuModal";
 import ThuocModal from "./ThuocModal";
 
-import Notice from "../Message/Notice";
 import ButtonMenu from "../ButtonMenu";
 import ViewButton from "../Button/ViewButton";
-import SideMenu from "../SideMenu";
 import Pagination from "../Common/Pagination";
 import { SuccessAlert } from "../Common/Alert";
 

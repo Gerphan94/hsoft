@@ -90,6 +90,7 @@ const Dropdown = memo(({
                         onClick={toggleDropdown}
                         disabled={disabled}
                         type='button'
+                        data-id={selectedOption.id}
                     >
                         <div
                             className="truncate"

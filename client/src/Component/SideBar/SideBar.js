@@ -21,14 +21,7 @@ import { MdAttachMoney } from "react-icons/md";
 function SideBar() {
 
     const { site, setSite , area, setArea, longSideBar } = useAppContext();
-
-    const navigate = useNavigate();
-
-    const location = useLocation();
-    const pathName = location.pathname;
-
     const [showChooseSite, setShowChooseSite] = useState(false);
-
     const [isShortSideBar, setIsShortSideBar] = useState(false);
 
     const funcs = [
@@ -42,13 +35,10 @@ function SideBar() {
         { id: 'todieutri', name: 'Tờ điều trị', icon: IoNewspaperOutline, path: '/to-dieu-tri' },
         { id: 'danhmuc', name: 'Danh mục', icon: TbCategoryFilled, path: '/danh-muc' },
         { id: 'sql', name: 'SQL', icon: PiFileSqlDuotone, path: 'https://aged-trader-e9b.notion.site/SQL-1150ea29bab180eeb4d6c8ad8290221b?pvs=4' },
-        { id: 'document', name: 'Documents', icon: FaBook, path: '/document' }
+        { id: 'document', name: 'Documents', icon: FaBook, path: '/document' },
+        { id: 'mynote', name: 'My Note', icon: FaBook, path: '/my-note' }
     ];
 
-    const handleClick = (id, path) => {
-        navigate(path);
-
-    };
 
     return (
         <>

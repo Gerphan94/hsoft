@@ -40,26 +40,26 @@ def get_khoaphong(site):
     ]
     return jsonify(result)
 
-@noitru.route('/noitru/hiendien/<site>/<makp>', methods=['GET'])
-def noitru_hiendien(site, makp):
-    """
-    Get Danh sách hiện diện BN
+@noitru.route('/noitru/quanlygiuong', methods=['GET'])
+def noitru_quanlygiuong():
+  """
+    Quản lý giường nội trú
     ---
     tags:
       - Nội trú
     parameters:
       - name: site
-        in: path
+        in: query
         type: string
         required: true
         description: The site identifier
         default: HCM_DEV
       - name: makp
-        in: path
+        in: query
         type: string
         required: true
         description: Mã Khoa Phòng
-     
+        default: 048
     responses:
       200:
         description: Success
@@ -72,26 +72,111 @@ def noitru_hiendien(site, makp):
                   type: string
                   example: ok
     """
+  site = request.args.get('site')
+  makp = request.args.get('makp')
+  cursor = get_cursor(site)
+  stm  = f'''
+      SELECT
+        A.ID,
+        A.MA,
+        A.TEN AS TENGIUONG,
+        A.MABH,
+        A.HIDE,
+        A.CODEGIUONGNT,
+        A.MABN,
+        C.HOTEN,
+        A.TINHTRANG,
+        B.TEN AS TENPHONG
+      FROM
+        DMGIUONG A
+      INNER JOIN DMPHONG B ON
+        A.IDPHONG = B.ID
+      LEFT JOIN BTDBN C ON
+        A.MABN = C.MABN
+      WHERE
+        B.MAKP = {makp}
+      ORDER BY
+        A.STT ASC
+    '''
+  col_names = ['id', 'ma', 'tengiuong', 'mabh', 'hide', 'codegiuongnt', 'mabn', 'hoten', 'tinhtrang', 'tenphong']
+  result = []
+  giuongs = cursor.execute(stm).fetchall()
+  for giuong in giuongs:
+    result.append(dict(zip(col_names, giuong)))
+  return jsonify(result), 200
+  
+  
+@noitru.route('/noitru/hiendien', methods=['GET'])
+def noitru_hiendien():
+    """
+    Get Danh sách hiện diện BN
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: makp
+        in: query
+        type: string
+        required: true
+        description: Mã Khoa Phòng
+        default: 048
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    site = request.args.get('site')
+    makp = request.args.get('makp')
     cursor = get_cursor(site)
+    
     result = []
-    
     col_names = ['id', 'mavaovien', 'maql', 'mabn', 'hoten', 'phai', 'ngaysinh',
-                 'namsinh', 'ngayvv', 'ngayvk', 'maicd', 'madoituong', 'doituong', 'sothe', 'mau_abo', 'mau_rh']
-    
+                 'namsinh', 'ngayvv', 'ngayvk', 'mabs', 'maicd', 'chandoan', 'madoituong', 'doituong', 'mau_abo', 'mau_rh','sothe','bsnhapkhoa',  'phong', 'giuong']
     stm = f'''
-        WITH tmp_bhyt AS (
-            SELECT
-                TO_CHAR(MAQL) AS MAQL ,
-                SOTHE
-            FROM
-                BHYT
-            WHERE
-                SUDUNG = 1 
-        )
-        SELECT
-            TO_CHAR(A.ID),
+        WITH BED AS (
+          SELECT
+            A.PID,
+            B.NAME AS TENPHONG,
+            A.NAME AS TENGIUONG,
+            ROW_NUMBER() OVER (PARTITION BY A.PID
+          ORDER BY
+            A.ID) AS RN
+          FROM
+            ITTAHCM_BED.DM_GIUONG A
+          INNER JOIN ITTAHCM_BED.DM_PHONG B ON
+            A.PHONG_ID = B.ID
+          WHERE
+            A.PID IS NOT NULL
+          ORDER BY
+            A.PID 
+          ),
+          TMP_BHYT AS (
+          SELECT
+            TO_CHAR(MAQL) AS MAQL ,
+            SOTHE
+          FROM
+            BHYT
+          WHERE
+            SUDUNG = 1 
+          ),
+          TMP_HIENDIEN AS (
+          SELECT
+            TO_CHAR(A.ID) AS IDKHOA ,
             TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN,
-            TO_CHAR(A.MAQL),
+            TO_CHAR(A.MAQL) AS MAQL,
             A.MABN,
             B.HOTEN,
             B.PHAI,
@@ -99,35 +184,41 @@ def noitru_hiendien(site, makp):
             B.NAMSINH,
             A.NGAYVV,
             A.NGAY AS NGAYVK,
-            A.MAICD,
+            NK.MABS,
+            NK.MAICD,
+            NK.CHANDOAN,
             D.MADOITUONG ,
             E.DOITUONG,
-            F.SOTHE,
             B.MAU_ABO,
             B.MAU_RH
-        FROM
+          FROM
             HIENDIEN A
-        INNER JOIN BTDBN B ON
+          INNER JOIN BTDBN B ON
             A.MABN = B.MABN
-        INNER JOIN ICD10 C ON
+          INNER JOIN ICD10 C ON
             A.MAICD = C.CICD10
-        LEFT JOIN BENHANDT D ON
+          INNER JOIN NHAPKHOA NK ON A.ID = NK.ID
+          LEFT JOIN BENHANDT D ON
             A.MAVAOVIEN = D.MAVAOVIEN
             AND A.MAQL = D.MAQL
-        INNER JOIN DOITUONG E ON
+          INNER JOIN DOITUONG E ON
             D.MADOITUONG = E.MADOITUONG
-        LEFT JOIN tmp_bhyt F ON
-            A.MAQL = F.MAQL
-        WHERE
+          WHERE
             A.MAKP = {makp}
             AND A.NHAPKHOA = 1
-        ORDER BY
+          ORDER BY
             A.NGAY DESC
+          )
+          SELECT HD.*, BH.SOTHE, DMBS.HOTEN AS BSNHAPKHOA, BED.TENPHONG, BED.TENGIUONG
+          FROM TMP_HIENDIEN HD
+          LEFT JOIN TMP_BHYT BH ON HD.MAQL = BH.MAQL
+          INNER JOIN DMBS ON HD.MABS = DMBS.MA
+          LEFT JOIN BED ON HD.MABN = BED.PID AND BED.RN = 1
     '''
     data_list = cursor.execute(stm).fetchall()
-    
     for data in data_list:
-         result.append(dict(zip(col_names, data)))
+        obj = dict(zip(col_names, data))
+        result.append(obj)
     return jsonify(result), 200
 @noitru.route('/noitru/hiendien-phongluu/<site>/<mmyy>', methods=['GET'])
 def noitru_hiendienphongluu(site, mmyy):
@@ -646,6 +737,82 @@ def noitru_xtutrucct():
     for xtutruc in xtutrucct:
         result.append(dict(zip(col_names, xtutruc)))
     return jsonify(result), 200
+  
+@noitru.route('/noitru/thuoc-phatiem', methods=['GET'])
+def noitru_thuoc_phatiem():
+  """
+    Thuốc PHa Tiêm
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: thangnam
+        in: query
+        type: string
+        required: true
+        description: MMYY
+        default: 1124
+      - name: idtoathuoc
+        in: query
+        type: string
+        required: true
+        description: id toa thuốc (iddutru, idxtutruc)
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  site = request.args.get('site', 'HCM_DEV')
+  idtoathuoc = request.args.get('idtoathuoc')
+  thangnam = request.args.get('thangnam')
+  schema = 'HSOFTTAMANH' + thangnam
+  cursor = get_cursor(site)
+  result = []
+  
+  def get_phathuoc_detail(phathuocid):
+    col_names = ['id', 'ma', 'tenbd', 'tenhc', 'dvt', 'duongdung']
+    stm = f"SELECT ID, MA, TENBD , TENHC, DANG, DUONGDUNG FROM {schema}.D_PHATHUOCTIEM WHERE PHATHUOCID = {phathuocid}"
+    thuocs = cursor.execute(stm).fetchall()
+    result = []
+    for thuoc in thuocs:
+      result.append(dict(zip(col_names, thuoc)))
+    return result
+    
+  stm = f'''
+      SELECT DISTINCT TO_CHAR(PHATHUOCID) AS PHATHUOCID, THUOCPHA, CACHPHA 
+      FROM {schema}.D_PHATHUOCTIEM 
+      WHERE TOATHUOCID = {idtoathuoc}
+    '''
+  phathuoctiems = cursor.execute(stm).fetchall()
+  
+  for phathuoctiem in phathuoctiems:
+    obj = {}
+    obj['phathuocid'] = phathuoctiem[0]
+    obj['thuocpha'] = phathuoctiem[1]
+    obj['cachpha'] = phathuoctiem[2]
+    obj['detail'] = get_phathuoc_detail(phathuoctiem[0])
+    result.append(obj)
+  return jsonify(result), 200
+    
+   
+    
+    
+    
+  
+    
 
 
 @noitru.route('/noitru/get-chidinh-by-idkhoa/<site>/<string:idkhoa>', methods=['GET'])

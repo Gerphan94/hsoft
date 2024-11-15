@@ -6,7 +6,6 @@ import TonKho from "./TonKho";
 import TonKhoKeToa from "./TonKhoKeToa";
 import Dmbd from "./Dmbd";
 import TonTuTruc from "./TonTuTruc";
-import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
 import PageHeader from "../PageHeader";
 import ButtonChucNang from "./ButtonChucNang";

@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // import Navbar from './Component/navBar';
 import { useAppContext } from './Component/Store/AppContext';
 
-import DashBoard from './Component/DashBoard';
+import Welcome from './Component/Welcome'; 
 import BenhNhan from './Component/BenhNhan/BenhNhan';
 
 import NotFound from './Page/404';
@@ -21,6 +21,7 @@ import NoiTru from './Component/NoiTru/NoiTru';
 import ToDieuTri from './Component/ToDieuTri/ToDieuTri';
 // import SideBar from './Component/SideBar';
 import SideBar from './Component/SideBar/SideBar';
+import MyNote from './Component/MyNote/MyNote';
 
 function App() {
 
@@ -29,7 +30,7 @@ function App() {
   // localStorage.setItem('site', 'HN_DEV');
 
   const Pages = [
-    { id: "dashboard", path: "/", title: 'Dash Board', component: <DashBoard /> },
+    { id: "welcome", path: "/", title: 'Hello', component: <Welcome /> },
     { id: "benhnhan", path: "/benh-nhan", title: 'Random Bệnh nhân', component: <BenhNhan /> },
     { id: "khambenh", path: "/kham-benh", title: 'Khám bệnh', component: <KhamBenh /> },
     { id: "phongluu", path: "/phong-luu", title: 'Phòng lưu', component: <PhongLuu /> },
@@ -42,7 +43,9 @@ function App() {
     { id: "vienphi", path: "/vien-phi", title: 'Viện phí', component: <VienPhi /> },
 
     { id: "todieutri", path: "/to-dieu-tri", title: 'Tờ điều trị', component: <ToDieuTri /> },
-    { id: "notfound", path: "*", title: 'Not Found', component: <NotFound /> }
+    { id: "mynote", path: "/my-note", title: 'My Note', component: <MyNote /> },
+
+    { id: "notfound", path: "*", title: 'Not Found', component: <NotFound /> },
   ]
 
   return (
