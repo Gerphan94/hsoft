@@ -42,7 +42,7 @@ function InventoryTable({ data, setIsShowModal, setSelectedPharmarId, isTonAo = 
     }
     return (
         <>
-            <div className="mt-2 w-full  flex flex-col py-2 min-h-[300px]" >
+            <div className="mt-2 w-full flex flex-col py-2 min-h-[300px]" >
                 <div className="overflow-x-auto overflow-y-hidden">
                     <table >
                         <thead className="sticky top-0 z-100">

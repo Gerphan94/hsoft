@@ -43,7 +43,7 @@ function NoiTru() {
     const [hiendiens, setHiendiens] = useState([]);
     const [viewData, setViewData] = useState([]);
 
-    const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '' , mavv:'', ngayvk:'' });
+    const [selected, setSelected] = useState({ pid: null, pname: '', idkhoa: '', maql: '', mavv: '', ngayvk: '' });
 
     const [showMedicineModal, setShowMedicineModal] = useState(false);
     const [showServiceModal, setShowServiceModal] = useState(false);
@@ -59,7 +59,7 @@ function NoiTru() {
     const [showQLGiuongModal, setShowQLGiuongModal] = useState(false);
 
     // --------------------------------------------------------------
- 
+
     const [searchTerm, setSearchTerm] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
 
@@ -209,13 +209,18 @@ function NoiTru() {
 
                     </div>
                 </div>
-
+                <div>
                 <Hiendien
                     site={site}
                     data={viewData}
                     selected={selected}
                     setSelected={setSelected}
                 />
+
+
+                    </div>
+
+               
 
             </div>
 

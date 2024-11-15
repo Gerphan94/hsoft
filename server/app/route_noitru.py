@@ -144,66 +144,76 @@ def noitru_hiendien():
     
     result = []
     col_names = ['id', 'mavaovien', 'maql', 'mabn', 'hoten', 'phai', 'ngaysinh',
-                 'namsinh', 'ngayvv', 'ngayvk', 'maicd', 'madoituong', 'doituong', 'sothe', 'mau_abo', 'mau_rh', 'phong', 'giuong']
+                 'namsinh', 'ngayvv', 'ngayvk', 'mabs', 'maicd', 'chandoan', 'madoituong', 'doituong', 'mau_abo', 'mau_rh','sothe','bsnhapkhoa',  'phong', 'giuong']
     stm = f'''
         WITH BED AS (
-          SELECT 
+          SELECT
             A.PID,
             B.NAME AS TENPHONG,
             A.NAME AS TENGIUONG,
-            ROW_NUMBER() OVER (PARTITION BY A.PID ORDER BY A.ID) AS RN
-          FROM ITTAHCM_BED.DM_GIUONG A
-          INNER JOIN ITTAHCM_BED.DM_PHONG B ON A.PHONG_ID = B.ID
-          WHERE A.PID IS NOT NULL
-          ORDER BY A.PID 
-        ),
-        tmp_bhyt AS (
-        SELECT
-          TO_CHAR(MAQL) AS MAQL ,
-          SOTHE
-        FROM
-          BHYT
-        WHERE
-          SUDUNG = 1 
-                )
-                SELECT
-          TO_CHAR(A.ID),
-          TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN,
-          TO_CHAR(A.MAQL),
-          A.MABN,
-          B.HOTEN,
-          B.PHAI,
-          TO_CHAR(B.NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH,
-          B.NAMSINH,
-          A.NGAYVV,
-          A.NGAY AS NGAYVK,
-          A.MAICD,
-          D.MADOITUONG ,
-          E.DOITUONG,
-          F.SOTHE,
-          B.MAU_ABO,
-          B.MAU_RH,
-          BED.TENPHONG,
-          BED.TENGIUONG
-        FROM
-          HIENDIEN A
-        INNER JOIN BTDBN B ON
-          A.MABN = B.MABN
-        INNER JOIN ICD10 C ON
-          A.MAICD = C.CICD10
-        LEFT JOIN BENHANDT D ON
-          A.MAVAOVIEN = D.MAVAOVIEN
-          AND A.MAQL = D.MAQL
-        INNER JOIN DOITUONG E ON
-          D.MADOITUONG = E.MADOITUONG
-        LEFT JOIN tmp_bhyt F ON
-          A.MAQL = F.MAQL
-        LEFT JOIN BED ON A.MABN = BED.PID AND BED.RN = 1
-        WHERE
-          A.MAKP = {makp}
-          AND A.NHAPKHOA = 1
-        ORDER BY
-          A.NGAY DESC
+            ROW_NUMBER() OVER (PARTITION BY A.PID
+          ORDER BY
+            A.ID) AS RN
+          FROM
+            ITTAHCM_BED.DM_GIUONG A
+          INNER JOIN ITTAHCM_BED.DM_PHONG B ON
+            A.PHONG_ID = B.ID
+          WHERE
+            A.PID IS NOT NULL
+          ORDER BY
+            A.PID 
+          ),
+          TMP_BHYT AS (
+          SELECT
+            TO_CHAR(MAQL) AS MAQL ,
+            SOTHE
+          FROM
+            BHYT
+          WHERE
+            SUDUNG = 1 
+          ),
+          TMP_HIENDIEN AS (
+          SELECT
+            TO_CHAR(A.ID) AS IDKHOA ,
+            TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN,
+            TO_CHAR(A.MAQL) AS MAQL,
+            A.MABN,
+            B.HOTEN,
+            B.PHAI,
+            TO_CHAR(B.NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH,
+            B.NAMSINH,
+            A.NGAYVV,
+            A.NGAY AS NGAYVK,
+            NK.MABS,
+            NK.MAICD,
+            NK.CHANDOAN,
+            D.MADOITUONG ,
+            E.DOITUONG,
+            B.MAU_ABO,
+            B.MAU_RH
+          FROM
+            HIENDIEN A
+          INNER JOIN BTDBN B ON
+            A.MABN = B.MABN
+          INNER JOIN ICD10 C ON
+            A.MAICD = C.CICD10
+          INNER JOIN NHAPKHOA NK ON A.ID = NK.ID
+          LEFT JOIN BENHANDT D ON
+            A.MAVAOVIEN = D.MAVAOVIEN
+            AND A.MAQL = D.MAQL
+          INNER JOIN DOITUONG E ON
+            D.MADOITUONG = E.MADOITUONG
+          WHERE
+            A.MAKP = {makp}
+            AND A.NHAPKHOA = 1
+          ORDER BY
+            A.NGAY DESC
+          )
+          SELECT HD.*, BH.SOTHE, DMBS.HOTEN AS BSNHAPKHOA, BED.TENPHONG, BED.TENGIUONG
+          FROM TMP_HIENDIEN HD
+          LEFT JOIN TMP_BHYT BH ON HD.MAQL = BH.MAQL
+          INNER JOIN DMBS ON HD.MABS = DMBS.MA
+          LEFT JOIN BED ON HD.MABN = BED.PID AND BED.RN = 1
     '''
     data_list = cursor.execute(stm).fetchall()
     for data in data_list:
@@ -727,6 +737,82 @@ def noitru_xtutrucct():
     for xtutruc in xtutrucct:
         result.append(dict(zip(col_names, xtutruc)))
     return jsonify(result), 200
+  
+@noitru.route('/noitru/thuoc-phatiem', methods=['GET'])
+def noitru_thuoc_phatiem():
+  """
+    Thuốc PHa Tiêm
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: thangnam
+        in: query
+        type: string
+        required: true
+        description: MMYY
+        default: 1124
+      - name: idtoathuoc
+        in: query
+        type: string
+        required: true
+        description: id toa thuốc (iddutru, idxtutruc)
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  site = request.args.get('site', 'HCM_DEV')
+  idtoathuoc = request.args.get('idtoathuoc')
+  thangnam = request.args.get('thangnam')
+  schema = 'HSOFTTAMANH' + thangnam
+  cursor = get_cursor(site)
+  result = []
+  
+  def get_phathuoc_detail(phathuocid):
+    col_names = ['id', 'ma', 'tenbd', 'tenhc', 'dvt', 'duongdung']
+    stm = f"SELECT ID, MA, TENBD , TENHC, DANG, DUONGDUNG FROM {schema}.D_PHATHUOCTIEM WHERE PHATHUOCID = {phathuocid}"
+    thuocs = cursor.execute(stm).fetchall()
+    result = []
+    for thuoc in thuocs:
+      result.append(dict(zip(col_names, thuoc)))
+    return result
+    
+  stm = f'''
+      SELECT DISTINCT TO_CHAR(PHATHUOCID) AS PHATHUOCID, THUOCPHA, CACHPHA 
+      FROM {schema}.D_PHATHUOCTIEM 
+      WHERE TOATHUOCID = {idtoathuoc}
+    '''
+  phathuoctiems = cursor.execute(stm).fetchall()
+  
+  for phathuoctiem in phathuoctiems:
+    obj = {}
+    obj['phathuocid'] = phathuoctiem[0]
+    obj['thuocpha'] = phathuoctiem[1]
+    obj['cachpha'] = phathuoctiem[2]
+    obj['detail'] = get_phathuoc_detail(phathuoctiem[0])
+    result.append(obj)
+  return jsonify(result), 200
+    
+   
+    
+    
+    
+  
+    
 
 
 @noitru.route('/noitru/get-chidinh-by-idkhoa/<site>/<string:idkhoa>', methods=['GET'])

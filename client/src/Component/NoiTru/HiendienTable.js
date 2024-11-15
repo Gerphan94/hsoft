@@ -53,33 +53,35 @@ function Hiendien({ data, selected, setSelected }) {
         const today = moment(new Date()).format('YYYY-MM-DD');
         const ngayvk = moment(ingay).format('YYYY-MM-DD');
         const songay = moment(today).diff(ngayvk, 'days');
-        return songay > 0 ? songay : 1;
+        return songay > 0 ? songay + 1: 1;
     }
 
     return (
         <>
-            <div className=" flex flex-col">
-                <div className="mt-2 px-4 flex-grow w-full h-full overflow-auto text-md" >
-                    <table className="w-full">
+            <div className="mt-2 w-full flex flex-col  min-h-[300px] px-4" >
+                <div className="overflow-x-auto overflow-y-hidden text-[15px]">
+                    <table className="">
                         <thead>
                             <tr>
-                                <th className="text-center"><div className=" py-1 text-center">STT</div></th>
+                                <th><div className="px-2 py-1 text-center">STT</div></th>
                                 <th className=""><div className="">PID</div></th>
-                                <th className=""><div>Họ tên</div></th>
-                                <th className="w-20"><div>Ngày sinh</div></th>
-                                <th><div className="text-center">Ngày VV</div></th>
-                                <th><div className="text-center">Ngày VK</div></th>
-                                <th><div>Đối tượng</div></th>
-                                <th><div className="text-center ">BHYT</div></th>
-                                <th><div className="text-center">N.Máu</div></th>
-                                <th><div className="text-center">Phòng</div></th>
-                                <th><div className="text-center">Giường</div></th>
-                                <th><div className="text-center">Số ngày ĐT</div></th>
+                                <th className="white-space-nowrap min-w-40"><div>Họ tên</div></th>
+                                <th><div className="w-28">Ngày sinh</div></th>
+                                <th><div className="text-center w-40">Ngày VV</div></th>
+                                <th><div className="text-center w-40">Ngày VK</div></th>
+                                <th><div className="text-center w-40">Đối tượng</div></th>
+                                <th><div className="text-center w-40">BHYT</div></th>
+                                <th><div className="text-center  w-40">N.Máu</div></th>
+                                <th><div className="text-center  w-20">Phòng</div></th>
+                                <th><div className="text-center  w-20">Giường</div></th>
+                                <th><div className="text-center  w-64">B.Sĩ nhập khoa</div></th>
+                                <th><div className="text-center ">Chẩn đoán vào khoa</div></th>
+                                <th><div className="text-center white-space-nowrap  w-40">S.Ngày ĐT</div></th>
                                 <th><div className="text-center w-32">...</div></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {data.length === 0 && <tr><td colSpan={13} className="text-center bg-gray-200 py-1 italic">Không có dữ liệu</td></tr>}
+                            {data.length === 0 && <tr><td colSpan={20} className="text-center bg-gray-200 py-1 italic">Không có dữ liệu</td></tr>}
 
                             {dataInPage.map((ele, index) => (
                                 <tr
@@ -97,7 +99,7 @@ function Hiendien({ data, selected, setSelected }) {
                                     data-maql={ele.maql}
                                 >
                                     <td className="text-center"><div className=" py-1 text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</div></td>
-                                    <td className="w-32">
+                                    <td>
                                         <div className="flex gap-2 items-center flex-row-reverse group">
                                             <div name="mabn" className="text-right pr-2 hover:underline hover:text-blue-500 cursor-pointer">
                                                 {ele.mabn}
@@ -109,15 +111,16 @@ function Hiendien({ data, selected, setSelected }) {
                                         </div>
                                     </td>
                                     <td>
-                                        <div className="flex gap-2 items-center">
+                                        <div className="flex gap-2 items-center w-80">
                                             {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}
-                                            {ele.hoten}
+                                            <div className="white-space-nowrap w-full text-left">{ele.hoten}
+                                                </div>
                                         </div>
                                     </td>
                                     <td><div className="text-center">
-                                        {ele.ngaysinh  ? ele.ngaysinh : ele.namsinh}
-                                        
-                                       </div></td>
+                                        {ele.ngaysinh ? ele.ngaysinh : ele.namsinh}
+
+                                    </div></td>
                                     <td><div className="text-right">{moment(ele.ngayvv).utc().format('DD/MM/YYYY HH:mm')}</div></td>
                                     <td><div className="text-right">{moment(ele.ngayvk).utc().format('DD/MM/YYYY HH:mm')}</div></td>
                                     <td><div className="text-center px-2">{ele.doituong}</div></td>
@@ -125,6 +128,8 @@ function Hiendien({ data, selected, setSelected }) {
                                     <td><div className="">{ele.mau_abo}{ele.mau_rh}</div></td>
                                     <td><div>{ele.phong}</div></td>
                                     <td><div>{ele.giuong}</div></td>
+                                    <td><div className="text-left">{ele.bsnhapkhoa}</div></td>
+                                    <td><div className="truncate text-left">{`${ele.chandoan} (${ele.maicd})`  } </div></td>
 
                                     <td><div className="">{songaydieutri(ele.ngayvk)}</div></td>
                                     <td><div className="">{ele.ghichu}</div></td>
@@ -132,14 +137,15 @@ function Hiendien({ data, selected, setSelected }) {
 
                         </tbody>
                     </table>
-                    <Pagination
-                        currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}
-                        totalPage={totalPage}
-                        itemsPerPage={itemsPerPage}
-                        setItemsPerPage={setItemsPerPage}
-                    />
                 </div>
+                <Pagination
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    totalPage={totalPage}
+                    itemsPerPage={itemsPerPage}
+                    setItemsPerPage={setItemsPerPage}
+                />
+
 
             </div>
 

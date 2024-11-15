@@ -7,15 +7,13 @@ import PhongGiuong from "./PhongGiuong";
 import { FcManager, FcCurrencyExchange, FcConferenceCall } from "react-icons/fc";
 import { IoBed } from "react-icons/io5";
 
-import SideMenu from "../SideMenu";
 import { useAppContext } from "../Store/AppContext";
 import PageHeader from "../PageHeader";
 import ButtonMenu from "./ButtonMenu";
 
 function DanhMuc() {
-    console.log('-----DanhMuc');
-
-    const site = localStorage.getItem('site');
+    const { site } = useAppContext();
+    
     const [selectedMenu, setSelectedMenu] = useState('');
 
     const menuList = useMemo(() => [
