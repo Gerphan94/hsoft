@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAppContext } from "../../Store/AppContext";
 import Dausinhton from "./Dausinhton";
 import moment from "moment";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
@@ -6,11 +7,14 @@ import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import ChiTietThuocComponent from "./ChiTietThuocComponent";
 
 
-function PhieuDetail({ selectedCoupon, detail, data, couponType }) {
+function PhieuDetailTab1( { selectedCoupon }) {
 
-    console.log(detail)
-    const [tabNumber, setTabNumber] = useState(1);
     const [showChandoan, setShowChandoan] = useState(false);
+    const { site } = useAppContext();
+    const [data, setData] = useState({});
+
+    const apiURL = process.env.REACT_APP_API_URL;
+
     const mutileLineChandoan = (cd) => {
         if (!cd) {
             return ''
@@ -18,32 +22,36 @@ function PhieuDetail({ selectedCoupon, detail, data, couponType }) {
         return cd.split(';').join(';\n')
     }
 
+    useEffect(() => {
+        const fetchDetail = async () => {
+            const fetchUrl = selectedCoupon.type === 2 ?
+                `${apiURL}noitru/thuoc-xtutrucct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}` :
+                `${apiURL}noitru/thuoc-dutruct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}`
+            try {
+                const response = await fetch(fetchUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('data', data)
+                    setData(data);
+                }
+            }
+            catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchDetail();
+    }, [selectedCoupon.id]);
+
+
+
     return (
         <>
-            <div className="">
-                <div className="flex justify-between border bg-white ">
-                    <div className="px-2 py-1">
-                        <strong>{selectedCoupon.name} </strong>
-                        ( <i>{selectedCoupon.id}</i> )
-                        </div>
-                    <div className="flex">
-                        <button
-                            className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 1 ? 'bg-blue-500 text-white' : ''}`}
-                            onClick={() => setTabNumber(1)}
-                        >Chi tiết</button>
-                         <button
-                            className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 2 ? 'bg-blue-500 text-white' : ''}`}
-                            onClick={() => setTabNumber(2)}
-                        >Pha tiêm</button>
-                        <button
-                            className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 3 ? 'bg-blue-500 text-white' : ''}`}
-                            onClick={() => setTabNumber(3)}
-                        >Thông tin xuất</button>
-                    </div>
-                </div>
-
-                {/* CHẨN ĐOÁN */}
-                <div className=" mt-2 border rounded-md text-sm ">
+        <div className=" mt-2 border rounded-md text-sm ">
                 <div className="flex justify-between text-left bg-slate-300 px-2 py-1">
                     <div className="w-full ">
                         <label className="w-24 text-left inline-block">ICD:</label>
@@ -101,18 +109,21 @@ function PhieuDetail({ selectedCoupon, detail, data, couponType }) {
                     </div>
                 }
             </div>
-            </div>
+           
             <div className="border rounded-md mt-4">
-                {detail && detail.thuoc.map((item) => (
+                {data && data.map((item) => (
                     <ChiTietThuocComponent
                         key={item.stt_index}
                         item={item}
-                        couponType={couponType} />
-
+                        couponType={selectedCoupon.couponType} />
                 ))}
             </div>
         </>
     )
+
+
+
 }
 
-export default PhieuDetail;
+
+export default PhieuDetailTab1

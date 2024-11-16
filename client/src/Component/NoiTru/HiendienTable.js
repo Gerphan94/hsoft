@@ -75,8 +75,9 @@ function Hiendien({ data, selected, setSelected }) {
                                 <th><div className="text-center  w-20">Phòng</div></th>
                                 <th><div className="text-center  w-20">Giường</div></th>
                                 <th><div className="text-center  w-64">B.Sĩ nhập khoa</div></th>
-                                <th><div className="text-center ">Chẩn đoán vào khoa</div></th>
+                                <th><div className="text-center white-space-nowrap min-w-40">Chẩn đoán vào khoa</div></th>
                                 <th><div className="text-center white-space-nowrap  w-40">S.Ngày ĐT</div></th>
+                                <th><div className="text-center white-space-nowrap  w-40">Bệnh án</div></th>
                                 <th><div className="text-center w-32">...</div></th>
                             </tr>
                         </thead>
@@ -129,10 +130,11 @@ function Hiendien({ data, selected, setSelected }) {
                                     <td><div>{ele.phong}</div></td>
                                     <td><div>{ele.giuong}</div></td>
                                     <td><div className="text-left">{ele.bsnhapkhoa}</div></td>
-                                    <td><div className="truncate text-left">{`${ele.chandoan} (${ele.maicd})`  } </div></td>
-
+                                    <td><div className="truncate text-left">{`${ele.chandoan} (${ele.maicd})`} </div></td>
                                     <td><div className="">{songaydieutri(ele.ngayvk)}</div></td>
-                                    <td><div className="">{ele.ghichu}</div></td>
+                                    <td><div className="text-left">{ele.benhan}</div></td>
+                                    <td><div className=""></div></td>
+
                                 </tr>))}
 
                         </tbody>

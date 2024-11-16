@@ -3,8 +3,9 @@ import styles from "../../styles.module.css"
 import ThuocDetail from "./ThuocModalDetail";
 import PhieuDanhSach from "./PhieuDanhSach";
 import moment from "moment";
-import PhieuDetail from "./PhieuDetail";
-import ChitietXuatThuoc from "./ChitietXuatThuoc";
+
+import PhieuDetailTab1 from "./PhieuDetailTab1";
+import PhieuDetailTab2 from "./PhieuDetailTab2";
 
 function ThuocModal({ site, selected, setModalShow }) {
 
@@ -13,7 +14,7 @@ function ThuocModal({ site, selected, setModalShow }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [dutrull, setDutrull] = useState([]);
-    const [detail, setDetail] = useState({'detail': {}, 'thuoc':[]});
+    const [detail, setDetail] = useState({ 'detail': {}, 'thuoc': [] });
     const [danhSachThuoc, setDanhSachThuoc] = useState([]);
     const [thucxuat, setThucxuat] = useState([]);
 
@@ -28,10 +29,8 @@ function ThuocModal({ site, selected, setModalShow }) {
         const fetchUrl = apiURL + "noitru/thuoc-danhsach-theo-idkhoa/" + site + "/" + selected.idkhoa
         const response = await fetch(fetchUrl);
         const data = await response.json();
-        console.log('-------', data)
 
         const grouped = data.reduce((acc, item) => {
-            console.log(acc)
             const date = moment(item.ngaytao).utc().format('DD/MM/YYYY');
             if (!acc[date]) {
                 acc[date] = [];
@@ -40,7 +39,6 @@ function ThuocModal({ site, selected, setModalShow }) {
             return acc;
 
         }, {});
-        console.log(grouped)
         setDutrull(grouped);
     }
 
@@ -62,7 +60,6 @@ function ThuocModal({ site, selected, setModalShow }) {
                 `${apiURL}noitru/thuoc-xtutrucct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}` :
                 `${apiURL}noitru/thuoc-dutruct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}`
             try {
-                console.log(fetchUrl)
                 const response = await fetch(fetchUrl, {
                     method: 'GET',
                     headers: {
@@ -71,7 +68,6 @@ function ThuocModal({ site, selected, setModalShow }) {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
                     setDetail(data);
                 }
             }
@@ -79,12 +75,11 @@ function ThuocModal({ site, selected, setModalShow }) {
                 console.error('Error fetching data:', error);
             }
         }
-      
+
         const getThucxuat = async () => {
             const fetchurl = apiURL + "duoc/get-thucxuat-benhnhan-by-id/" + site + "/" + selectedCoupon.id;
             const response = await fetch(fetchurl);
             const data = await response.json();
-            console.log(data)
             setThucxuat(data);
         };
 
@@ -123,13 +118,40 @@ function ThuocModal({ site, selected, setModalShow }) {
                             <div className="w-2/3 h-full border p-3 rounded-lg shadow-lg">
                                 <div className="flex-grow px-4 w-full h-full overflow-y-scroll" >
                                     {selectedCoupon && selectedCoupon.id &&
-                                        <PhieuDetail
-                                            selectedCoupon={selectedCoupon}
-                                            detail={detail}
-                                            couponType={selectedCoupon.type}
-                                        />}
+                                        <>
+                                            <div className="">
+                                                <div className="flex justify-between border bg-white ">
+                                                    <div className="px-2 py-1">
+                                                        <strong>{selectedCoupon.name} </strong>
+                                                        ( <i>{selectedCoupon.id}</i> )
+                                                    </div>
+                                                    <div className="flex font-bold">
+                                                        <button
+                                                            className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 1 ? 'bg-blue-500 text-white' : ''}`}
+                                                            onClick={() => setTabNumber(1)}
+                                                        >Chi tiết</button>
+                                                        <button
+                                                            className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 2 ? 'bg-blue-500 text-white' : ''}`}
+                                                            onClick={() => setTabNumber(2)}
+                                                        >Pha tiêm</button>
+                                                        <button
+                                                            className={`px-2 py-0.5 hover:bg-blue-300 hover:text-white ${tabNumber === 3 ? 'bg-blue-500 text-white' : ''}`}
+                                                            onClick={() => setTabNumber(3)}
+                                                        >Thông tin xuất</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                {tabNumber === 1 && <PhieuDetailTab1
+                                                    selectedCoupon={selectedCoupon}
+                                                    detail={detail}
+                                                   />}
+                                                {tabNumber === 2 && <PhieuDetailTab2
+                                                    selectedCoupon={selectedCoupon} />}
+                                            </div>
 
-
+                                        </>
+                                    }
 
                                 </div>
                             </div>

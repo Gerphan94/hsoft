@@ -144,7 +144,8 @@ def noitru_hiendien():
     
     result = []
     col_names = ['id', 'mavaovien', 'maql', 'mabn', 'hoten', 'phai', 'ngaysinh',
-                 'namsinh', 'ngayvv', 'ngayvk', 'mabs', 'maicd', 'chandoan', 'madoituong', 'doituong', 'mau_abo', 'mau_rh','sothe','bsnhapkhoa',  'phong', 'giuong']
+                 'namsinh', 'ngayvv', 'ngayvk', 'mabs', 'maicd', 'chandoan', 'madoituong', 'doituong', 'mau_abo', 'mau_rh','benhan',
+                 'sothe','bsnhapkhoa',  'phong', 'giuong']
     stm = f'''
         WITH BED AS (
           SELECT
@@ -190,7 +191,8 @@ def noitru_hiendien():
             D.MADOITUONG ,
             E.DOITUONG,
             B.MAU_ABO,
-            B.MAU_RH
+            B.MAU_RH, 
+            DMBENHAN.TEN AS BENHAN
           FROM
             HIENDIEN A
           INNER JOIN BTDBN B ON
@@ -198,6 +200,7 @@ def noitru_hiendien():
           INNER JOIN ICD10 C ON
             A.MAICD = C.CICD10
           INNER JOIN NHAPKHOA NK ON A.ID = NK.ID
+          INNER JOIN DMBENHAN ON NK.MABA = DMBENHAN.MABA
           LEFT JOIN BENHANDT D ON
             A.MAVAOVIEN = D.MAVAOVIEN
             AND A.MAQL = D.MAQL
@@ -780,7 +783,7 @@ def noitru_thuoc_phatiem():
   thangnam = request.args.get('thangnam')
   schema = 'HSOFTTAMANH' + thangnam
   cursor = get_cursor(site)
-  result = []
+  
   
   def get_phathuoc_detail(phathuocid):
     col_names = ['id', 'ma', 'tenbd', 'tenhc', 'dvt', 'duongdung']
@@ -790,21 +793,26 @@ def noitru_thuoc_phatiem():
     for thuoc in thuocs:
       result.append(dict(zip(col_names, thuoc)))
     return result
-    
+  
+  result = []
   stm = f'''
-      SELECT DISTINCT TO_CHAR(PHATHUOCID) AS PHATHUOCID, THUOCPHA, CACHPHA 
-      FROM {schema}.D_PHATHUOCTIEM 
-      WHERE TOATHUOCID = {idtoathuoc}
+    SELECT TO_CHAR(PHATHUOCID) AS PHATHUOCID, THUOCPHA, CACHPHA
+    FROM {schema}.D_PHATHUOCTIEM
+    WHERE TOATHUOCID = {idtoathuoc}
+    ORDER BY STT
     '''
   phathuoctiems = cursor.execute(stm).fetchall()
+  phatien_ar = []
   
   for phathuoctiem in phathuoctiems:
-    obj = {}
-    obj['phathuocid'] = phathuoctiem[0]
-    obj['thuocpha'] = phathuoctiem[1]
-    obj['cachpha'] = phathuoctiem[2]
-    obj['detail'] = get_phathuoc_detail(phathuoctiem[0])
-    result.append(obj)
+    if phathuoctiem[0] not in phatien_ar: 
+      phatien_ar.append(phathuoctiem[0])
+      obj = {}
+      obj['phathuocid'] = phathuoctiem[0]
+      obj['thuocpha'] = phathuoctiem[1]
+      obj['cachpha'] = phathuoctiem[2]
+      obj['detail'] = get_phathuoc_detail(phathuoctiem[0])
+      result.append(obj)
   return jsonify(result), 200
     
    
