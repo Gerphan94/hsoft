@@ -11,7 +11,9 @@ function PhieuDetailTab1( { selectedCoupon }) {
 
     const [showChandoan, setShowChandoan] = useState(false);
     const { site } = useAppContext();
-    const [data, setData] = useState({});
+    const [data, setData] = useState([]);
+
+    const [detail, setDetail] = useState({'detail': {}, 'dst':{}});
 
     const apiURL = process.env.REACT_APP_API_URL;
 
