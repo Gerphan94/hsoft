@@ -7,13 +7,13 @@ import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import ChiTietThuocComponent from "./ChiTietThuocComponent";
 
 
-function PhieuDetailTab1( { selectedCoupon }) {
+function PhieuDetailTab1({ selectedCoupon }) {
 
     const [showChandoan, setShowChandoan] = useState(false);
     const { site } = useAppContext();
     const [data, setData] = useState([]);
 
-    const [detail, setDetail] = useState({'detail': {}, 'dst':{}});
+    const [detail, setDetail] = useState({ 'detail': {}, 'dst': {} });
 
     const apiURL = process.env.REACT_APP_API_URL;
 
@@ -25,7 +25,7 @@ function PhieuDetailTab1( { selectedCoupon }) {
     }
 
     useEffect(() => {
-        const fetchDetail = async () => {
+        const fetchThuoc = async () => {
             const fetchUrl = selectedCoupon.type === 2 ?
                 `${apiURL}noitru/thuoc-xtutrucct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}` :
                 `${apiURL}noitru/thuoc-dutruct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}`
@@ -46,22 +46,31 @@ function PhieuDetailTab1( { selectedCoupon }) {
                 console.error('Error fetching data:', error);
             }
         }
-        fetchDetail();
+        const fetchChandoanDST = async () => {
+            try {
+                const response = await fetch(`${apiURL}noitru/thuoc-chandoan-dst-toathuoc?site=${site}&idtoathuoc=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}&type=${selectedCoupon.type}`);
+                const data = await response.json();
+                setDetail(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        fetchThuoc();
+        fetchChandoanDST();
     }, [selectedCoupon.id]);
-
-
 
     return (
         <>
-        <div className=" mt-2 border rounded-md text-sm ">
+            <div className=" mt-2 border rounded-md text-sm ">
                 <div className="flex justify-between text-left bg-slate-300 px-2 py-1">
                     <div className="w-full ">
                         <label className="w-24 text-left inline-block">ICD:</label>
-                        <input 
-                        type="text" 
-                        className="w-1/3 border outline-none px-0.5 py-0.5" 
-                        readOnly={true} 
-                        value={detail && detail.detail && detail.detail.maicd} />
+                        <input
+                            type="text"
+                            className="w-1/3 border outline-none px-0.5 py-0.5"
+                            readOnly={true}
+                            value={detail && detail.maicd} />
                     </div>
                     <span className="flex items-center w-10">
                         {showChandoan ?
@@ -79,31 +88,31 @@ function PhieuDetailTab1( { selectedCoupon }) {
                             type="text"
                             className="w-full h-24 border outline-none p-1"
                             readOnly={true}
-                            value={detail && detail.detail && mutileLineChandoan(detail.detail.chandoan)}
+                            value={detail && detail && mutileLineChandoan(detail.chandoan)}
                         />
                         <div className='w-[450px]  p-2 text-left border rounded-md '>
                             <div className="table w-full">
                                 <div className="table-row">
                                     <div className="table-cell w-20">Mạch: </div>
-                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.mach} />
+                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.mach} />
                                     <div className="table-cell w-20 pl-2">Nhịp thở: </div>
-                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.nhiptho} />
+                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.nhiptho} />
 
                                 </div>
                                 <div className="table-row">
                                     <div className="table-cell">Nhiệt độ: </div>
-                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.nhietdo} />
+                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.nhietdo} />
 
                                     <div className="table-cell pl-2">Cân nặng: </div>
-                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.cannang} />
+                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.cannang} />
 
                                 </div>
                                 <div className="table-row">
                                     <div className="table-cell">Huyết áp: </div>
-                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.huyetap} />
+                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.huyetap} />
 
                                     <div className="table-cell pl-2">Chiều cao: </div>
-                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.dst && detail.dst.chieucao} />
+                                    <input type="text" className="w-full border outline-none px-0.5 py-0.5 text-xs" readOnly={true} value={detail && detail.chieucao} />
 
                                 </div>
                             </div>
@@ -111,7 +120,7 @@ function PhieuDetailTab1( { selectedCoupon }) {
                     </div>
                 }
             </div>
-           
+
             <div className="border rounded-md mt-4">
                 {data && data.map((item) => (
                     <ChiTietThuocComponent

@@ -13,8 +13,6 @@ import Pagination from "../Common/Pagination";
 import ItemComponent from "./TableIconComponent";
 function InventoryTable({ data, setIsShowModal, setSelectedPharmarId, isTonAo = false }) {
 
-    console.log(data)
-
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(25);
     const [totalPage, setTotalPage] = useState(0);

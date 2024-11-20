@@ -50,44 +50,6 @@ function ThuocModal({ site, selected, setModalShow }) {
         setMedicineDetail([]);
         fetchDutrull();
     }
-    // useEffect(() => {
-    //     setGroupedData(dutrull);
-    // }, [dutrull]);
-
-    useEffect(() => {
-        const fetchDetail = async () => {
-            const fetchUrl = selectedCoupon.type === 2 ?
-                `${apiURL}noitru/thuoc-xtutrucct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}` :
-                `${apiURL}noitru/thuoc-dutruct?site=${site}&id=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}`
-            try {
-                const response = await fetch(fetchUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setDetail(data);
-                }
-            }
-            catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-
-        const getThucxuat = async () => {
-            const fetchurl = apiURL + "duoc/get-thucxuat-benhnhan-by-id/" + site + "/" + selectedCoupon.id;
-            const response = await fetch(fetchurl);
-            const data = await response.json();
-            setThucxuat(data);
-        };
-
-        if (selectedCoupon && selectedCoupon.id) {
-            getThucxuat();
-            fetchDetail();
-        }
-    }, [selectedCoupon.id])
 
     return (
         <>

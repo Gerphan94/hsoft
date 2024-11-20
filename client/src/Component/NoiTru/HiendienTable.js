@@ -58,7 +58,7 @@ function Hiendien({ data, selected, setSelected }) {
 
     return (
         <>
-            <div className="mt-2 w-full flex flex-col  min-h-[300px] px-4" >
+            <div className="py-2 w-full flex flex-col  min-h-[300px] px-4" >
                 <div className="overflow-x-auto overflow-y-hidden text-[15px]">
                     <table className="">
                         <thead>

@@ -12,11 +12,12 @@ function PhieuDetailTab2({ selectedCoupon }) {
         const fetchPhatiem = async () => {
             const response = await fetch(`${apiURL}noitru/thuoc-phatiem?site=${site}&idtoathuoc=${selectedCoupon.id}&thangnam=${selectedCoupon.thangnam}`);
             const data = await response.json();
+            console.log('data', data)
             setPhaTiem(data);
         }
         fetchPhatiem();
 
-    }, [])
+    }, [selectedCoupon.id])
 
     return (
 

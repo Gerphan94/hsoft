@@ -3,19 +3,14 @@ import { FaAngleDown } from "react-icons/fa6";
 import { FiFilter } from "react-icons/fi";
 
 const Filter3 = memo(({ filters, setFilters, onClick }) => {
-    console.log('filters', filters)
 
     const numberView = 4;
-
-    console.log('render dropdown', filters)
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [filterCount, setFilterCount] = useState(0);
     const [filtertext, setFilterText] = useState([]);
 
     const color = ["#EB8317", "#387478", "#295F98", "#A04747", "#00712D"]
-
-
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
