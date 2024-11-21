@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { FaEye, FaBars } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 
 import Dropdown from "../Common/Dropdown";
-import Toggle from "../Common/ToggleSwitch";
-import Pagination from "../Common/Pagination";
-import { useSearchParams } from 'react-router-dom';
-import TaiKhoaKpModal from "./Modal/TaiKhoaKpModal";
 import SearchBar from "../Common/SearchBar";
 import Filter from "./Filter";
 import TaiKhoanTable from "./TaiKhoanTable";
@@ -16,7 +12,7 @@ function TaiKhoan() {
     // console.log('rending tai khoan')
     const apiURL = process.env.REACT_APP_API_URL;
 
-    const { site, setSelectedSideBar } = useAppContext();
+    const { site, area } = useAppContext();
 
     const accountTypes = [
         { id: 'hsoft', name: 'Hsoft' },
@@ -24,9 +20,6 @@ function TaiKhoan() {
         { id: 'duoc', name: 'Dược' }
     ];
     const [accountType, setAccountType] = useState({ id: 'hsoft', name: 'Hsoft' });
-
-    const [cosos, setCosos] = useState([]);
-    const [selectedCoso, setSelectedCoso] = useState({ id: 0, name: '' });
 
 
     const [nhomnvs, setNhomnvs] = useState([]);
@@ -51,8 +44,8 @@ function TaiKhoan() {
 
     const fetchDSKhoa = async () => {
         if (site === '') return;
-        if (selectedCoso.id === 0) return;
-        const kpsURL = `${apiURL}noitru/dskhoa/${site}/${selectedCoso.id}`;
+       
+        const kpsURL = `${apiURL}noitru/dskhoa/${site}/${area}`;
         try {
             const response = await fetch(kpsURL);
             const data = await response.json();
@@ -64,7 +57,7 @@ function TaiKhoan() {
 
     useEffect(() => {
         fetchDSKhoa();
-    }, [selectedCoso.id]);
+    }, [area]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -80,10 +73,7 @@ function TaiKhoan() {
                 ]);
                 const cosoData = await cosoResponse.json();
                 const nhomnvsData = await nhomnvsResponse.json();
-                setCosos(cosoData);
                 setNhomnvs(nhomnvsData);
-                setSelectedCoso({ id: cosoData[0].id, name: cosoData[0].name });
-
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -103,7 +93,9 @@ function TaiKhoan() {
 
     const handeleView = async () => {
         try {
-            const fecthURL = apiURL + "danhmuc/taikhoan-hsoft/" + site + "/" + selectedCoso.id;
+            // const fecthURL = apiURL + "danhmuc/taikhoan-hsoft/" + site + "/" + selectedCoso.id;
+            const fecthURL = `${apiURL}danhmuc/taikhoan-hsoft?site=${site}&cosoid=${area}`;
+
             const response = await fetch(fecthURL);
             const data = await response.json();
             setData(data);
@@ -259,13 +251,6 @@ function TaiKhoan() {
                     data={viewDatas}
                 />
             </div>
-
-            {kpModal.show && <TaiKhoaKpModal
-                kpModal={kpModal}
-                setKpModal={setKpModal}
-                site={site}
-            />}
-
         </>
     )
 

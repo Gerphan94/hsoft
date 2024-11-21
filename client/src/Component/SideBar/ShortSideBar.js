@@ -46,7 +46,7 @@ function ShortSideBar({ data, isShortSideBar, setIsShortSideBar, site }) {
     return (
         <>
             <div className={`w-16 bg-[#031C30]  text-white h-screen overflow-visible`}>
-                <ul className="p-2 mt-10 w-full space-y-1 ">
+                <ul className="py-2 ml-3 mt-10 w-full space-y-1 ">
                     {data.map((func, index) => (
                         <Tooltip text={func.name} key={index}>
                             <li

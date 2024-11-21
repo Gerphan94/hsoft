@@ -15,8 +15,7 @@ function ThuocModal({ site, selected, setModalShow }) {
 
     const [dutrull, setDutrull] = useState([]);
     const [detail, setDetail] = useState({ 'detail': {}, 'thuoc': [] });
-    const [danhSachThuoc, setDanhSachThuoc] = useState([]);
-    const [thucxuat, setThucxuat] = useState([]);
+   
 
 
     const [selectedCoupon, setSelectedCoupon] = useState({ id: null, name: '', type: '', thangnam: '' });

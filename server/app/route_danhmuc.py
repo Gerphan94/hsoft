@@ -58,6 +58,50 @@ def danhmuc_coso_tamanh(site):
   return jsonify([{"id": row[0], "name": row[1]} for row in cosos]), 200
 
 
+@dm.route('/danhmuc/khoaphong-all', methods=['GET'])
+def danhmuc_khoaphong_all():
+    """
+    Get Danh mục Khoa Phòng
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: khu
+        in: query
+        type: number
+        required: true
+        default: 1
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+  """
+    site = request.args.get('site', 'HCM_DEV')
+    khu = request.args.get('area', '1')
+    cursor = get_cursor(site)
+    col_names = ['makp', 'tenkp', 'loai']
+    stm = f"SELECT MAKP, TENKP, LOAI FROM BTDKP_BV WHERE KHU = {khu}"
+    result = []
+    khoas = cursor.execute(stm).fetchall()
+    for khoa in khoas:
+        result.append(dict(zip(col_names, khoa)))
+    return jsonify(result), 200
+      
+      
+    
 @dm.route('/danhmuc/khoa', methods=['GET'])
 def danhmuc_khoaphong():
     """
@@ -246,8 +290,8 @@ def get_nhom_nhanvien(site):
     nhom_nhan_vien_list = [{"id": row[0], "name": row[1]} for row in results]
     return jsonify(nhom_nhan_vien_list), 200
 
-@dm.route('/danhmuc/taikhoan-hsoft/<site>/<khu>', methods=['GET'])
-def danhmuc_taikhoan(site, khu):
+@dm.route('/danhmuc/taikhoan-hsoft', methods=['GET'])
+def danhmuc_taikhoan():
     """
     Get Tài khoản Hsoft
     ---
@@ -255,13 +299,13 @@ def danhmuc_taikhoan(site, khu):
       - Danh mục
     parameters:
       - name: site
-        in: path
+        in: query
         type: string
         required: true
         description: Site (HCM_DEV, HN_DEV,...)
         default: HCM_DEV
       - name: khu
-        in: path
+        in: query
         type: string
         required: true
         description: Quận Tân Bình, Quận 8, Quận 7
@@ -278,6 +322,9 @@ def danhmuc_taikhoan(site, khu):
                   type: string
                   example: ok
     """
+    
+    site = request.args.get('site', 'HCM_DEV')
+    khu = request.args.get('area', 1)
     cursor = get_cursor(site)
     result = []
     col_names = ['id', 'userid', 'password_', 'tentaikhoan', 'manhomtk', 'makp', 'mabs', 
