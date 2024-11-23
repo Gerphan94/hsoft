@@ -4,6 +4,8 @@ import { FaGrip } from "react-icons/fa6";
 import { FcSignature } from "react-icons/fc";
 import { VscCopy } from "react-icons/vsc";
 import { SuccessAlert } from "../Common/Alert";
+
+import TaiKhoanKhoaPhongModal from "./Modal/TaiKhoanKhoaPhongModal";
 function TaiKhoanTable({ data }) {
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -13,6 +15,9 @@ function TaiKhoanTable({ data }) {
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+
+    const [showKPModal, setShowKPModal] = useState(false);
+    const [khoaPhongData, setKhoaPhongData] = useState('');
 
     const constDataInPage = (iPage, iData) => {
         const indexOfLastItem = iPage * itemsPerPage;
@@ -36,12 +41,16 @@ function TaiKhoanTable({ data }) {
         }
         try {
             navigator.clipboard.writeText(pwd);
-            
             setAlertMessage(`Đã sao chép mật khẩu ${pwd}`);
         } catch (error) {
             setAlertMessage('Cannot write to clipboard', error);
         }
         setShowAlert(true);
+    }
+
+    const handleClickKp = (kp) => {
+        setKhoaPhongData(kp);
+        setShowKPModal(true);
     }
 
     return (
@@ -97,17 +106,11 @@ function TaiKhoanTable({ data }) {
                                 <td className="hidden">{item.makp}</td>
                                 <td>
                                     <div className="px-2 flex gap-2 flex-row-reverse">
-
-                                        <button
-                                        >
+                                        <button onClick={() => handleClickKp(item.makp)}>
                                             <FaGrip />
-
                                         </button>
                                         {item.khoakyrv === 1 && <span><FcSignature /></span>}
-
                                     </div>
-
-
                                 </td>
                             </tr>
                         ))}
@@ -132,6 +135,14 @@ function TaiKhoanTable({ data }) {
                 />
 
             }
+
+            {showKPModal && 
+            <TaiKhoanKhoaPhongModal
+                data = {khoaPhongData}
+                setShowKPModal = {setShowKPModal}
+                kpstring={khoaPhongData}
+                
+            />}
         </>
     )
 }

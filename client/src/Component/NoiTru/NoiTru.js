@@ -165,7 +165,6 @@ function NoiTru() {
                             >
                                 Xem
                             </button>
-
                         </div>
                         {/* <TouchSwitch /> */}
                         <div className="w-96">

@@ -4,14 +4,14 @@ function MyNoteAccount() {
 
 
     const accoountData = [
-        { 'site': 'HCM', 'user': 'duyth1', 'password': 'VNaCrX3vMmY=', 'personel': 'ThS.BS Trần Hữu Duy', 'pin': '020657'  },
-        { 'site': 'HCM', 'user': 'duyth1', 'password': 'VNaCrX3vMmY=', 'personel': 'ThS.BS Trần Hữu Duy', 'pin': '020657'  },
+        { 'site': 'HCM', 'user': 'duyth1', 'password': 'dev3', 'personel': 'ThS.BS Trần Hữu Duy', 'pin': '020657'  },
+        { 'site': 'HN', 'user': 'namnst', 'password': 'abc@123', 'personel': 'TBSCKII. Ngô Sỹ Thanh Nam', 'pin': '898989'  },
 
     ]
 
     return (
         <>
-        <div className="px-10">
+        <div className="px-40 py-10">
             <div className="text-left font-bold py-1">USER ACCOUNT</div>
             <table>
                 <thead>
@@ -20,7 +20,7 @@ function MyNoteAccount() {
                         <th>Site</th>
                         <th>User</th>
                         <th>Pwd</th>
-                        <th>Personel</th>
+                        <th  className="text-left py-1">Personel</th>
                         <th>Pin</th>
                         </tr>
                 </thead>
@@ -31,7 +31,7 @@ function MyNoteAccount() {
                             <td>{item.site}</td>
                             <td>{item.user}</td>
                             <td>{item.password}</td>
-                            <td>{item.personel}</td>
+                            <td className="text-left">{item.personel}</td>
                             <td>{item.pin}</td>
                         </tr>
                     ))}

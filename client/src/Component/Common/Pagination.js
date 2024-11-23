@@ -3,11 +3,8 @@ import { BiChevronsLeft, BiChevronsRight } from "react-icons/bi";
 
 function Pagination({ currentPage, setCurrentPage, totalPage, itemsPerPage = 20, setItemsPerPage }) {
 
-    console.log(totalPage)
-
     const range = (start, end) => {
         const length = end - start + 1;
-        console.log(length)
         return Array.from({ length }, (_, i) => start + i);
     };
 
@@ -41,11 +38,8 @@ function Pagination({ currentPage, setCurrentPage, totalPage, itemsPerPage = 20,
                     visiblePages.push('...');
                 }
                 visiblePages.push(totalPage);
-
             }
-
         }
-
         return visiblePages;
     };
 
