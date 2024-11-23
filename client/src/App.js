@@ -15,6 +15,7 @@ import NotFound from './Page/404';
 import KhamBenh from './Component/KhamBenh/KhamBenh';
 import PhongLuu from './Component/NoiTru/PhongLuu';
 import DanhMuc from './Component/DanhMuc/DanhMuc';
+import DanhSachPhieu from './Component/DanhSachPhieu/DanhSachPhieu';
 import Duoc from './Component/Duoc/Duoc';
 import VienPhi from './Component/VienPhi/VienPhi';
 import NoiTru from './Component/NoiTru/NoiTru';
@@ -39,11 +40,13 @@ function App() {
 
     { id: "danhmuc", path: "/danh-muc", title: 'Danh mục', component: <DanhMuc /> },
     { id: "duoc", path: "/duoc", title: 'Dược', component: <Duoc /> },
+    
+    { id: "danhsachphieu", path: "/danh-sach-phieu", title: 'Danh sách phiếu', component: <DanhSachPhieu /> },
 
     { id: "vienphi", path: "/vien-phi", title: 'Viện phí', component: <VienPhi /> },
 
     { id: "todieutri", path: "/to-dieu-tri", title: 'Tờ điều trị', component: <ToDieuTri /> },
-    { id: "mynote", path: "/my-note", title: 'My Note', component: <MyNote /> },
+    
 
     { id: "notfound", path: "*", title: 'Not Found', component: <NotFound /> },
   ]
