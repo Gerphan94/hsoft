@@ -63,7 +63,7 @@ def get_dsphieu_theodoikhangsinh():
     cursor = get_cursor(site)
   
     def get_danhsach(fromdate, todate):
-      cols_name = ['idkhoa', 'tenkhoadieutri', 'mabn', 'hoten', 'ngaybatdau', 'ngaykethuc', 'phacdo', 'giaidoan', 'songaydieutri']
+      cols_name = ['idkhoa', 'khoadieutri', 'mabn', 'hoten', 'ngaybatdau', 'ngaykethuc', 'phacdo', 'giaidoan', 'songaydieutri']
       stm = f'''
           SELECT DISTINCT TO_CHAR(A.IDKHOA) AS IDKHOA, A.TENKHOADIEUTRI , A.MABN, B.HOTEN, A.NGAYBATDAU, A.NGAYKETHUC, A.PHACDO , A.GIAIDOAN , A.KHOANGNGAYDIEUTRI
           FROM TA_KHANGSINHLL A
