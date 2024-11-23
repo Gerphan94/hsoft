@@ -61,8 +61,7 @@ def get_dsphieu_theodoikhangsinh():
         return jsonify({'error': 'Invalid date format'}), 400
     
     cursor = get_cursor(site)
-    col_names = ['idtrack', 'khoadieutri', 'mabn',  'hoten', 'ngay', 'ngaybatdau',
-                 'ngayketthuc', 'phacdo', 'giaidoan','songaydieutri', 'ngayylenh', 'tenthuoc', 'soluong', 'ngayks', 'duyetks']
+  
     def get_danhsach(fromdate, todate):
       cols_name = ['idkhoa', 'tenkhoadieutri', 'mabn', 'hoten', 'ngaybatdau', 'ngaykethuc', 'phacdo', 'giaidoan', 'songaydieutri']
       stm = f'''

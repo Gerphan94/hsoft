@@ -22,6 +22,7 @@ function PhieuTheoDoiKhangSinh() {
         try {
             const response = await fetch(fecthURL);
             const data = await response.json();
+            console.log('data', data)
             setData(data);
         } catch (error) {
             console.error('Error fetching data:', error);
