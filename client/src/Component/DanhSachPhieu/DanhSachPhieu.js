@@ -3,7 +3,7 @@ import PageHeader from "../PageHeader";
 import ButtonMenu from "./ButtonMenu";
 import { FcManager, FcCurrencyExchange, FcConferenceCall } from "react-icons/fc";
 
-import PhieuTheoDoiKhangSinh from "./PhieuTheoDoiKhangSinh";
+import PhieuTheoDoiKhangSinh from "./TheoDoiKhangSinh";
 
 function DanhSachPhieu() {
 

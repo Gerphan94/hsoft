@@ -12,7 +12,7 @@ import DichVuModal from "./DichVu/DichVuModal";
 import MauModal from "./Mau/MauModal";
 import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
-import TreatmentSheetModal from "./ToDieuTri/ToDieuTrIModal";
+import ToDieuTriModal from "./ToDieuTri/ToDieuTriModal";
 import PhieuCongKhaiModal from "./Emr/PhieuCongKhaiModal";
 import QuanLyGiuongModal from "./QLGiuong/QuanLyGiuongModal";
 
@@ -253,7 +253,7 @@ function NoiTru() {
                 />}
 
             {showTreatmentSheet &&
-                <TreatmentSheetModal
+                <ToDieuTriModal
                     site={site}
                     selected={selected}
                     setModalShow={setShowTreatmentSheet}

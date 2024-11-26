@@ -10,7 +10,7 @@ import MauModal from "./Mau/MauModal";
 import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
 import PhongLuuTable from "./PhongLuuTable";
-import ToDieuTriModal from "./ToDieuTri/ToDieuTrIModal";
+import ToDieuTriModal from "./ToDieuTri/ToDieuTriModal";
 import PageHeader from "../PageHeader";
 
 import Toggle from "../Common/ToggleSwitch";

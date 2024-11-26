@@ -61,36 +61,56 @@ def get_dsphieu_theodoikhangsinh():
         return jsonify({'error': 'Invalid date format'}), 400
     
     cursor = get_cursor(site)
-  
-    def get_danhsach(fromdate, todate):
-      cols_name = ['idkhoa', 'khoadieutri', 'mabn', 'hoten', 'ngaybatdau', 'ngaykethuc', 'phacdo', 'giaidoan', 'songaydieutri']
+    
+    def get_ds_khoa(fromdate, todate):
       stm = f'''
-          SELECT DISTINCT TO_CHAR(A.IDKHOA) AS IDKHOA, A.TENKHOADIEUTRI , A.MABN, B.HOTEN, A.NGAYBATDAU, A.NGAYKETHUC, A.PHACDO , A.GIAIDOAN , A.KHOANGNGAYDIEUTRI
+        SELECT DISTINCT KHOADIEUTRI , TENKHOADIEUTRI 
+        FROM  TA_KHANGSINHLL 
+        WHERE ISACTIVE = 1 AND PHACDO IS NOT NULL AND NGAY BETWEEN TO_DATE({fromdate}, 'YYYYMMDD') AND TO_DATE({todate}, 'YYYYMMDD')
+        ORDER BY KHOADIEUTRI
+      '''
+      result = []
+      data = cursor.execute(stm).fetchall()
+      for d in data:
+        result.append(dict(zip(['idkhoa', 'tenkhoa'], d)))
+      return data
+    
+    def get_danhsach_by_khoa(fromdate, todate, makp):
+      cols_name = ['idkhoa', 'idtrack', 'mabn', 'hoten', 'ngaybatdau', 'ngayketthuc', 'phacdo', 'giaidoan', 'songaydieutri']
+      stm = f'''
+          SELECT DISTINCT TO_CHAR(A.IDKHOA) AS IDKHOA , A.IDTRACK, A.MABN, B.HOTEN, A.NGAYBATDAU, A.NGAYKETHUC, A.PHACDO , A.GIAIDOAN , A.KHOANGNGAYDIEUTRI
           FROM TA_KHANGSINHLL A
           INNER JOIN BTDBN B ON A.MABN = B.MABN
-          WHERE A.NGAY BETWEEN TO_DATE({fromdate}, 'YYYYMMDD') AND TO_DATE({todate}, 'YYYYMMDD')
-          AND A.ISACTIVE = 1 AND A.PHACDO IS NOT NULL
+          WHERE A.NGAY BETWEEN TO_DATE({fromdate}, 'YYYYMMDD') AND TO_DATE({todate}, 'YYYYMMDD') 
+          AND A.KHOADIEUTRI = {makp}
+          AND A.ISACTIVE = 1 
+          AND A.PHACDO IS NOT NULL
       '''
       result = []
       for data in cursor.execute(stm).fetchall():
         obj = dict(zip(cols_name, data))
-        idkhoa = data[0]
+        idtrack = data[1]
         stm = f'''
-          SELECT B.TENBD || ' (' || B.TENHC || ')' AS TENTHUOC, B.SOLUONG , B.NGAYKS, B.DUYETKS, A.NGAYYLENH
+          SELECT B.ID,  B.TENBD || ' (' || B.TENHC || ')' AS TENTHUOC, B.SOLUONG , B.NGAYKS, B.DUYETKS, A.NGAYYLENH
           FROM TA_KHANGSINHLL A
           INNER JOIN TA_KHANGSINHCT B ON A.IDTRACK = B.IDTRACK
-          WHERE A.IDKHOA = {idkhoa} AND A.ISACTIVE = 1 AND a.PHACDO IS NOT NULL
+          WHERE A.IDTRACK = {idtrack} AND A.ISACTIVE = 1 AND a.PHACDO IS NOT NULL
         '''
         detail = cursor.execute(stm).fetchall()
         detail_ar = []
         for d in detail:
-          detail_ar.append(dict(zip(['tenthuoc', 'soluong', 'ngayks', 'duyetks', 'ngayylenh'], d)))
+          detail_ar.append(dict(zip(['id','tenthuoc', 'soluong', 'ngayks', 'duyetks', 'ngayylenh'], d)))
         obj['detail'] = detail_ar
         result.append(obj)
       return result
-
-    khangsinhll = get_danhsach(fromdate, todate)
-    return jsonify(khangsinhll), 200
+    
+    result = []
+    data_by_khoa = get_ds_khoa(fromdate, todate)
+    for data in data_by_khoa:
+      obj = dict(zip(['makp', 'tenkhoa'], data))
+      obj['partients'] = get_danhsach_by_khoa(fromdate, todate, data[0])
+      result.append(obj)
+    return jsonify(result), 200
       
     
    

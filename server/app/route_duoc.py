@@ -137,18 +137,78 @@ def duoc_tonkho_theokho_dskho(site):
 
 
 
-@duoc.route('/duoc/tonkho/theokho/<site>/<idkho>', methods=['GET'])
-def duoc_tonkho_theokho(site, idkho):
+@duoc.route('/duoc/tonkho-theokho', methods=['GET'])
+def duoc_tonkho_theokho():
+    """
+    Tồn kho theo kho
+    ---
+    tags:
+      - Dược
+    parameters:
+      - name: site
+        in: path
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    
+    
+    
+    site = request.args.get('site')
+    makho = request.args.get('makho')
     cursor =get_cursor(site)
     result = []
-    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr','adrcao', 'soluongdvsd', 'bienban', 'luuy', 'duongdungmorong', 'dd_count']    
+    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 
+                'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 
+                'maatc', 'adr','adrcao', 'soluongdvsd', 'bienban', 'luuy', 'duongdungmorong', 'dd_count']    
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR,D.ADRCAO, C.SOLUONGDVSD, C.BIENBAN, C.LUUY, C.DUONGDUNGMORONG, NVL(REGEXP_COUNT(C.DUONGDUNGMORONG, ',') + 1,0) AS dd_count
-        FROM {schema_now()}.D_TONKHOTH A 
-        INNER JOIN D_DMBD C ON A.MABD = C.ID
-        LEFT JOIN D_DMBD_ATC D ON C.ID = D.ID
-        WHERE A.MAKHO = {idkho}
-        ORDER BY C.MA ASC
+        SELECT
+            A.MABD AS ID,
+            C.MA,
+            C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG,
+            C.TENHC,
+            C.DANG AS DVT,
+            C.DONVIDUNG AS DVD,
+            C.DUONGDUNG,
+            C.BHYT,
+            A.TONDAU,
+            A.SLNHAP,
+            A.SLXUAT,
+            (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,
+            A.SLYEUCAU ,
+            (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD,
+            D.DALIEU,
+            C.NHOMBO,
+            C.MAATC,
+            C.ADR,
+            D.ADRCAO,
+            C.SOLUONGDVSD,
+            C.BIENBAN,
+            C.LUUY,
+            C.DUONGDUNGMORONG,
+            NVL(REGEXP_COUNT(C.DUONGDUNGMORONG, ',') + 1, 0) AS dd_count
+        FROM
+            {schema_now() }.D_TONKHOTH A
+        INNER JOIN D_DMBD C ON
+            A.MABD = C.ID
+        LEFT JOIN D_DMBD_ATC D ON
+            C.ID = D.ID
+        WHERE
+            A.MAKHO = {makho}
+        ORDER BY
+            C.MA ASC
     '''
     datas = cursor.execute(stm).fetchall()
     for data in datas:

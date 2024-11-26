@@ -6,9 +6,7 @@ function MyNoteAccount() {
     const accoountData = [
         { 'site': 'HCM', 'user': 'duyth1', 'password': 'dev3', 'personel': 'ThS.BS Trần Hữu Duy', 'pin': '020657'  },
         { 'site': 'HN', 'user': 'namnst', 'password': 'abc@123', 'personel': 'TBSCKII. Ngô Sỹ Thanh Nam', 'pin': '898989'  },
-
     ]
-
     return (
         <>
         <div className="px-40 py-10">

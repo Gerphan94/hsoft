@@ -46,10 +46,10 @@ function TonKhoTongHop({ menuData, selectedMenu, setSelectedMenu, isDetail = fal
 
 
     useEffect(() => {
-        if (!site) return; // Skip fetch if `site` is not valid or undefined
+        if (!site) return; 
         console.count("Số lần Callback trong useEffect chạy");
-        const controller = new AbortController(); // Create a new AbortController
-        const signal = controller.signal; // Get the signal to pass to fetch
+        const controller = new AbortController(); 
+        const signal = controller.signal;
         const fetchData = async () => {
             try {
                 const fetchURL = apiURL + "/duoc/danhsach-kho/" + site;
@@ -135,35 +135,18 @@ function TonKhoTongHop({ menuData, selectedMenu, setSelectedMenu, isDetail = fal
         }
         const fetchTonKho = async () => {
             try {
-                const fecthURL = apiURL + "duoc/tonkho/theokho/" + site + "/" + selectedKhoId;
-                const response = await fetch(fecthURL);
+                // const fecthURL = apiURL + "duoc/tonkho-theokho/" + site + "/" + selectedKhoId;
+                const fetchURL = isDetail ? `${apiURL}duoc/tonkho-theokho-chitiet?site=${site}&makho=${selectedKhoId}` :
+                 `${apiURL}duoc/tonkho-theokho?site=${site}&makho=${selectedKhoId}`
+                const response = await fetch(fetchURL);
                 const data = await response.json();
                 setPharmars(data);
                 setViewDatas(data);
-
-
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-        const fetchTonKhoChiTiet = async () => {
-            try {
-                const fecthURL = apiURL + "duoc/tonkho/theokho-chitiet/" + site + "/" + selectedKhoId;
-                const response = await fetch(fecthURL);
-                const data = await response.json();
-                setPharmars(data);
-                setViewDatas(data);
-
-
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-        if (isDetail) {
-            fetchTonKhoChiTiet();
-        } else {
-            fetchTonKho();
-        }
+        fetchTonKho();
     }
 
     const search = (data, seachValue) => {

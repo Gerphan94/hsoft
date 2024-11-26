@@ -131,7 +131,6 @@ function InventoryTableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
                                     <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
                                     <td className={`text-right px-1 pr-2 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
-
                                 </tr>
                             ))}
                         </tbody>
