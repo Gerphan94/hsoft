@@ -1,15 +1,17 @@
 import React from "react";
+import CanLamSang from "./CanLamSang";
+import DuTruMau from "./DuTruMau";
 
 function DienBienTable({ dienbiens }) {
 
     return (
 
         <>
-            <table>
+            <table className="mb-10">
                 <tbody>
                     {dienbiens.map((item, index) => (
                         <tr key={item.idseq} className="border-b hover:bg-transparent">
-                            <td className="w-1/2 text-left text-sm">
+                            <td className="w-1/3 text-left text-sm">
                                 <div className="p-4 w-full">
                                     <div className="mb-4 space-y-2">
                                         <span className="text-xl font-bold text-center border rounded-2xl px-2 py-0.5">{item.idseq}</span>
@@ -24,7 +26,7 @@ function DienBienTable({ dienbiens }) {
                                             <div>Cân nặng:  <strong>{item.cannang}</strong> kg</div>}
                                         {item.huyetap !== null && item.huyetap.trim() !== '/' &&
                                             <div>Huyết áp: <strong>{item.huyetap}</strong> mmHg</div>}
-                                        {item.duonghuyet!== null && item.duonghuyet > 0 &&
+                                        {item.duonghuyet !== null && item.duonghuyet > 0 &&
                                             <div>Đường huyết:  <strong>{item.duonghuyet}</strong> mg/dl</div>}
                                         {item.chieucao !== null && item.chieucao > 0 &&
                                             <div>Chiều cao:  <strong>{item.chieucao}</strong> cm</div>}
@@ -46,14 +48,15 @@ function DienBienTable({ dienbiens }) {
 
 
                             </td>
-                            <td className="w-1/2 border-l">
-                                <div className="text-left p-4">
-                                    <div>
-                                        <div className="h-full font-bold">Bác sĩ</div>
+                            <td className="w-2/3 border-l">
+                                <div className="text-left p-4 space-y-3">
+                                    <CanLamSang cls={item.cls} />
+                                    {item.dutrumau && <DuTruMau dutrumau={item.dutrumau } />}
+
+                                    <div className="mt-10">
+                                        <div className="h-full font-bold underline">Bác sĩ</div>
                                         <div>{item.tenbs}</div>
                                     </div>
-
-
                                 </div>
 
 

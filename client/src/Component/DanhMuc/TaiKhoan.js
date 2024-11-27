@@ -9,11 +9,9 @@ import TaiKhoanTable from "./TaiKhoanTable";
 import { useAppContext } from "../Store/AppContext";
 
 function TaiKhoan() {
-    // console.log('rending tai khoan')
+
     const apiURL = process.env.REACT_APP_API_URL;
-
     const { site, area } = useAppContext();
-
     const accountTypes = [
         { id: 'hsoft', name: 'Hsoft' },
         { id: 'vienphi', name: 'Viện phí' },
@@ -93,9 +91,7 @@ function TaiKhoan() {
 
     const handeleView = async () => {
         try {
-            // const fecthURL = apiURL + "danhmuc/taikhoan-hsoft/" + site + "/" + selectedCoso.id;
-            const fecthURL = `${apiURL}danhmuc/taikhoan-hsoft?site=${site}&cosoid=${area}`;
-
+            const fecthURL = `${apiURL}danhmuc/taikhoan-hsoft?site=${site}&area=${area}`;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setData(data);
@@ -118,10 +114,7 @@ function TaiKhoan() {
     }, [searchTerm]);
 
     useEffect(() => {
-        console.log('debouncedSearchTerm', debouncedSearchTerm)
-
         if (debouncedSearchTerm === '') {
-            console.log('empty', data)
             setViewDatas(data);
            
         } else {

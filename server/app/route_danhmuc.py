@@ -304,9 +304,9 @@ def danhmuc_taikhoan():
         required: true
         description: Site (HCM_DEV, HN_DEV,...)
         default: HCM_DEV
-      - name: khu
+      - name: area
         in: query
-        type: string
+        type: number
         required: true
         description: Quận Tân Bình, Quận 8, Quận 7
         default: 1
@@ -344,6 +344,7 @@ def danhmuc_taikhoan():
         WHERE A.HIDE = 0  AND A.KHU LIKE '%{khu}%'
         ORDER BY A.ID 
     '''
+    print(stm)
     taikhoans = cursor.execute(stm).fetchall()
     for taikhoan in taikhoans:
         obj = {}
