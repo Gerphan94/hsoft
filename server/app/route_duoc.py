@@ -251,7 +251,7 @@ def duoc_tonkho_theokho_chitiet():
     cursor =get_cursor(site)
     result = []
     cols = ['stt', 'idbd', 'mabd', 'tenbd', 'tenhc', 'dvt', 'dvd', 'duongdung','bhyt', 'handung', 'losx',
-            'tondau', 'slnhap', 'slxuat', 'toncuoi','dalieu', 'nhombo', 'maatc', 'adr', 'adrcao', 
+            'tondau', 'slnhap', 'slxuat', 'toncuoi','dalieu', 'duocbvid', 'maatc', 'adr', 'adrcao', 
             'soluongdvsd', 'bienban', 'luuy', 'duongdungmorong']
     query = f'''
         SELECT
@@ -495,7 +495,7 @@ def duoc_tontutruc_chitiet():
     cursor =get_cursor(site)
     result = []
     cols = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 
-            'handung', 'losx', 'nhombo', 'dalieu']
+            'handung', 'losx', 'duocbvid',  'dalieu']
     stm = f'''
         SELECT
             A.MABD ,

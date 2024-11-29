@@ -6,7 +6,7 @@ import { TbSortAZ } from "react-icons/tb";
 import { VscCopy } from "react-icons/vsc";
 import { SuccessAlert } from "../Common/Alert";
 import moment from "moment";
-
+import IconButtonTienIch from "./IconButtonTienIch";
 
 function Hiendien({ data, selected, setSelected }) {
 
@@ -25,8 +25,6 @@ function Hiendien({ data, selected, setSelected }) {
 
     const [showAlert, setShowAlert] = useState(false);
 
-
-
     useEffect(() => {
         setDataInPage(constDataInPage(1, data));
         setTotalPage(Math.ceil(data.length / itemsPerPage));
@@ -42,9 +40,7 @@ function Hiendien({ data, selected, setSelected }) {
     };
 
     const handleClickCopy = (pid) => {
-        console.log(pid)
         navigator.clipboard.writeText(pid)
-
         setShowAlert(true);
     };
 
@@ -53,8 +49,10 @@ function Hiendien({ data, selected, setSelected }) {
         const today = moment(new Date()).format('YYYY-MM-DD');
         const ngayvk = moment(ingay).format('YYYY-MM-DD');
         const songay = moment(today).diff(ngayvk, 'days');
-        return songay > 0 ? songay + 1: 1;
+        return songay > 0 ? songay + 1 : 1;
     }
+
+  
 
     return (
         <>
@@ -63,18 +61,20 @@ function Hiendien({ data, selected, setSelected }) {
                     <table className="">
                         <thead>
                             <tr>
+                                <th className="w-10"></th>
                                 <th><div className="px-2 py-1 text-center">STT</div></th>
                                 <th className=""><div className="">PID</div></th>
                                 <th className="white-space-nowrap min-w-40"><div>Họ tên</div></th>
                                 <th><div className="w-28">Ngày sinh</div></th>
                                 <th><div className="text-center w-40">Ngày VV</div></th>
                                 <th><div className="text-center w-40">Ngày VK</div></th>
-                                <th><div className="text-center w-40">Đối tượng</div></th>
+                                <th><div className="text-center w-40">Nơi chuyển</div></th>
+                                <th><div className="text-center w-20">Đối tượng</div></th>
                                 <th><div className="text-center w-40">BHYT</div></th>
                                 <th><div className="text-center  w-40">N.Máu</div></th>
-                                <th><div className="text-center  w-20">Phòng</div></th>
-                                <th><div className="text-center  w-20">Giường</div></th>
-                                <th><div className="text-center  w-64">B.Sĩ nhập khoa</div></th>
+                                <th><div className="text-center  w-28">Phòng</div></th>
+                                <th><div className="text-center  w-28">Giường</div></th>
+                                <th><div className="text-left px-2 w-64">B.Sĩ nhập khoa</div></th>
                                 <th><div className="text-center white-space-nowrap min-w-40">Chẩn đoán vào khoa</div></th>
                                 <th><div className="text-center white-space-nowrap  w-40">S.Ngày ĐT</div></th>
                                 <th><div className="text-center white-space-nowrap  w-40">Bệnh án</div></th>
@@ -99,6 +99,11 @@ function Hiendien({ data, selected, setSelected }) {
                                     data-idkhoa={ele.id}
                                     data-maql={ele.maql}
                                 >
+                                    <td className="w-10">
+                                        <div>
+                                            <IconButtonTienIch pid={ele.mabn} />
+                                        </div>
+                                    </td>
                                     <td className="text-center"><div className=" py-1 text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</div></td>
                                     <td>
                                         <div className="flex gap-2 items-center flex-row-reverse group">
@@ -115,7 +120,7 @@ function Hiendien({ data, selected, setSelected }) {
                                         <div className="flex gap-2 items-center w-80">
                                             {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}
                                             <div className="white-space-nowrap w-full text-left">{ele.hoten}
-                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                     <td><div className="text-center">
@@ -124,11 +129,13 @@ function Hiendien({ data, selected, setSelected }) {
                                     </div></td>
                                     <td><div className="text-right">{moment(ele.ngayvv).utc().format('DD/MM/YYYY HH:mm')}</div></td>
                                     <td><div className="text-right">{moment(ele.ngayvk).utc().format('DD/MM/YYYY HH:mm')}</div></td>
+
+                                    <td><div className="text-left px-2 truncate">{ele.tenkpchuyen}</div></td>
                                     <td><div className="text-center px-2">{ele.doituong}</div></td>
                                     <td><div className="">{ele.sothe}</div></td>
                                     <td><div className="">{ele.mau_abo}{ele.mau_rh}</div></td>
-                                    <td><div>{ele.phong}</div></td>
-                                    <td><div>{ele.giuong}</div></td>
+                                    <td><div className="truncate">{ele.phong}</div></td>
+                                    <td><div className="truncate">{ele.giuong}</div></td>
                                     <td><div className="text-left">{ele.bsnhapkhoa}</div></td>
                                     <td><div className="truncate text-left">{`${ele.chandoan} (${ele.maicd})`} </div></td>
                                     <td><div className="">{songaydieutri(ele.ngayvk)}</div></td>

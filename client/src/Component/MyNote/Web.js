@@ -12,7 +12,7 @@ function Web() {
                 <table>
                     <thead>
                         <tr>
-                            <th>STT</th>
+                            <th>Tên</th>
                             <th>Link</th>
                             <th>User</th>
                             <th>Pwd</th>
@@ -23,7 +23,9 @@ function Web() {
                             <tr key={index}>
                                
                                 <td>{item.name}</td>
-                                <td><a href={item.link} /></td>
+                                <td>
+                                    <a className="text-blue-600 hover:underline" href={item.link} target="_blank" rel="noopener noreferrer">{item.link}</a>
+                                    </td>
                                 <td>{item.user}</td>
                                 <td>{item.password}</td>
                                 <td className="text-left">{item.personel}</td>

@@ -121,6 +121,7 @@ def get_tdt():
    schema_ar = list(schema_mutil(ngaynhapkhoa, datetime.now() ))
    col_names = ['idseq', 'ngayylenh', 'cdall', 
                 'chieucao', 'cannang', 'bmi', 'mach', 'huyetap', 'nhietdo', 'nhiptho', 'spo2', 'duonghuyet',
+                'chamsoc', 'chamsockhac', 'tendinhduong', 'dienbienbenh', 'canhbao', 'ylenhkhac', 'vandechinh', 'xutri',
                 'tenbs', 'mabs', 'isactive']
    result= []
    for schema in reversed(schema_ar):
@@ -130,6 +131,8 @@ def get_tdt():
             TO_CHAR(NGAY, 'dd/MM/yyyy HH24:Mi') AS NGAYYLENH,
             CDKHAC AS CDALL,
             CHIEUCAO, CANNANG , BMI , MACH, HUYETAP , NHIETDO , NHIPTHO, SPO2 , DUONGHUYET ,
+            TENCHAMSOC, CHAMSOCKHAC, TENDINHDUONG, NOIDUNG AS DIENBIENBENH, GHICHU AS CANHBAO,
+            YLENHKHAC, CANHBAO AS VANDECHINH, XUTRI,
             TENBS, MABS,
             ISACTIVE
          FROM {schema}.TA_DIENBIEN td WHERE idkhoa = {idkhoa}

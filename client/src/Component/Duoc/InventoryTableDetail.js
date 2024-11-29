@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { FaBottleDroplet, FaJar } from "react-icons/fa6";
-import { CiPill } from "react-icons/ci";
+// ---
+import Pagination from "../Common/Pagination";
+import ItemComponent from "./TableIconComponent";
+// --
+import { FaBottleDroplet } from "react-icons/fa6";
 import { TbCircleLetterK } from "react-icons/tb";
-import { WiMoonAltFull, WiMoonAltFirstQuarter, WiMoonAltNew } from "react-icons/wi";
 import { GiPoisonBottle } from "react-icons/gi";
 import { GoReport } from "react-icons/go";
 import { IoMdWarning } from "react-icons/io";
-
-import Pagination from "../Common/Pagination";
-import ItemComponent from "./TableIconComponent";
-
+// --
 function InventoryTableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
-    console.log('data', data)
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 25;
