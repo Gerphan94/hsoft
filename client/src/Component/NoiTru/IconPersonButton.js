@@ -5,13 +5,14 @@ import { GiTestTubes, GiMedicines } from "react-icons/gi";
 import { BiSolidShieldPlus } from "react-icons/bi";
 import { FaAlignJustify } from "react-icons/fa6";
 
-const IconButtonTienIch = ({
+const IconPersonButton = ({
     setShowCabinetModal,
     setShowDSPhieuModal,
     setShowQLGiuongModal
 }) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [dropdownPosition, setDropdownPosition] = useState('bottom'); // Track dropdown position (top or bottom)
 
     const dropdownRef = useRef(null);
 
@@ -27,6 +28,18 @@ const IconButtonTienIch = ({
 
     useEffect(() => {
         if (isDropdownOpen) {
+            // Check the dropdown position when opened
+            const dropdownElement = dropdownRef.current;
+            const dropdownRect = dropdownElement.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            // If the dropdown is too close to the bottom of the viewport, show it on top
+            if (dropdownRect.bottom > windowHeight - 200) {
+                setDropdownPosition('top');
+            } else {
+                setDropdownPosition('bottom');
+            }
+
             document.addEventListener("mousedown", handleClickOutside);
         } else {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -50,7 +63,7 @@ const IconButtonTienIch = ({
                 </button>
 
                 {isDropdownOpen && (
-                    <div className="origin-top-right absolute mt-2 left-0 w-60 max-h-96 shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
+                    <div className={`origin-top-right absolute  ${dropdownPosition === 'top' ? 'bottom-full' : 'top-full'} left-0 w-60 max-h-96 shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto`}>
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             <li>
                                 <button
@@ -95,4 +108,4 @@ const IconButtonTienIch = ({
     )
 }
 
-export default IconButtonTienIch;
+export default IconPersonButton;

@@ -6,12 +6,11 @@ import { TbSortAZ } from "react-icons/tb";
 import { VscCopy } from "react-icons/vsc";
 import { SuccessAlert } from "../Common/Alert";
 import moment from "moment";
-import IconButtonTienIch from "./IconButtonTienIch";
+import IconPersonButton from "./IconPersonButton";
 
 function Hiendien({ data, selected, setSelected }) {
 
     console.log('rending hiendien table -------------------------------------')
-    console.log('data', data)
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(20);
     const [totalPage, setTotalPage] = useState(0);
@@ -61,7 +60,7 @@ function Hiendien({ data, selected, setSelected }) {
                     <table className="">
                         <thead>
                             <tr>
-                                <th className="w-10"></th>
+                                <th className=""></th>
                                 <th><div className="px-2 py-1 text-center">STT</div></th>
                                 <th className=""><div className="">PID</div></th>
                                 <th className="white-space-nowrap min-w-40"><div>Họ tên</div></th>
@@ -99,10 +98,14 @@ function Hiendien({ data, selected, setSelected }) {
                                     data-idkhoa={ele.id}
                                     data-maql={ele.maql}
                                 >
-                                    <td className="w-10">
-                                        <div>
-                                            <IconButtonTienIch pid={ele.mabn} />
-                                        </div>
+                                    <td className="">
+                                        {/* <div>
+                                            <IconPersonButton
+                                             pid={ele.mabn}
+
+                                             
+                                             />
+                                        </div> */}
                                     </td>
                                     <td className="text-center"><div className=" py-1 text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</div></td>
                                     <td>

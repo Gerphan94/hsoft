@@ -13,7 +13,8 @@ const ButtonChucNang = ({
     setShowBloodModal,
     setShowMedicineModal,
     setShowTreatmentSheet,
-    setShowPhieuCongKhai
+    setShowPhieuCongKhai,
+    setShowChiPhiModal
 }) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -42,17 +43,7 @@ const ButtonChucNang = ({
         };
     }, [isDropdownOpen]);
 
-    const subMenu = () => {
-        return (
-            <div className="origin-top-right absolute mt-2 w-48 max-h-96 shadow-lg shadow-gray-300 border border-gray-400 bg-white  ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
-                <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                    <li>
-                        <button>1111</button>
-                    </li>
-                </ul>
-            </div>
-        )
-    }
+ 
 
     return (
         <div className='w-full items-center inline-block' ref={dropdownRef}>
@@ -121,8 +112,6 @@ const ButtonChucNang = ({
                                     <FcSurvey />
                                     Tờ điều trị
                                 </button>
-
-
                                 <button
                                     className="w-full text-left flex gap-1 items-center px-4 py-2  hover:bg-gray-300 select-none"
                                     onClick={() => {
@@ -132,6 +121,16 @@ const ButtonChucNang = ({
                                 >
                                     <FcDocument />
                                     PCK
+                                </button>
+                                <button
+                                    className="w-full text-left flex gap-1 items-center px-4 py-2  hover:bg-gray-300 select-none"
+                                    onClick={() => {
+                                        setShowChiPhiModal(true);
+                                        setIsDropdownOpen(!isDropdownOpen);
+                                    }}
+                                >
+                                    <FcDocument />
+                                    Chi phí
                                 </button>
                             </li>
 
