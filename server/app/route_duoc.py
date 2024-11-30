@@ -135,20 +135,75 @@ def duoc_tonkho_theokho_dskho(site):
         })
     return jsonify(result)
 
-
-
-@duoc.route('/duoc/tonkho/theokho/<site>/<idkho>', methods=['GET'])
-def duoc_tonkho_theokho(site, idkho):
+@duoc.route('/duoc/tonkho-theokho', methods=['GET'])
+def duoc_tonkho_theokho():
+    """
+    Tồn kho theo kho
+    ---
+    tags:
+      - Dược
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    site = request.args.get('site')
+    makho = request.args.get('makho')
     cursor =get_cursor(site)
     result = []
-    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc', 'adr','adrcao', 'soluongdvsd', 'bienban', 'luuy', 'duongdungmorong', 'dd_count']    
+    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 
+                'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slyeucau', 'tonkhadung', 'dalieu', 'duocbvid', 
+                'maatc', 'adr','adrcao', 'soluongdvsd', 'bienban', 'luuy', 'duongdungmorong', 'dd_count']    
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI, A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC, C.ADR,D.ADRCAO, C.SOLUONGDVSD, C.BIENBAN, C.LUUY, C.DUONGDUNGMORONG, NVL(REGEXP_COUNT(C.DUONGDUNGMORONG, ',') + 1,0) AS dd_count
-        FROM {schema_now()}.D_TONKHOTH A 
-        INNER JOIN D_DMBD C ON A.MABD = C.ID
-        LEFT JOIN D_DMBD_ATC D ON C.ID = D.ID
-        WHERE A.MAKHO = {idkho}
-        ORDER BY C.MA ASC
+        SELECT
+            A.MABD AS ID,
+            C.MA,
+            C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG,
+            C.TENHC,
+            C.DANG AS DVT,
+            C.DONVIDUNG AS DVD,
+            C.DUONGDUNG,
+            C.BHYT,
+            A.TONDAU,
+            A.SLNHAP,
+            A.SLXUAT,
+            (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,
+            A.SLYEUCAU ,
+            (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD,
+            D.DALIEU,
+            C.NHOMBO,
+            C.MAATC,
+            C.ADR,
+            D.ADRCAO,
+            C.SOLUONGDVSD,
+            C.BIENBAN,
+            C.LUUY,
+            C.DUONGDUNGMORONG,
+            NVL(REGEXP_COUNT(C.DUONGDUNGMORONG, ',') + 1, 0) AS dd_count
+        FROM
+            {schema_now() }.D_TONKHOTH A
+        INNER JOIN D_DMBD C ON
+            A.MABD = C.ID
+        LEFT JOIN D_DMBD_ATC D ON
+            C.ID = D.ID
+        WHERE
+            A.MAKHO = {makho}
+        ORDER BY
+            C.MA ASC
     '''
     datas = cursor.execute(stm).fetchall()
     for data in datas:
@@ -158,44 +213,83 @@ def duoc_tonkho_theokho(site, idkho):
         result.append(obj)
     return jsonify(result), 200
 
-@duoc.route('/duoc/tonkho/theokho-chitiet/<site>/<idkho>', methods=['GET'])
-def duoc_tonkho_theokho_chitiet(site, idkho):
+@duoc.route('/duoc/tonkho-theokho-chitiet', methods=['GET'])
+def duoc_tonkho_theokho_chitiet():
+    """
+    Tồn kho chi tiết
+    ---
+    tags:
+      - Dược
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: makho
+        in: query
+        type: string
+        required: true
+        description: Mã kho
+        default: 104
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  
+    site = request.args.get('site')
+    makho = request.args.get('makho')
     cursor =get_cursor(site)
     result = []
-    cols = ['stt', 'idbd', 'mabd', 'tenbd', 'tenhc', 'dvt', 'dvd', 'duongdung', 'duongdungmorong','dd_count','bhyt', 'handung', 'losx','tondau', 'slnhap', 'slxuat', 'toncuoi']
+    cols = ['stt', 'idbd', 'mabd', 'tenbd', 'tenhc', 'dvt', 'dvd', 'duongdung','bhyt', 'handung', 'losx',
+            'tondau', 'slnhap', 'slxuat', 'toncuoi','dalieu', 'duocbvid', 'maatc', 'adr', 'adrcao', 
+            'soluongdvsd', 'bienban', 'luuy', 'duongdungmorong']
     query = f'''
-        SELECT 
-            A.STT, 
-            A.MABD AS IDBD,
-            C.MA,
-            C.TEN || ' ' || C.HAMLUONG AS TENBD, 
-            C.TENHC,
-            C.DANG AS DVT,
-            C.DONVIDUNG AS DVD,
-            C.DUONGDUNG,
-            C.DUONGDUNGMORONG,
-            NVL(REGEXP_COUNT(C.DUONGDUNGMORONG, ',') + 1,0) AS dd_count,
-            C.BHYT,
-            B.HANDUNG,
-            B.LOSX, 
-            A.TONDAU,
-            A.SLNHAP,
-            A.SLXUAT,
-            (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI
+        SELECT
+          A.STT,
+          A.MABD AS IDBD,
+          C.MA,
+          C.TEN || ' ' || C.HAMLUONG AS TENBD,
+          C.TENHC,
+          C.DANG AS DVT,
+          C.DONVIDUNG AS DVD,
+          C.DUONGDUNG,
+          C.BHYT,
+          B.HANDUNG,
+          B.LOSX,
+          A.TONDAU,
+          A.SLNHAP,
+          A.SLXUAT,
+          (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,
+          D.DALIEU,
+          C.NHOMBO,
+          C.MAATC,
+          C.ADR,
+          D.ADRCAO,
+          C.SOLUONGDVSD,
+          C.BIENBAN,
+          C.LUUY,
+          C.DUONGDUNGMORONG
         FROM {schema_now()}.D_TONKHOCT A
-        INNER JOIN {schema_now()}.D_THEODOI B
-            ON A.STT = B.ID
-        INNER JOIN D_DMBD C
-            ON A.MABD = C.ID
-        WHERE A.MAKHO = {idkho}
+        INNER JOIN {schema_now()}.D_THEODOI B ON A.STT = B.ID
+        INNER JOIN D_DMBD C ON A.MABD = C.ID
+        LEFT JOIN D_DMBD_ATC D ON C.ID = D.ID
+        WHERE A.MAKHO =  {makho}
         ORDER BY A.MABD ASC
     '''
     tonkhos = cursor.execute(query).fetchall()
     for tonkho in tonkhos:
-        obj = {}
-        for idx, col in  enumerate(cols):
-            obj[col] = tonkho[idx]
-        result.append(obj)
+      result.append(dict(zip(cols, tonkho)))
+        
     return jsonify(result), 200
     
 @duoc.route('/duoc/tonbhyt/<site>', methods=['GET'])
@@ -288,11 +382,10 @@ def get_khoaphong(site, area):
 
 
 
-@duoc.route('/duoc/tutruc/danhsach-tutruc/<site>', methods=['GET'])
 
 
-@duoc.route('/duoc/tutruc/tontutruc/<site>/<idtutruc>', methods=['GET'])
-def get_tutruc_tonkho(site, idtutruc):
+@duoc.route('/duoc/tonkho-tontutruc', methods=['GET'])
+def get_tutruc_tonkho():
     """
     Get Tồn tủ trực
     ---
@@ -300,16 +393,17 @@ def get_tutruc_tonkho(site, idtutruc):
       - Dược
     parameters:
       - name: site
-        in: path
+        in: query
         type: string
         required: true
         description: Site (HCM_DEV, HN_DEV,...)
         default: HCM_DEV
       - name: idtutruc
-        in: path
+        in: query
         type: integer
         required: true
         description:
+        default: 15
     responses:
       200:
         description: Success
@@ -322,6 +416,8 @@ def get_tutruc_tonkho(site, idtutruc):
                   type: string
                   example: ok
     """
+    site = request.args.get('site')
+    idtutruc = request.args.get('idtutruc')
     cursor = get_cursor(site)
     result = []
     stm = f'''
@@ -362,8 +458,8 @@ def get_tutruc_tonkho(site, idtutruc):
     result = [dict(zip(col_names, data)) for data in datas]
     return jsonify(result), 200
 
-@duoc.route('/duoc/tutruc/tontutruc-chitiet/<site>/<idtutruc>', methods=['GET'])
-def duoc_tontutruc_chitiet(site, idtutruc):
+@duoc.route('/duoc/tonkho-tontutruc-chitiet', methods=['GET'])
+def duoc_tontutruc_chitiet():
     """
     Get Tồn tủ trực - Chi tiết
     ---
@@ -371,16 +467,17 @@ def duoc_tontutruc_chitiet(site, idtutruc):
       - Dược
     parameters:
       - name: site
-        in: path
+        in: query
         type: string
         required: true
         description: Site (HCM_DEV, HN_DEV,...)
         default: HCM_DEV
       - name: idtutruc
-        in: path
+        in: query
         type: integer
         required: true
         description:
+        default: 15
     responses:
       200:
         description: Success
@@ -393,10 +490,12 @@ def duoc_tontutruc_chitiet(site, idtutruc):
                   type: string
                   example: ok
     """
+    site = request.args.get('site')
+    idtutruc = request.args.get('idtutruc')
     cursor =get_cursor(site)
     result = []
     cols = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 
-            'handung', 'losx', 'nhombo', 'dalieu']
+            'handung', 'losx', 'duocbvid',  'dalieu']
     stm = f'''
         SELECT
             A.MABD ,

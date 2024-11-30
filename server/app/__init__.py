@@ -15,6 +15,7 @@ from .route_kb import kb
 from .route_tdt import tdt
 from .route_emr import emr
 from .route_danhsachphieu import dsphieu
+from .route_vienphi import vienphi
 # SECRET_KEY = os.urandom(24)
 SECRET_KEY = "th3DC0d3v3ryS3cr3tK3y"
 
@@ -38,6 +39,7 @@ def create_app():
     app.register_blueprint(tdt)
     app.register_blueprint(emr)
     app.register_blueprint(dsphieu)
+    app.register_blueprint(vienphi)
 
     return app
 

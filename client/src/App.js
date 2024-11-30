@@ -46,7 +46,8 @@ function App() {
     { id: "vienphi", path: "/vien-phi", title: 'Viện phí', component: <VienPhi /> },
 
     { id: "todieutri", path: "/to-dieu-tri", title: 'Tờ điều trị', component: <ToDieuTri /> },
-    
+    { id: "mynote", path: "/my-note", title: 'My Note', component: <MyNote /> },
+
 
     { id: "notfound", path: "*", title: 'Not Found', component: <NotFound /> },
   ]

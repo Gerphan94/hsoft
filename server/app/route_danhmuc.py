@@ -304,9 +304,9 @@ def danhmuc_taikhoan():
         required: true
         description: Site (HCM_DEV, HN_DEV,...)
         default: HCM_DEV
-      - name: khu
+      - name: area
         in: query
-        type: string
+        type: number
         required: true
         description: Quận Tân Bình, Quận 8, Quận 7
         default: 1
@@ -344,6 +344,7 @@ def danhmuc_taikhoan():
         WHERE A.HIDE = 0  AND A.KHU LIKE '%{khu}%'
         ORDER BY A.ID 
     '''
+    print(stm)
     taikhoans = cursor.execute(stm).fetchall()
     for taikhoan in taikhoans:
         obj = {}
@@ -492,4 +493,47 @@ def vienphi_giavp_bhyt(site, bhytid):
             obj[col] = giavp[idx]
         result.append(obj)
     return jsonify(result), 200  
+  
+@dm.route('/danhmuc/dinhduong-chedoan', methods=['GET'])
+def dinhduong_chedoan():
+  """
+    Danh mục chế độ ăn
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  site = request.args.get('site')
+  cursor = get_cursor(site)
+  result = []
+  col_names = ['id', 'ma', 'ten', 'benhly', 'idnhom', 'tennhom', 'ischild']
+  query = f'''
+    SELECT A.ID, A.MA, A.TEN, A.BENHLY , A.IDNHOM, B.TEN , A.TREEM
+    FROM TA_CHEDOAN A
+    INNER JOIN TA_NHOMCHEDOAN B ON A.IDNHOM = B.ID
+    WHERE A.ISACTIVE = 1
+    ORDER BY A.IDNHOM, MA
+  '''
+  chedoans = cursor.execute(query).fetchall()
+  for chedoan in chedoans:
+    result.append(dict(zip(col_names, chedoan)))
+  return jsonify(result), 200
+  
 

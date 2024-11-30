@@ -55,7 +55,7 @@ function TaiKhoanTable({ data }) {
 
     return (
         <>
-            <div className="min-h-96 text-md">
+            <div className="h-full text-md flex flex-col justify-between overflow-y-auto">
                 <table>
                     <thead className="sticky top-0 bg-white ">
                         <tr className="">
@@ -67,13 +67,13 @@ function TaiKhoanTable({ data }) {
                             <th>Mã NV</th>
                             <th className="text-left">Họ tên NV</th>
                             <th className="text-left">Tên Nhóm</th>
-                            {/* <th className="text-left">Chứng thư số</th> */}
+                            <th className="text-left">Chứng thư số</th>
                             <th className="text-center">Pin</th>
                             <th className="text-left hidden">Khoa/Phong</th>
                             <th className="text-center">...</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="">
                         {dataInPage.length === 0 && <tr><td colSpan={15} className="text-center bg-gray-200 py-1">Không có kết quả</td></tr>}
                         {dataInPage.map((item, index) => (
                             <tr key={index}>
@@ -101,7 +101,7 @@ function TaiKhoanTable({ data }) {
                                 <td>{item.mabs}</td>
                                 <td className="text-left">{item.hoten}</td>
                                 <td className="text-left">{item.tennhom}</td>
-                                {/* <td>{item.chungthuso}</td> */}
+                                <td>{item.chungthuso}</td>
                                 <td className="text-center">{item.pin}</td>
                                 <td className="hidden">{item.makp}</td>
                                 <td>

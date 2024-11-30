@@ -144,7 +144,7 @@ def noitru_hiendien():
     
     result = []
     col_names = ['id', 'mavaovien', 'maql', 'mabn', 'hoten', 'phai', 'ngaysinh',
-                 'namsinh', 'ngayvv', 'ngayvk', 'mabs', 'maicd', 'chandoan', 'madoituong', 'doituong', 'mau_abo', 'mau_rh','benhan',
+                 'namsinh', 'ngayvv', 'ngayvk','makpchuyen','tenkpchuyen', 'mabs', 'maicd', 'chandoan', 'madoituong', 'doituong', 'mau_abo', 'mau_rh','benhan',
                  'sothe','bsnhapkhoa',  'phong', 'giuong']
     stm = f'''
         WITH BED AS (
@@ -153,25 +153,16 @@ def noitru_hiendien():
             B.NAME AS TENPHONG,
             A.NAME AS TENGIUONG,
             ROW_NUMBER() OVER (PARTITION BY A.PID
-          ORDER BY
-            A.ID) AS RN
-          FROM
-            ITTAHCM_BED.DM_GIUONG A
-          INNER JOIN ITTAHCM_BED.DM_PHONG B ON
-            A.PHONG_ID = B.ID
-          WHERE
-            A.PID IS NOT NULL
-          ORDER BY
-            A.PID 
+          ORDER BY A.ID) AS RN
+          FROM ITTAHCM_BED.DM_GIUONG A
+          INNER JOIN ITTAHCM_BED.DM_PHONG B ON A.PHONG_ID = B.ID
+          WHERE A.PID IS NOT NULL
+          ORDER BY A.PID 
           ),
           TMP_BHYT AS (
-          SELECT
-            TO_CHAR(MAQL) AS MAQL ,
-            SOTHE
-          FROM
-            BHYT
-          WHERE
-            SUDUNG = 1 
+          SELECT TO_CHAR(MAQL) AS MAQL, SOTHE
+          FROM BHYT
+          WHERE SUDUNG = 1 
           ),
           TMP_HIENDIEN AS (
           SELECT
@@ -185,6 +176,8 @@ def noitru_hiendien():
             B.NAMSINH,
             A.NGAYVV,
             A.NGAY AS NGAYVK,
+            A.NOICHUYEN AS MAKPCHUYEN,
+            KP.TENKP AS KPCHUYEN,
             NK.MABS,
             NK.MAICD,
             NK.CHANDOAN,
@@ -197,6 +190,7 @@ def noitru_hiendien():
             HIENDIEN A
           INNER JOIN BTDBN B ON
             A.MABN = B.MABN
+          INNER JOIN BTDKP_BV KP ON A.NOICHUYEN = KP.MAKP
           INNER JOIN ICD10 C ON
             A.MAICD = C.CICD10
           INNER JOIN NHAPKHOA NK ON A.ID = NK.ID

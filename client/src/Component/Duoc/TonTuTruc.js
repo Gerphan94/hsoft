@@ -92,12 +92,13 @@ function TonTuTruc({ menuData, selectedMenu, setSelectedMenu, isDetail = false }
                     name: `${item.name} (${item.id})` // Append id to name
                 }));
 
-                setTuTrucList(updatedData); // Set updated data to state
+                setTuTrucList(updatedData);
 
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
+        if (selectedKhoaphong.id === 0) return;
         fetchTuTrucList();
 
         return () => {
@@ -109,8 +110,8 @@ function TonTuTruc({ menuData, selectedMenu, setSelectedMenu, isDetail = false }
     const getData = async () => {
         if (!selectedTuTruc.id) return;
         const fetchUrl = isDetail ?
-            `${apiURL}duoc/tutruc/tontutruc-chitiet/${site}/${selectedTuTruc.id}` :
-            `${apiURL}duoc/tutruc/tontutruc/${site}/${selectedTuTruc.id}`;
+            `${apiURL}duoc/tonkho-tontutruc-chitiet?site=${site}&idtutruc=${selectedTuTruc.id}` :
+            `${apiURL}duoc/tonkho-tontutruc?site=${site}&idtutruc=${selectedTuTruc.id}`;
 
         try {
             const response = await fetch(fetchUrl);

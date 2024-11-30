@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { FaBottleDroplet, FaJar } from "react-icons/fa6";
-import { CiPill } from "react-icons/ci";
+// ---
+import Pagination from "../Common/Pagination";
+import ItemComponent from "./TableIconComponent";
+// --
+import { FaBottleDroplet } from "react-icons/fa6";
 import { TbCircleLetterK } from "react-icons/tb";
-import { WiMoonAltFull, WiMoonAltFirstQuarter, WiMoonAltNew } from "react-icons/wi";
 import { GiPoisonBottle } from "react-icons/gi";
 import { GoReport } from "react-icons/go";
 import { IoMdWarning } from "react-icons/io";
-
-import Pagination from "../Common/Pagination";
-import ItemComponent from "./TableIconComponent";
-
+// --
 function InventoryTableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 25;
     const [totalPage, setTotalPage] = useState(1);
     const [dataInPage, setDataInPage] = useState([]);
-
-    
 
     const formatDateString = (dateString) => {
         if (!dateString || dateString.length !== 6) {
@@ -131,7 +128,6 @@ function InventoryTableDetail({ data, setIsShowModal, setSelectedPharmarId }) {
                                     <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
                                     <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
                                     <td className={`text-right px-1 pr-2 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
-
                                 </tr>
                             ))}
                         </tbody>

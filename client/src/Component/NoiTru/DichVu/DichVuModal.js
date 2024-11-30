@@ -8,23 +8,9 @@ function DichVuModal({ site, setModalShow, selected }) {
     const apiURL = process.env.REACT_APP_API_URL;
     const [chidinhs, setChidinhs] = useState([]);
 
-    // useEffect(() => {
-    //     const fetchNhapKhoa = async () => {
-    //         const fetchUrl = apiURL + "/noi-tru/get-nhap-khoa-of-bn/" + site + "/" + selected.maql;
-    //         console.log(fetchUrl)
-    //         const response = await fetch(fetchUrl);
-    //         const data = await response.json();
-    //         setnhapKhoas(data);
-    //         console.log('----------------------', data);
-    //     }
-    //     fetchNhapKhoa();
-
-    // }, [selected, apiURL, site])
-
-
     const fetchChidinh = async () => {
         try {
-            const fetchUrl = apiURL + "/noitru/get-chidinh-by-idkhoa/" + site + "/" + selected.idkhoa;
+            const fetchUrl = `${apiURL}vienphi//get-v_chidinh-by-idkhoa?site=${site}&idkhoa=${selected.idkhoa}`
             const response = await fetch(fetchUrl);
             const data = await response.json();
 
@@ -45,6 +31,10 @@ function DichVuModal({ site, setModalShow, selected }) {
             console.error('Error fetching data:', error);
         }
     }
+
+    useEffect(() => {
+        fetchChidinh();
+    }, [selected.idkhoa]);
 
     const onClickView = () => {
         fetchChidinh();

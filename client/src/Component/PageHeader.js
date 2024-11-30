@@ -9,7 +9,7 @@ function PageHeader({ title }) {
 
     return (
         <>
-            <div className="w-full shadow-lg border-b text-left flex justify-between items-center select-none">
+            <div className="w-full h-10 shadow-lg border-b text-left flex justify-between items-center select-none">
                 <div className="flex gap-2 px-2">
                     <button
                         className="text-gray-500 hover:text-gray-600"

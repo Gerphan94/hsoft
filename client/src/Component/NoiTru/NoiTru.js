@@ -12,9 +12,10 @@ import DichVuModal from "./DichVu/DichVuModal";
 import MauModal from "./Mau/MauModal";
 import Hiendien from "./HiendienTable";
 import BHYTModal from "./BHYT/BhytModal";
-import TreatmentSheetModal from "./ToDieuTri/ToDieuTrIModal";
+import ToDieuTriModal from "./ToDieuTri/ToDieuTriModal";
 import PhieuCongKhaiModal from "./Emr/PhieuCongKhaiModal";
 import QuanLyGiuongModal from "./QLGiuong/QuanLyGiuongModal";
+import ChiPhiModal from "./ChiPhi/ChiPhiModal";
 
 
 import TuTrucModal from "./TuTruc/TuTrucModal";
@@ -53,6 +54,7 @@ function NoiTru() {
 
     const [showPhieuCongKhai, setShowPhieuCongKhai] = useState(false);
     const [showCabinetModal, setShowCabinetModal] = useState(false);
+    const [showChiPhiModal, setShowChiPhiModal] = useState(false);
 
     // TIỆN ÍCH
     const [showDSPhieuModal, setShowDSPhieuModal] = useState(false);
@@ -197,6 +199,7 @@ function NoiTru() {
                             setShowMedicineModal={setShowMedicineModal}
                             setShowTreatmentSheet={setShowTreatmentSheet}
                             setShowPhieuCongKhai={setShowPhieuCongKhai}
+                            setShowChiPhiModal={setShowChiPhiModal}
                         />
                         <ButtonTienIch
                             setShowCabinetModal={setShowCabinetModal}
@@ -209,17 +212,17 @@ function NoiTru() {
                     </div>
                 </div>
                 <div>
-                <Hiendien
-                    site={site}
-                    data={viewData}
-                    selected={selected}
-                    setSelected={setSelected}
-                />
+                    <Hiendien
+                        site={site}
+                        data={viewData}
+                        selected={selected}
+                        setSelected={setSelected}
+                    />
 
 
-                    </div>
+                </div>
 
-               
+
 
             </div>
 
@@ -253,7 +256,7 @@ function NoiTru() {
                 />}
 
             {showTreatmentSheet &&
-                <TreatmentSheetModal
+                <ToDieuTriModal
                     site={site}
                     selected={selected}
                     setModalShow={setShowTreatmentSheet}
@@ -286,6 +289,13 @@ function NoiTru() {
                     site={site}
                     setShowModal={setShowQLGiuongModal}
                     khoa={selectedKhoa}
+                />}
+
+            {showChiPhiModal &&
+                <ChiPhiModal
+                    site={site}
+                    setShowModal={setShowChiPhiModal}
+                    selected={selected}
                 />}
         </>
     );
