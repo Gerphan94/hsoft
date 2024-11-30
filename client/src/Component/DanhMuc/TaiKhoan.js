@@ -123,10 +123,12 @@ function TaiKhoan() {
                 const userid = item.userid?.toLowerCase() ?? '';
                 const ma = item.mabs?.toLowerCase() ?? '';
                 const hoten = item.hoten?.toLowerCase() ?? '';
+                const chungthu = item.chungthuso?.toLowerCase() ?? '';
                 return String(item.id) === debouncedSearchTerm ||
                     ma.includes(lowerCasedSearchTerm) ||
                     hoten.includes(lowerCasedSearchTerm) ||
-                    userid.includes(lowerCasedSearchTerm);
+                    userid.includes(lowerCasedSearchTerm) ||
+                    chungthu.includes(lowerCasedSearchTerm);
             });
          
             setViewDatas(filteredData);
@@ -178,7 +180,7 @@ function TaiKhoan() {
 
     return (
         <>
-            <div className="">
+            <div className="h-full flex flex-col flex-grow">
                 <div className=' w-full text-md bg-white py-3 z-10'>
                     <div className="flex gap-4 items-center">
                         <div className="flex gap-2">
@@ -239,10 +241,13 @@ function TaiKhoan() {
                     </div>
 
                 </div>
-
+                <div >
                 <TaiKhoanTable
                     data={viewDatas}
                 />
+                </div>
+
+                
             </div>
         </>
     )

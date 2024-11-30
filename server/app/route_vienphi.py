@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, Blueprint
 from flask_cors import CORS
 from datetime import datetime, timedelta
 from .db import get_cursor, schema_now, schema_mutil
-
+import pandas as pd
 vienphi = Blueprint('vienphi', __name__)
 
 @vienphi.route('/vienphi/get-v_chidinh-by-idkhoa', methods=['GET'])
@@ -88,4 +88,63 @@ def get_v_chidinh_by_idkhoa():
       for chidinh in chidinh:
          result.append(dict(zip(col_names, chidinh)))
    return jsonify(result), 200
+   
+@vienphi.route('/vienphi/get-chiphi-dichvu', methods=['GET'])
+def get_chiphi_dichvu():
+   """
+   Chí phí dịch vụ
+   ---
+   tags:
+      - Viện phí
+   parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: idkhoa
+        in: query
+        type: string
+        required: true
+        description: id nhập khoa
+   responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+               type: object
+               properties:
+                  message:
+                  type: string
+                  example: ok
+   """
+   site = request.args.get('site', 'HCM_DEV')
+   idkhoa = request.args.get('idkhoa')
+   cursor = get_cursor(site)
+   result = []
+   
+   stm = f'''
+      SELECT 
+	VCD.ID, VCD.IDCHIDINH, VP.TEN AS TENGIAVP, VP.DVT, VCD.DONGIA, VCD.SOLUONG, VCD.MADOITUONG, VP.BHYT, VCD.TLCHITRA ,
+	LVP.TEN AS TENLOAI, NVP.TEN AS TENNHOM, NVP.IDNHOMBHYT AS IDNHOMBH, NBH.TEN AS TENNHOMBH
+	FROM HSOFTTAMANH1124.V_CHIDINH VCD
+	INNER JOIN V_GIAVP VP ON VCD.MAVP = VP.ID 
+	INNER JOIN V_LOAIVP LVP ON VP.ID_LOAI = LVP.ID
+	INNER JOIN V_NHOMVP NVP ON LVP.ID_NHOM = NVP.MA
+	INNER JOIN V_NHOMBHYT NBH ON NVP.IDNHOMBHYT = NBH.ID 
+	WHERE VCD.IDKHOA = 241125091539788092
+   '''
+   result = []
+   dichvus = cursor.execute(stm).fetchall()
+   df = pd.DataFrame(dichvus, columns=['id', 'idchidinh', 'tengiavp', 'dvt', 'dongia', 'soluong', 'madoituong', 'bhyt', 'tlchitra', 'tenloai', 'tennhom', 'idnhombh', 'tennhombh'])
+   for index, row in df.iterrows():
+      if (row['madoituong'] == 3):
+            continue
+      result.append(dict(zip(['id', 'idchidinh', 'tengiavp', 'dvt', 'dongia', 'soluong', 'madoituong', 'bhyt', 'tlchitra', 'tenloai', 'tennhom', 'idnhombh', 'tennhombh'], row)))
+
+   return jsonify(result), 200
+   
+      
    
