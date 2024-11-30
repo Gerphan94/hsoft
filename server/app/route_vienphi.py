@@ -142,7 +142,10 @@ def get_chiphi_dichvu():
    for index, row in df.iterrows():
       if (row['madoituong'] == 3):
             continue
-      result.append(dict(zip(['id', 'idchidinh', 'tengiavp', 'dvt', 'dongia', 'soluong', 'madoituong', 'bhyt', 'tlchitra', 'tenloai', 'tennhom', 'idnhombh', 'tennhombh'], row)))
+      obj = {}
+      obj = dict(zip(['id', 'idchidinh', 'tengiavp', 'dvt', 'dongia', 'soluong', 'madoituong', 'bhyt', 'tlchitra', 'tenloai', 'tennhom', 'idnhombh', 'tennhombh'], row))
+      
+      result.append(obj)
 
    return jsonify(result), 200
    
