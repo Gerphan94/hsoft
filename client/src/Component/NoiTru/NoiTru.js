@@ -16,7 +16,7 @@ import ToDieuTriModal from "./ToDieuTri/ToDieuTriModal";
 import PhieuCongKhaiModal from "./Emr/PhieuCongKhaiModal";
 import QuanLyGiuongModal from "./QLGiuong/QuanLyGiuongModal";
 import ChiPhiModal from "./ChiPhi/ChiPhiModal";
-
+import NhapXuatKhoaModal from "./NhapXuatKhoa/NhapXuatKhoaModal";
 
 import TuTrucModal from "./TuTruc/TuTrucModal";
 import DanhSachPhieuModal from "./Thuoc/DanhSachPhieuModal";
@@ -55,6 +55,7 @@ function NoiTru() {
     const [showPhieuCongKhai, setShowPhieuCongKhai] = useState(false);
     const [showCabinetModal, setShowCabinetModal] = useState(false);
     const [showChiPhiModal, setShowChiPhiModal] = useState(false);
+    const [showNhapXuatKhoaModal, setShowNhapXuatKhoaModal] = useState(false);
 
     // TIỆN ÍCH
     const [showDSPhieuModal, setShowDSPhieuModal] = useState(false);
@@ -205,6 +206,7 @@ function NoiTru() {
                             setShowCabinetModal={setShowCabinetModal}
                             setShowDSPhieuModal={setShowDSPhieuModal}
                             setShowQLGiuongModal={setShowQLGiuongModal}
+                            setShowNhapXuatKhoaModal={setShowNhapXuatKhoaModal}
 
 
                         />
@@ -295,6 +297,12 @@ function NoiTru() {
                 <ChiPhiModal
                     site={site}
                     setShowModal={setShowChiPhiModal}
+                    selected={selected}
+                />}
+            {showNhapXuatKhoaModal &&
+                <NhapXuatKhoaModal
+                    site={site}
+                    setShowModal={setShowNhapXuatKhoaModal}
                     selected={selected}
                 />}
         </>

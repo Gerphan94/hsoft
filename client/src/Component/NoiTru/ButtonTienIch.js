@@ -7,12 +7,36 @@ import { BiSolidShieldPlus } from "react-icons/bi";
 const ButtonTienIch = ({
     setShowCabinetModal,
     setShowDSPhieuModal,
-    setShowQLGiuongModal
+    setShowQLGiuongModal,
+    setShowNhapXuatKhoaModal
 }) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const dropdownRef = useRef(null);
+
+    const nList = [
+        { id: 'tutruc', name: 'Tủ trực', icon: <BiSolidShieldPlus /> },
+        { id: 'dsphieu', name: 'Danh sách phiếu đã lập', icon: <BiSolidShieldPlus /> },
+        { id: 'qlgiuong', name: 'Quản lý giường', icon: <BiSolidShieldPlus /> },
+        { id: 'nhapxuatkhoa', name: 'Nhập/ Xuất khoa', icon: <BiSolidShieldPlus /> },
+    ]
+
+    const handleClick = (id) => {
+        if (id === 'tutruc') {
+            setShowCabinetModal(true)
+        } else if (id === 'dsphieu') {
+            setShowDSPhieuModal(true)
+        } else if (id === 'qlgiuong') {
+            setShowQLGiuongModal(true)
+        } else if (id === 'nhapxuatkhoa') {
+            setShowNhapXuatKhoaModal(true)
+        }
+        setIsDropdownOpen(!isDropdownOpen);
+
+    }
+
+
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -51,40 +75,18 @@ const ButtonTienIch = ({
                 {isDropdownOpen && (
                     <div className="origin-top-left absolute mt-2 right-0 w-60 max-h-96 shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                            <li>
-                                <button
-                                    className="w-full text-left flex gap-1 items-center px-4 py-2 hover:bg-gray-300 select-none"
-                                    onClick={() => {
-                                        setShowCabinetModal(true);
-                                        setIsDropdownOpen(!isDropdownOpen);
-                                    }}
-                                >
-                                    <BiSolidShieldPlus className='text-green-500' />
-                                    Tủ trực
-                                </button>
-                                <button
-                                    className="w-full text-left flex gap-1 items-center px-4 py-2 hover:bg-gray-300 select-none"
-                                    onClick={() => {
-                                        setShowDSPhieuModal(true);
-                                        setIsDropdownOpen(!isDropdownOpen);
-                                    }}
-                                >
-                                    <BiSolidShieldPlus className='text-green-500' />
-                                    Danh sách phiếu đã lập
-                                </button>
-                                <button
-                                    className="w-full text-left flex gap-1 items-center px-4 py-2 hover:bg-gray-300 select-none"
-                                    onClick={() => {
-                                        setShowQLGiuongModal(true);
-                                        setIsDropdownOpen(!isDropdownOpen);
-                                    }}
-                                >
-                                    <BiSolidShieldPlus className='text-green-500' />
-                                    Quản lý giường
-                                </button>
+                            {nList.map((item, index) => (
+                                <li>
+                                    <button
+                                        className="w-full text-left flex gap-1 items-center px-4 py-2 hover:bg-gray-300 select-none"
+                                        onClick={() => handleClick(item.id)}
+                                    >
+                                        {item.icon}
+                                        {item.name}
+                                    </button>
+                                </li>
+                            ))}
 
-
-                            </li>
 
                         </ul>
                     </div>
