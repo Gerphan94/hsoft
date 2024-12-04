@@ -6,6 +6,15 @@ from .db import get_cursor, schema_now, schema_mutil
 
 noitru = Blueprint('noitru', __name__)
 
+def check_date(date): 
+  # Check date format = YYYYMMDD
+  if len(date) != 8:
+      return False
+  try:
+      datetime.strptime(date, '%Y%m%d')
+      return True
+  except ValueError:
+      return False
 
 @noitru.route('/noitru/dskhoa/<site>/<khu>', methods=['GET'])
 def noitru_dskhoa(site, khu):
@@ -103,6 +112,75 @@ def noitru_quanlygiuong():
   giuongs = cursor.execute(stm).fetchall()
   for giuong in giuongs:
     result.append(dict(zip(col_names, giuong)))
+  return jsonify(result), 200
+
+@noitru.route('/noitru/get-danhsach-nhapkhoa-all', methods=['GET'])
+def noitru_get_danhsach_nhapkhoa_all():
+  """
+    Get Danh sách nhập khoa - all
+    ---
+    tags:
+      - Nội trú
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+      - name: tungay
+        in: query
+        type: string
+        required: true
+        description: Từ ngày (yyyyMMdd)
+      - name: denngay
+        in: query
+        type: string
+        required: true
+        description: Đến ngày (yyyyMMdd)
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+  
+  site = request.args.get('site')
+  tungay = request.args.get('tungay')
+  denngay = request.args.get('denngay')
+  if (check_date(tungay) == False) or (check_date(denngay) == False):
+    return jsonify({'message': 'Ngày không hợp lệ'}), 400
+  # tungay = datetime.strptime(tungay, '%Y%m%d').replace(hour=0, minute=0, second=0, microsecond=0)
+  # denngay = datetime.strptime(denngay, '%Y%m%d')
+  # print(tungay, type(tungay), denngay, type(denngay))
+
+  
+  cursor = get_cursor(site)
+  
+  stm = f'''
+    SELECT TO_CHAR(NK.ID), TO_CHAR(NK.MAQL), NK.MABN , BN.HOTEN, NK.NGAY AS NGAYVAOKHOA,  NK.MAKP , KP.TENKP, NK.MABA , Nk.KHOACHUYEN , KC.TENKP AS TENKHOACHUYEN, NK.CHANDOAN , NK.MAICD, NK.MABS, BS.HOTEN AS TENBS
+    FROM NHAPKHOA NK
+    INNER JOIN BTDBN BN ON NK.MABN = BN.MABN
+    INNER JOIN BTDKP_BV KP ON NK.MAKP = KP.MAKP
+    INNER JOIN BTDKP_BV KC ON NK.KHOACHUYEN = KC.MAKP
+    INNER JOIN DMBS BS ON BS.MA = NK.MABS
+    WHERE TO_DATE(TO_CHAR(NK.NGAY, 'YYYYMMDD'), 'YYYYMMDD') >= TO_DATE({tungay}, 'YYYYMMDD') 
+    AND TO_DATE(TO_CHAR(NK.NGAY, 'YYYYMMDD'), 'YYYYMMDD') <= TO_DATE({denngay}, 'YYYYMMDD')
+  
+  '''
+  print(stm)
+  col_names = ['id', 'maql', 'mabn', 'hoten', 'ngayvaokhoa', 'makp', 'tenkp', 'maba', 'khoachuyen', 'tenkhoachuyen', 
+               'chandoan', 'maicd', 'mabs', 'tenbs']
+  result = []
+  nhapkhoas = cursor.execute(stm).fetchall()
+  for nhapkhoa in nhapkhoas:
+    result.append(dict(zip(col_names, nhapkhoa)))
   return jsonify(result), 200
   
   
