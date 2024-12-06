@@ -30,8 +30,6 @@ def khambenh(site , ngay):
         INNER JOIN HSOFTTAMANH.BTDBN C ON A.MABN  = C.MABN
         INNER JOIN HSOFTTAMANH.DOITUONG D ON A.MADOITUONG = D.MADOITUONG
         LEFT  JOIN {schema}.BENHANPK E ON A.MAVAOVIEN = E.MAVAOVIEN AND A.MAKP = E.MAKP
-        
-        
         WHERE  TO_CHAR(A.NGAY, 'yyyyMMdd') = '{ngay}'
         ORDER BY A.NGAY ASC
     '''

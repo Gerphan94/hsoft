@@ -10,7 +10,7 @@ function DichVuModal({ site, setModalShow, selected }) {
 
     const fetchChidinh = async () => {
         try {
-            const fetchUrl = `${apiURL}vienphi//get-v_chidinh-by-idkhoa?site=${site}&idkhoa=${selected.idkhoa}`
+            const fetchUrl = `${apiURL}vienphi/get-v_chidinh-by-idkhoa?site=${site}&idkhoa=${selected.idkhoa}`
             const response = await fetch(fetchUrl);
             const data = await response.json();
 
@@ -44,16 +44,17 @@ function DichVuModal({ site, setModalShow, selected }) {
         <>
             <div className="fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
                 <div className="relative w-full h-full  mx-auto bg-white">
-                    <div className="h-full flex flex-col justify-between">
+                    <div data-id={selected.idkhoa}  className="h-full flex flex-col justify-between">
                         {/* HEADER */}
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
-                            {'Dịch vụ'} - {selected.idkhoa}
+                            {'Dịch vụ'} - {selected.pid} - {selected.pname}
                         </div>
+                       
                         {/* BODY */}
                         <div className=" h-full p-4 overflow-hidden ">
                             <div className="flex gap-2 items-center">
-                                
-                               
+
+
                             </div>
                             <div className="h-full w-full flex-grow overflow-y-auto pb-10">
                                 {Object.keys(chidinhs).map((date) => (
@@ -67,10 +68,10 @@ function DichVuModal({ site, setModalShow, selected }) {
 
                         </div>
                         {/* FOOTER  */}
-                        <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
+                        <div className="w-full flex gap-4 items-center justify-center px-4 py-3 bg-[#f5f5f5] relative">
                             <button
                                 className="btn btn-view"
-                            onClick={onClickView}
+                                onClick={onClickView}
                             >
                                 Xem
                             </button>

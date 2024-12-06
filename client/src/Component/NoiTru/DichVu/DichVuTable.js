@@ -2,6 +2,7 @@ import React, { } from "react";
 import { SiOxygen } from "react-icons/si";
 import { GiTestTubes } from "react-icons/gi";
 import { MdBloodtype } from "react-icons/md";
+import { MdTypeSpecimen } from "react-icons/md";
 
 function DichvuTable({ data = [] }) {
     return (
@@ -28,6 +29,11 @@ function DichvuTable({ data = [] }) {
                         {data.map((item, index) => (
                             <tr key={item.id} className={`${item.madoituong === 3 ? 'text-orange-500' : ''}`}>
                                 <td>
+                                    <div>
+                                        <button className={``}>
+                                            <MdTypeSpecimen />
+                                        </button>
+                                    </div>
 
                                 </td>
                                 <td className="text-center w-10"><div className=" py-1 text-center">{index + 1}</div></td>
