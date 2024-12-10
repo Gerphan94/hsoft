@@ -7,6 +7,9 @@ from .db import get_cursor, schema_now, schema_mutil
 emr = Blueprint('emr', __name__)
 
 
+
+
+
 @emr.route('/emr/danhmuc-bieumau-emr', methods=['GET'])
 def emr_dm_bieumau_emr():
   """
@@ -36,50 +39,34 @@ def emr_dm_bieumau_emr():
   site = request.args.get('site')
   cursor = get_cursor(site)
   
-  def get_gays():
-    result = []
-    stm = f"SELECT ID, TEN FROM E_DMGAY ORDER BY STT"
-    gays = cursor.execute(stm).fetchall()
-    for gay in gays:
-      obj = dict(zip(['idgay', 'tengay'], gay))
-      result.append(obj)
-    return result
+ 
   
-  def get_bieumaus():
-    result = []
-    stm = f"SELECT ID, MAPHIEU, SLKYSO, GHICHU AS TENBIEUMAU, LOAIPHIEU, TRANGTHAI, CHOPHEPXOA FROM E_DMBIEUMAU WHERE GAYID = '{idgay}'"
-    col_names = ['idbieumau', 'maphieu', 'slkyso', 'tenbieumau', 'loaiphieu', 'trangthai', 'chophepxoa']
-    bieumaus = cursor.execute(stm).fetchall()
-    for bieumau in bieumaus:
-     result.append(dict(zip(col_names, bieumau)))
-    return result
+  
     
-  def get_bieumauky(idbieumau):
-    result = []
-    stm = f'''
-        SELECT A.STT, A.THUTUKY,A.GHICHU , A.ANCHOR , A.DORONG , A.CHIEUCAO , A.LECHTREN , A.LECHTRAI  ,  B.TEN AS VAITRO, C.TEN AS LOAIKY
-        FROM E_DMBIEUMAUKY A
-        LEFT JOIN E_DMVAITRO B ON A.VAITRO = B.ID
-        INNER JOIN E_DMLOAIKY C ON A.LOAI = C.ID 
-        WHERE BIEUMAUID = {idbieumau}
-      '''
-    col_names = ['stt', 'thutuky', 'ghichu', 'anchor', 'dorong', 'chieucao', 'lechtren', 'lechtrai', 'vaitro', 'loai']
-    kys = cursor.execute(stm).fetchall()
-    for ky in kys:
-      obj = dict(zip(col_names, ky))
-      result.append(obj)
-    return result
+  
   
   result = []
-  gays = get_gays()
-  for gay in gays:
-    idgay = gay['idgay']
-    bieumaus = get_bieumaus()
-    for bieumau in bieumaus:
-      idbieumau = bieumau['idbieumau']
-      bieumau['kys'] = get_bieumauky(idbieumau)
-    gay['bieumaus'] = bieumaus
-    result.append(gay)
+  
+  stm = f'''
+    SELECT
+      B.ID AS IDGAY,
+      B.TEN AS TENGAY,
+      A.ID AS IDBIEUMAU,
+      A.MAPHIEU,
+      A.GHICHU AS TENMAU,
+      A.STT,
+      A.SLKYSO ,
+      A.LOAIPHIEU ,
+      A.CHOPHEPXOA
+    FROM E_DMBIEUMAU A
+    INNER JOIN E_DMGAY B ON A.GAYID = B.ID
+    ORDER BY A.GAYID, A.ID
+  '''
+  col_names = ['idgay', 'tengay', 'idbieumau', 'maphieu', 'tenmau', 'stt', 'slkyso', 'loaiphieu', 'chophepxoa']
+  bieumau = cursor.execute(stm).fetchall()
+  for bieumau in bieumau:
+      result.append(dict(zip(col_names, bieumau)))
+  
 
   return jsonify(result), 200
   

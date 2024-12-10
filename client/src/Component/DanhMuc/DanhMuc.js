@@ -4,7 +4,7 @@ import TaiKhoan from "./TaiKhoan";
 import GiaVP from "./GiaVP";
 import PhongGiuong from "./PhongGiuong";
 import DinhDuong from "./DinhDuong";
-import BieuMauEMR from "./BieuMauEMR";
+import BieuMauEMR from "./BieuMauEMR/BieuMauEMR";
 
 import { FcManager, FcCurrencyExchange, FcConferenceCall } from "react-icons/fc";
 import { IoBed } from "react-icons/io5";
