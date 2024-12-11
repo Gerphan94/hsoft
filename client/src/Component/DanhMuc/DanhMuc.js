@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import TaiKhoan from "./TaiKhoan";
+import TaiKhoan from "./TaiKhoan/TaiKhoan";
 import GiaVP from "./GiaVP";
 import PhongGiuong from "./PhongGiuong";
 import DinhDuong from "./DinhDuong";
