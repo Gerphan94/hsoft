@@ -12,12 +12,15 @@ function NhapXuatKhoaModal({ setShowModal, selected }) {
     const { site, area } = useAppContext();
 
     const [selectedTab, setSelectedTab] = useState(1);
-
-
     const [title, setTitle] = useState('Danh sách nhập khoa');
 
     const [khoas, setKhoas] = useState([]);
+    const timeTypes = [{ id:0, name: '1 Ngày' }, { id: 1, name: '3 Ngày' }, { id: 2, name: '1 Tuần' }, { id: 3, name: '1 Tháng' }];
+
+
     const [selectedKhoa, setSelectedKhoa] = useState({ id: 0, name: '' });
+    const [selectedTimeType, setSelectedTimeType] = useState({ id: 0, name: '1 Ngày' });
+
     const [nhapKhoaData, setNhapKhoaData] = useState([]);
 
     const [fromDate, setFromDate] = useState(new Date());
@@ -43,8 +46,27 @@ function NhapXuatKhoaModal({ setShowModal, selected }) {
         if (fromDate > toDate) {
             setToDate(fromDate);
         }
-
     }, [fromDate])
+
+    useEffect(() => {
+        if (selectedTimeType.id === 0) {
+            setFromDate(new Date());
+            setToDate(new Date());
+        } else if (selectedTimeType.id === 1) {
+            setToDate(new Date());
+            setFromDate(new Date());
+            setFromDate(moment(new Date()).subtract(3, 'days').toDate());
+        } else if (selectedTimeType.id === 2) {
+            setToDate(new Date());
+            setFromDate(new Date());
+            setFromDate(moment(new Date()).subtract(7, 'days').toDate());
+        } else if (selectedTimeType.id === 3) {
+            setToDate(new Date());
+            setFromDate(new Date());
+            setFromDate(moment(new Date()).subtract(1, 'months').toDate());
+        }
+
+    },[selectedTimeType.id]);
 
     const handleClickTab = (tab) => {
         setSelectedTab(tab);
@@ -75,8 +97,6 @@ function NhapXuatKhoaModal({ setShowModal, selected }) {
         }
     }
 
-
-
     return (
         <>
             <div className="fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
@@ -88,7 +108,7 @@ function NhapXuatKhoaModal({ setShowModal, selected }) {
                         </div>
                         {/* BODY */}
                         <div className=" h-full p-4 overflow-hidden ">
-                            <div className="flex gap-10 items-center">
+                            <div className="flex gap-10 items-center pb-4">
                                 <div className="flex">
                                     <button
                                         className={`px-2 py-1 border ${selectedTab === 1 ? 'bg-[#9BB0C1]' : ''}`}
@@ -101,7 +121,14 @@ function NhapXuatKhoaModal({ setShowModal, selected }) {
                                     >Xuất Khoa</button>
                                 </div>
 
-                                <div className="flex gap-4">
+                                <div className="flex gap-4 items-center">
+                                    <div className="w-32">
+                                        <Dropdown
+                                            data={timeTypes}
+                                            selectedOption={selectedTimeType}
+                                            setSelectedOption={setSelectedTimeType}
+                                         />
+                                    </div>
                                     <div className="">
                                         <label className="">Từ ngày:</label>
                                         <DatePicker
@@ -149,7 +176,7 @@ function NhapXuatKhoaModal({ setShowModal, selected }) {
                                 </div>
 
                             </div>
-                            <div className="h-full w-full flex-grow overflow-y-auto pb-10 py-4">
+                            <div className="h-full w-full flex-grow overflow-y-auto pb-10 ">
                                 {selectedTab === 1 && <NhapKhoaTable data={nhapKhoaData} />}
 
 

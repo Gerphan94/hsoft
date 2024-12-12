@@ -164,19 +164,24 @@ def noitru_get_danhsach_nhapkhoa_all():
   cursor = get_cursor(site)
   
   stm = f'''
-    SELECT TO_CHAR(NK.ID), TO_CHAR(NK.MAQL), NK.MABN , BN.HOTEN, NK.NGAY AS NGAYVAOKHOA,  NK.MAKP , KP.TENKP, NK.MABA , Nk.KHOACHUYEN , KC.TENKP AS TENKHOACHUYEN, NK.CHANDOAN , NK.MAICD, NK.MABS, BS.HOTEN AS TENBS
+    SELECT TO_CHAR(NK.ID) AS ID, TO_CHAR(NK.MAQL) AS MAQL, NK.MABN , BN.HOTEN, DT.NGAY AS NGAYVAOVIEN, NK.NGAY AS NGAYVAOKHOA,
+    NK.MAKP , KP.TENKP, NK.MABA , Nk.KHOACHUYEN , KC.TENKP AS TENKHOACHUYEN, NK.CHANDOAN , NK.MAICD, NK.MABS, BS.HOTEN AS TENBS, KQ.TEN AS XUTRI
     FROM NHAPKHOA NK
     INNER JOIN BTDBN BN ON NK.MABN = BN.MABN
     INNER JOIN BTDKP_BV KP ON NK.MAKP = KP.MAKP
     INNER JOIN BTDKP_BV KC ON NK.KHOACHUYEN = KC.MAKP
     INNER JOIN DMBS BS ON BS.MA = NK.MABS
+    INNER JOIN BENHANDT DT ON DT.MAQL = NK.MAQL 
+    LEFT JOIN XUATKHOA XK ON NK.ID = XK.ID
+    LEFT JOIN TTXK  KQ ON XK.KETQUA = KQ.MA 
     WHERE TO_DATE(TO_CHAR(NK.NGAY, 'YYYYMMDD'), 'YYYYMMDD') >= TO_DATE({tungay}, 'YYYYMMDD') 
     AND TO_DATE(TO_CHAR(NK.NGAY, 'YYYYMMDD'), 'YYYYMMDD') <= TO_DATE({denngay}, 'YYYYMMDD')
+    ORDER BY NK.NGAY DESC
   
   '''
   print(stm)
-  col_names = ['id', 'maql', 'mabn', 'hoten', 'ngayvaokhoa', 'makp', 'tenkp', 'maba', 'khoachuyen', 'tenkhoachuyen', 
-               'chandoan', 'maicd', 'mabs', 'tenbs']
+  col_names = ['id', 'maql', 'mabn', 'hoten','ngayvaovien', 'ngayvaokhoa', 'makp', 'tenkp', 'maba', 'khoachuyen', 'tenkhoachuyen', 
+               'chandoan', 'maicd', 'mabs', 'tenbs', 'xutri']
   result = []
   nhapkhoas = cursor.execute(stm).fetchall()
   for nhapkhoa in nhapkhoas:

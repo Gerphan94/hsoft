@@ -34,14 +34,9 @@ def benhnhan_get_random_benhnhan(site):
     random_year = random.choice(year_ar)
     cursor = get_cursor(site)
     stm = f'''
-    
-    
-        SELECT
-            A.MABN, A.HOTEN
-        FROM
-            BTDBN A
-        INNER JOIN DIENTHOAI B ON
-            A.MABN = B.MABN
+        SELECT A.MABN, A.HOTEN
+        FROM BTDBN A
+        INNER JOIN DIENTHOAI B ON A.MABN = B.MABN
         WHERE
             A.MABN LIKE '{random_year}%'
             AND LENGTH(B.DIDONG) > 9
