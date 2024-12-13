@@ -245,6 +245,7 @@ function TaiKhoan() {
                 </div>
                 <div >
                     <TaiKhoanTable
+                        site={site}
                         data={viewDatas}
                     />
                 </div>

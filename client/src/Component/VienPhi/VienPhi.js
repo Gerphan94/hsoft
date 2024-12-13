@@ -5,9 +5,10 @@ function VienPhi() {
     return (
         <>
 
-            <PageHeader title="Viện phí" >
-                <button>111</button>
-            </PageHeader>
+            <PageHeader title="Viện phí" />
+            <div className="flex gap-10">
+
+            </div>
 
         </>
     )

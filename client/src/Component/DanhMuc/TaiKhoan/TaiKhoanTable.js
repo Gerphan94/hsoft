@@ -7,8 +7,9 @@ import { SuccessAlert } from "../../Common/Alert";
 
 import TaiKhoanKhoaPhongModal from "../Modal/TaiKhoanKhoaPhongModal";
 import ChangeNhanVienModal from "./ChangeNhanVienModal";
+import PhanQuyenModal from "./PhanQuyenModal";
 
-function TaiKhoanTable({ data }) {
+function TaiKhoanTable({ site, data }) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(20);
@@ -22,6 +23,7 @@ function TaiKhoanTable({ data }) {
     const [khoaPhongData, setKhoaPhongData] = useState('');
 
     const [showChangeNhanVienModal, setShowChangeNhanVienModal] = useState(false);
+    const [showPhanQuyenModal, setShowPhanQuyenModal] = useState(false);
 
 
     const constDataInPage = (iPage, iData) => {
@@ -63,6 +65,11 @@ function TaiKhoanTable({ data }) {
     const handleClickMaNV = (accId, nvId) => {
         setShowChangeNhanVienModal(true);
     }
+
+    const handleClickPQ = (accId) => {
+        setShowPhanQuyenModal(true);
+    }
+
 
     return (
         <>
@@ -109,10 +116,10 @@ function TaiKhoanTable({ data }) {
                                         {item.tentaikhoan}
                                     </div>
                                 </td>
-                                <td><button 
-                                className="hover:underline hover:text-blue-600"
-                                onClick={() => handleClickMaNV(item.id, item.manv)}
-                                 >
+                                <td><button
+                                    className="hover:underline hover:text-blue-600"
+                                    onClick={() => handleClickMaNV(item.id, item.manv)}
+                                >
                                     {item.mabs}
                                 </button></td>
                                 <td className="text-left">{item.hoten}</td>
@@ -126,6 +133,10 @@ function TaiKhoanTable({ data }) {
                                             <FaGrip />
                                         </button>
                                         {item.khoakyrv === 1 && <span><FcSignature /></span>}
+                                        <button
+                                            onClick={() => handleClickPQ(item.id)}
+                                        >
+                                            PQ</button>
                                     </div>
                                 </td>
                             </tr>
@@ -160,9 +171,14 @@ function TaiKhoanTable({ data }) {
 
                 />}
 
-{showChangeNhanVienModal &&
+            {showChangeNhanVienModal &&
                 <ChangeNhanVienModal
                     setModalShow={setShowChangeNhanVienModal} />}
+
+            {showPhanQuyenModal &&
+                <PhanQuyenModal
+                    site={site}
+                    setModalShow={setShowPhanQuyenModal} />}
         </>
     )
 }

@@ -582,5 +582,58 @@ def dinhduong_chedoan():
   for chedoan in chedoans:
     result.append(dict(zip(col_names, chedoan)))
   return jsonify(result), 200
+
+
+@dm.route('/danhmuc/hsoft-roles', methods=['GET'])
+def hsoft_roles():
+  """
+    Danh mục quyền
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+  """
+  site = request.args.get('site')
+  cursor = get_cursor(site)
+  
+  def get_child(parent_id):
+    array = []
+    stm = f"SELECT ID, TEN, ID_GOC, STT FROM M_MENUITEM WHERE ID_GOC = '{parent_id}' ORDER BY ID"
+    datas = cursor.execute(stm).fetchall()
+    print(parent_id, datas)
+    for data in datas:
+      obj = dict(zip(['id', 'ten', 'id_goc', 'stt'], data))
+      obj['children'] = get_child(data[0])
+      array.append(obj)
+    return array
+  
+  result = []
+  
+  stm = "SELECT ID, TEN, ID_GOC, STT FROM M_MENUITEM WHERE ID_GOC = -1 ORDER BY ID"
+  
+  datas = cursor.execute(stm).fetchall()
+  for data in datas:
+    obj = dict(zip(['id', 'ten', 'id_goc', 'stt'], data))
+    obj['children'] = get_child(data[0])
+    result.append(obj)
+  return jsonify(result), 200
+ 
   
 
