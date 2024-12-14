@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import TaiKhoan from "./TaiKhoan";
+import TaiKhoan from "./TaiKhoan/TaiKhoan";
 import GiaVP from "./GiaVP";
 import PhongGiuong from "./PhongGiuong";
 import DinhDuong from "./DinhDuong";
+import BieuMauEMR from "./BieuMauEMR/BieuMauEMR";
 
 import { FcManager, FcCurrencyExchange, FcConferenceCall } from "react-icons/fc";
 import { IoBed } from "react-icons/io5";
@@ -22,7 +23,9 @@ function DanhMuc() {
         { id: 'nhanvien', name: 'Nhân viên', icon: <FcConferenceCall /> },
         { id: 'giavp', name: 'Giá viện phí', icon: <FcCurrencyExchange /> },
         { id: 'dinhduong', name: 'Dinh dưỡng', icon: <FcCurrencyExchange /> },
-        { id: 'phonggiuong', name: 'Phòng/Giường', icon: <IoBed className="text-blue-600" /> }
+        { id: 'phonggiuong', name: 'Phòng/Giường', icon: <IoBed className="text-blue-600" /> },  
+        { id: 'bieumauemr', name: 'Biểu mẫu EMR', icon: <FcCurrencyExchange /> },
+
     ], []);
 
     return (
@@ -44,6 +47,7 @@ function DanhMuc() {
                 {selectedMenu && selectedMenu.id === 'giavp' && <GiaVP site={site} />}
                 {selectedMenu && selectedMenu.id === 'phonggiuong' && <PhongGiuong />}
                 {selectedMenu && selectedMenu.id === 'dinhduong' && <DinhDuong />}
+                {selectedMenu && selectedMenu.id === 'bieumauemr' && <BieuMauEMR />}
 
                 </div>
               

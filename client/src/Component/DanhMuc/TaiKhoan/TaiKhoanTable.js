@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import Pagination from "../Common/Pagination";
+import Pagination from "../../Common/Pagination";
 import { FaGrip } from "react-icons/fa6";
 import { FcSignature } from "react-icons/fc";
 import { VscCopy } from "react-icons/vsc";
-import { SuccessAlert } from "../Common/Alert";
+import { SuccessAlert } from "../../Common/Alert";
 
-import TaiKhoanKhoaPhongModal from "./Modal/TaiKhoanKhoaPhongModal";
-function TaiKhoanTable({ data }) {
+import TaiKhoanKhoaPhongModal from "../Modal/TaiKhoanKhoaPhongModal";
+import ChangeNhanVienModal from "./ChangeNhanVienModal";
+import PhanQuyenModal from "./PhanQuyenModal";
+
+function TaiKhoanTable({ site, data }) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(20);
@@ -19,11 +22,17 @@ function TaiKhoanTable({ data }) {
     const [showKPModal, setShowKPModal] = useState(false);
     const [khoaPhongData, setKhoaPhongData] = useState('');
 
+    const [showChangeNhanVienModal, setShowChangeNhanVienModal] = useState(false);
+    const [showPhanQuyenModal, setShowPhanQuyenModal] = useState(false);
+
+
     const constDataInPage = (iPage, iData) => {
         const indexOfLastItem = iPage * itemsPerPage;
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
         return iData.slice(indexOfFirstItem, indexOfLastItem);
     }
+
+
 
     useEffect(() => {
         setTotalPage(Math.ceil(data.length / itemsPerPage));
@@ -52,6 +61,15 @@ function TaiKhoanTable({ data }) {
         setKhoaPhongData(kp);
         setShowKPModal(true);
     }
+
+    const handleClickMaNV = (accId, nvId) => {
+        setShowChangeNhanVienModal(true);
+    }
+
+    const handleClickPQ = (accId) => {
+        setShowPhanQuyenModal(true);
+    }
+
 
     return (
         <>
@@ -98,7 +116,12 @@ function TaiKhoanTable({ data }) {
                                         {item.tentaikhoan}
                                     </div>
                                 </td>
-                                <td>{item.mabs}</td>
+                                <td><button
+                                    className="hover:underline hover:text-blue-600"
+                                    onClick={() => handleClickMaNV(item.id, item.manv)}
+                                >
+                                    {item.mabs}
+                                </button></td>
                                 <td className="text-left">{item.hoten}</td>
                                 <td className="text-left">{item.tennhom}</td>
                                 <td>{item.chungthuso}</td>
@@ -110,6 +133,10 @@ function TaiKhoanTable({ data }) {
                                             <FaGrip />
                                         </button>
                                         {item.khoakyrv === 1 && <span><FcSignature /></span>}
+                                        <button
+                                            onClick={() => handleClickPQ(item.id)}
+                                        >
+                                            PQ</button>
                                     </div>
                                 </td>
                             </tr>
@@ -136,13 +163,22 @@ function TaiKhoanTable({ data }) {
 
             }
 
-            {showKPModal && 
-            <TaiKhoanKhoaPhongModal
-                data = {khoaPhongData}
-                setShowKPModal = {setShowKPModal}
-                kpstring={khoaPhongData}
-                
-            />}
+            {showKPModal &&
+                <TaiKhoanKhoaPhongModal
+                    data={khoaPhongData}
+                    setShowKPModal={setShowKPModal}
+                    kpstring={khoaPhongData}
+
+                />}
+
+            {showChangeNhanVienModal &&
+                <ChangeNhanVienModal
+                    setModalShow={setShowChangeNhanVienModal} />}
+
+            {showPhanQuyenModal &&
+                <PhanQuyenModal
+                    site={site}
+                    setModalShow={setShowPhanQuyenModal} />}
         </>
     )
 }

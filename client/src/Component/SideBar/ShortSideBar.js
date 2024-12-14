@@ -25,7 +25,7 @@ function ShortSideBar({ data, isShortSideBar, setIsShortSideBar, site }) {
                 </div>
 
                 {showTooltip && (
-                    <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-5 px-3 py-2 bg-gray-800 text-white rounded text-sm z-50">
+                    <div className="absolute left-12 top-1/2 transform -translate-y-3/4 ml-2 px-2 py-1 bg-[#031C30] text-white rounded text-sm z-50 truncate">
                         {text}
                     </div>
                 )}

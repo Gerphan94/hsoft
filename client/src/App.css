@@ -51,13 +51,25 @@
   
 }
 
+.btn-save {
+  color: #508D69;
+  border: 1px solid #508D69;
+}
+
+.btn-save:hover {
+  background-color: #508D69;
+  color: white;
+  border-color: transparent;
+}
+
+
 .btn-view {
   color: #4299e1;
   border: 1px solid #4299e1;
 }
 
 .btn-view:hover {
-  background-color: #4299e1; /* bg-blue-500 */
+  background-color: #4299e1;
   color: white;
   border-color: transparent;
 }

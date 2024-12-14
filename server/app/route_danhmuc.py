@@ -289,6 +289,53 @@ def get_nhom_nhanvien(site):
     results = cursor.execute(query).fetchall()
     nhom_nhan_vien_list = [{"id": row[0], "name": row[1]} for row in results]
     return jsonify(nhom_nhan_vien_list), 200
+  
+@dm.route("/danhmuc/nhanvien/summarires", methods=["GET"])
+def get_nhanvien():
+  """
+    Danh mục Nhân viên
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: Site (HCM_DEV, HN_DEV,...)
+        default: HCM_DEV
+      - name: area
+        in: query
+        type: number
+        required: true
+        description: Quận Tân Bình, Quận 8, Quận 7
+        default: 1
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+
+  site = request.args.get('site', 'HCM_DEV')
+  khu = request.args.get('area', 1)
+ 
+  
+  cursor = get_cursor(site)
+  
+  stm = f"SELECT MA , HOTEN  FROM DMBS WHERE NHOM <> 9"
+
+  
+  
+  
+  result = []
+  return jsonify(result), 200
 
 @dm.route('/danhmuc/taikhoan-hsoft', methods=['GET'])
 def danhmuc_taikhoan():
@@ -535,5 +582,57 @@ def dinhduong_chedoan():
   for chedoan in chedoans:
     result.append(dict(zip(col_names, chedoan)))
   return jsonify(result), 200
+
+
+@dm.route('/danhmuc/hsoft-roles', methods=['GET'])
+def hsoft_roles():
+  """
+    Danh mục quyền
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: The site identifier
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+  """
+  site = request.args.get('site')
+  cursor = get_cursor(site)
+  
+  def get_child(parent_id):
+    array = []
+    stm = f"SELECT ID, TEN, ID_GOC, STT FROM M_MENUITEM WHERE ID_GOC = '{parent_id}' ORDER BY ID"
+    datas = cursor.execute(stm).fetchall()
+    for data in datas:
+      obj = dict(zip(['id', 'ten', 'id_goc', 'stt'], data))
+      obj['children'] = get_child(data[0])
+      array.append(obj)
+    return array
+  
+  result = []
+  
+  stm = "SELECT ID, TEN, ID_GOC, STT FROM M_MENUITEM WHERE ID_GOC = -1 ORDER BY ID"
+  
+  datas = cursor.execute(stm).fetchall()
+  for data in datas:
+    obj = dict(zip(['id', 'ten', 'id_goc', 'stt'], data))
+    obj['children'] = get_child(data[0])
+    result.append(obj)
+  return jsonify(result), 200
+ 
   
 

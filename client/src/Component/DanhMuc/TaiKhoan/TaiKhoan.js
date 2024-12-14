@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { FaEye } from "react-icons/fa";
 
-import Dropdown from "../Common/Dropdown";
-import SearchBar from "../Common/SearchBar";
-import Filter from "./Filter";
+import Dropdown from "../../Common/Dropdown";
+import SearchBar from "../../Common/SearchBar";
+import Filter from "../Filter";
 import TaiKhoanTable from "./TaiKhoanTable";
 
-import { useAppContext } from "../Store/AppContext";
+import { useAppContext } from "../../Store/AppContext";
 
 function TaiKhoan() {
 
@@ -42,7 +42,7 @@ function TaiKhoan() {
 
     const fetchDSKhoa = async () => {
         if (site === '') return;
-       
+
         const kpsURL = `${apiURL}noitru/dskhoa/${site}/${area}`;
         try {
             const response = await fetch(kpsURL);
@@ -80,7 +80,7 @@ function TaiKhoan() {
         fetchData();
         setData([]);
         setViewDatas([]);
-       
+
 
     }, [site]);
 
@@ -116,7 +116,7 @@ function TaiKhoan() {
     useEffect(() => {
         if (debouncedSearchTerm === '') {
             setViewDatas(data);
-           
+
         } else {
             const lowerCasedSearchTerm = debouncedSearchTerm.toLowerCase();
             const filteredData = data.filter(item => {
@@ -130,12 +130,12 @@ function TaiKhoan() {
                     userid.includes(lowerCasedSearchTerm) ||
                     chungthu.includes(lowerCasedSearchTerm);
             });
-         
+
             setViewDatas(filteredData);
         }
     }, [debouncedSearchTerm]);
 
-    
+
     const handleFilter = () => {
         setSearchTerm('');
         const filterData = data.filter((item) => {
@@ -176,6 +176,8 @@ function TaiKhoan() {
         const filterData = filter(data);
         setViewDatas(filterData);
     }
+
+   
 
 
     return (
@@ -242,13 +244,16 @@ function TaiKhoan() {
 
                 </div>
                 <div >
-                <TaiKhoanTable
-                    data={viewDatas}
-                />
+                    <TaiKhoanTable
+                        site={site}
+                        data={viewDatas}
+                    />
                 </div>
 
-                
+
             </div>
+
+           
         </>
     )
 
