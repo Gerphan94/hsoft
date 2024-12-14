@@ -16,6 +16,8 @@ function BenhNhan() {
 
     const [type, setType] = useState(0);
 
+    const [selectedPid, setSelectedPid] = useState('');
+
 
 
 
@@ -55,7 +57,12 @@ function BenhNhan() {
                 </div>
                 <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 p-20 gap-10">
                     {persons.map((person) => (
-                        <BenhNhanComponent person={person} />
+                        <BenhNhanComponent 
+                        person={person}
+                        selectedPid={selectedPid}
+                        setSelectedPid={setSelectedPid}
+                        
+                        />
                     ))}
 
                 </div>

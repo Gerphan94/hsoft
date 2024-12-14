@@ -617,7 +617,6 @@ def hsoft_roles():
     array = []
     stm = f"SELECT ID, TEN, ID_GOC, STT FROM M_MENUITEM WHERE ID_GOC = '{parent_id}' ORDER BY ID"
     datas = cursor.execute(stm).fetchall()
-    print(parent_id, datas)
     for data in datas:
       obj = dict(zip(['id', 'ten', 'id_goc', 'stt'], data))
       obj['children'] = get_child(data[0])

@@ -1,26 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../Store/AppContext";
 
 function PhanQuyenModal({ site, setModalShow }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
 
-    useEffect(() => {
-        const fetch = async () => {
-            
-            try {
-                const fetchURL = `${apiURL}benhnhan/get-random-benhnhan?site=${site}`
-                console.log('fetchURL', fetchURL)
-                const response = await fetch(fetchURL);
-                const data = await response.json();
-                console.log('data', data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
+    const [data, setData] = useState([]);
 
+
+    const fetchPhanQuyenList = async () => {
+        try {
+            const fetchURL = `${apiURL}danhmuc/hsoft-roles?site=${site}`
+            const response = await fetch(fetchURL);
+            const data = await response.json();
+            setData(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-        fetch();
 
+    }
+
+    useEffect(() => {
+        fetchPhanQuyenList();
     },[site])
 
     const title = 'Phân quyền';
@@ -37,7 +38,15 @@ function PhanQuyenModal({ site, setModalShow }) {
 
                         {/* BODY */}
                         <div className="min-h-40">
+                            {data.map((item, index) => (
+                                <div key={item.id}>
+                                    <div>{item.ten}</div>
+
+
+                                    </div>
+                            ))}
                         </div>
+
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
                             <button
