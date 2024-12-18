@@ -1,9 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useAppContext } from "../../Store/AppContext";
+import Dropdown from "../../Common/Dropdown";
 
 function ChangeNhanVienModal({ setModalShow }) {
 
 
     const title = 'Nhân viên';
+
+    // danhmuc/nhanvien/summarires
+
+    const apiURL = process.env.REACT_APP_API_URL;
+    const { site, area } = useAppContext();
+
+    const [data, setData] = useState([]);
+    const [selectedNv, setSelectedNv] = useState({ id: 0, name: '' });
+
+    const fetNhanvienList = async () => {
+        try {
+
+            const fetchURL = `${apiURL}danhmuc/nhanvien/summaries?site=${site}&area=${area}`;
+            console.log('fetchURL', fetchURL)
+            const response = await fetch(fetchURL);
+            const data = await response.json();
+            console.log('data', data)
+            setData(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    useEffect(() => {
+        fetNhanvienList();
+    }, []);
+
+
 
     return (
         <>
@@ -16,7 +46,21 @@ function ChangeNhanVienModal({ setModalShow }) {
                         </div>
 
                         {/* BODY */}
-                        <div className="min-h-40">
+                        <div className="min-h-40 p-4">
+                            <div className="flex gap-3 items-center">
+                                <div>Nhân viên</div>
+                                <div className="w-64">
+                                <Dropdown
+                                data={data}
+                                setSelectedOption={setSelectedNv}
+                                selectedOption={selectedNv}
+                                searchable
+                            />
+                                </div>
+                            
+
+                            </div>
+                           
                         </div>
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">

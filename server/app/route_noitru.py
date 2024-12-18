@@ -165,7 +165,7 @@ def noitru_get_danhsach_nhapkhoa_all():
   
   stm = f'''
     SELECT TO_CHAR(NK.ID) AS ID, TO_CHAR(NK.MAQL) AS MAQL, NK.MABN , BN.HOTEN, DT.NGAY AS NGAYVAOVIEN, NK.NGAY AS NGAYVAOKHOA,
-    NK.MAKP , KP.TENKP, NK.MABA , Nk.KHOACHUYEN , KC.TENKP AS TENKHOACHUYEN, NK.CHANDOAN , NK.MAICD, NK.MABS, BS.HOTEN AS TENBS, KQ.TEN AS XUTRI
+    NK.MAKP , KP.TENKP, NK.MABA , Nk.KHOACHUYEN , KC.TENKP AS TENKHOACHUYEN, NK.CHANDOAN , NK.MAICD, NK.MABS, BS.HOTEN AS TENBS, TTXK.TEN AS XUTRI
     FROM NHAPKHOA NK
     INNER JOIN BTDBN BN ON NK.MABN = BN.MABN
     INNER JOIN BTDKP_BV KP ON NK.MAKP = KP.MAKP
@@ -173,7 +173,7 @@ def noitru_get_danhsach_nhapkhoa_all():
     INNER JOIN DMBS BS ON BS.MA = NK.MABS
     INNER JOIN BENHANDT DT ON DT.MAQL = NK.MAQL 
     LEFT JOIN XUATKHOA XK ON NK.ID = XK.ID
-    LEFT JOIN TTXK  KQ ON XK.KETQUA = KQ.MA 
+    LEFT JOIN TTXK ON XK.TTLUCRK = TTXK.MA 
     WHERE TO_DATE(TO_CHAR(NK.NGAY, 'YYYYMMDD'), 'YYYYMMDD') >= TO_DATE({tungay}, 'YYYYMMDD') 
     AND TO_DATE(TO_CHAR(NK.NGAY, 'YYYYMMDD'), 'YYYYMMDD') <= TO_DATE({denngay}, 'YYYYMMDD')
     ORDER BY NK.NGAY DESC
@@ -232,12 +232,13 @@ def noitru_get_danhsach_xuatkhoa_all():
     return jsonify({'message': 'Ngày không hợp lệ'}), 400
  
   cursor = get_cursor(site)
-  col_names = ['id', 'mabn', 'hoten', 'ngayvv', 'ngayvk', 'makp', 'tenkp', 'ketqua', 'xutrixk', 'chandoan', 'maicd', 'mabs','bsxuatkhoa']
-  # Assuming you're using a DB-API like psycopg2, cx_Oracle, or sqlite3
+  col_names = ['id', 'mabn', 'hoten', 'ngayvv', 'ngayvk', 'makp', 'tenkp', 'ketqua', 'xutrixk', 'chandoan', 
+               'maicd', 'mabs','bsxuatkhoa', 'ngayxk']
+  
   query = """
   SELECT TO_CHAR(XK.ID) AS ID, BN.MABN, BN.HOTEN, BA.NGAY AS NGAYVV, Nk.NGAY AS NGAYVK, NK.MAKP, KP.TENKP, 
         KQ.TEN AS KETQUA, TTXK.TEN AS XUTRIXK, Xk.CHANDOAN, XK.MAICD, XK.MABS, 
-        DMBS.HOTEN AS BSXUATKHOA
+        DMBS.HOTEN AS BSXUATKHOA, XK.NGAY AS NGAYXK
   FROM XUATKHOA XK
   INNER JOIN KETQUA KQ ON XK.KETQUA = KQ.MA
   INNER JOIN TTXK ON XK.TTLUCRK = TTXK.MA

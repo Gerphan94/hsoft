@@ -142,7 +142,7 @@ function Hiendien({ data, selected, setSelected }) {
                                     <td><div className="text-left">{ele.bsnhapkhoa}</div></td>
                                     <td><div className="truncate text-left">{`${ele.chandoan} (${ele.maicd})`} </div></td>
                                     <td><div className="">{songaydieutri(ele.ngayvk)}</div></td>
-                                    <td><div className="text-left">{ele.benhan}</div></td>
+                                    <td><div className="text-left truncate">{ele.benhan}</div></td>
                                     <td><div className=""></div></td>
 
                                 </tr>))}

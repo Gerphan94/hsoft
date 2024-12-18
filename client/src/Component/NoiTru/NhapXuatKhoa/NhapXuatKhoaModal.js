@@ -4,6 +4,7 @@ import { useAppContext } from "../../Store/AppContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NhapKhoaTable from "./NhapKhoaTable";
+import XuatKhoaTable from "./XuatKhoaTable";
 import moment from "moment";
 function NhapXuatKhoaModal({ setShowModal, selected }) {
 
@@ -22,6 +23,9 @@ function NhapXuatKhoaModal({ setShowModal, selected }) {
     const [selectedTimeType, setSelectedTimeType] = useState({ id: 0, name: '1 Ngày' });
 
     const [nhapKhoaData, setNhapKhoaData] = useState([]);
+
+    const [xuatKhoaData, setXuatKhoaData] = useState([]);
+
 
     const [fromDate, setFromDate] = useState(new Date());
     const [toDate, setToDate] = useState(new Date());
@@ -92,8 +96,22 @@ function NhapXuatKhoaModal({ setShowModal, selected }) {
                 console.error('Error fetching data:', error);
             }
         }
+        const fetchXuatKhoa = async () => {
+            const fetchUrl = `${apiURL}noitru/get-danhsach-xuatkhoa-all?site=${site}&tungay=${formatFromDate}&denngay=${formatToDate}`
+            try {
+                const response = await fetch(fetchUrl);
+                const data = await response.json();
+                console.log('data', data)
+                setXuatKhoaData(data);
+            } catch (error) {
+                setXuatKhoaData([])
+                console.error('Error fetching data:', error);
+            }
+        }
         if (selectedTab === 1) {
             fetchNhapKhoa();
+        } else if (selectedTab === 2) {
+            fetchXuatKhoa();
         }
     }
 
@@ -178,6 +196,7 @@ function NhapXuatKhoaModal({ setShowModal, selected }) {
                             </div>
                             <div className="h-full w-full flex-grow overflow-y-auto pb-10 ">
                                 {selectedTab === 1 && <NhapKhoaTable data={nhapKhoaData} />}
+                                {selectedTab === 2 && <XuatKhoaTable data={xuatKhoaData} />}
 
 
                             </div>

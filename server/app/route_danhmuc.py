@@ -290,7 +290,7 @@ def get_nhom_nhanvien(site):
     nhom_nhan_vien_list = [{"id": row[0], "name": row[1]} for row in results]
     return jsonify(nhom_nhan_vien_list), 200
   
-@dm.route("/danhmuc/nhanvien/summarires", methods=["GET"])
+@dm.route("/danhmuc/nhanvien/summaries", methods=["GET"])
 def get_nhanvien():
   """
     Danh mục Nhân viên
@@ -325,16 +325,14 @@ def get_nhanvien():
 
   site = request.args.get('site', 'HCM_DEV')
   khu = request.args.get('area', 1)
- 
-  
   cursor = get_cursor(site)
   
   stm = f"SELECT MA , HOTEN  FROM DMBS WHERE NHOM <> 9"
-
   
-  
-  
+  datas = cursor.execute(stm).fetchall()
   result = []
+  for data in datas:
+    result.append(dict(zip(['id', 'name'], data)))
   return jsonify(result), 200
 
 @dm.route('/danhmuc/taikhoan-hsoft', methods=['GET'])
