@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../Store/AppContext";
 import Dropdown from "../../Common/Dropdown";
 
-function ChangeNhanVienModal({ setModalShow }) {
+function ChangeNhanVienModal({ setModalShow, selectedNhomNV }) {
 
 
     const title = 'Nhân viên';
@@ -12,22 +12,39 @@ function ChangeNhanVienModal({ setModalShow }) {
     const apiURL = process.env.REACT_APP_API_URL;
     const { site, area } = useAppContext();
 
+    const [nhomNVS, setNhomNVS] = useState([])
     const [data, setData] = useState([]);
     const [selectedNv, setSelectedNv] = useState({ id: 0, name: '' });
+    const [selectedNhomNv2, setSelectedNhomNv2] = useState(selectedNhomNV);
+
+    const fetchNhomNV = async () => {
+        try {
+
+            const fetchURL = `${apiURL}danhmuc/nhom-nhanvien?site=${site}`;
+            const response = await fetch(fetchURL);
+            const data = await response.json();
+            setNhomNVS(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 
     const fetNhanvienList = async () => {
         try {
 
             const fetchURL = `${apiURL}danhmuc/nhanvien/summaries?site=${site}&area=${area}`;
-            console.log('fetchURL', fetchURL)
             const response = await fetch(fetchURL);
             const data = await response.json();
-            console.log('data', data)
-            setData(data);
+            const newData = data.map((item) => ({ id: item.id, name: item.id + ' - ' + item.name }));
+            setData(newData);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     }
+
+    useEffect(() => {
+        fetchNhomNV();
+    }, []);
 
     useEffect(() => {
         fetNhanvienList();
@@ -46,21 +63,31 @@ function ChangeNhanVienModal({ setModalShow }) {
                         </div>
 
                         {/* BODY */}
-                        <div className="min-h-40 p-4">
+                        <div className="p-4 space-y-2">
                             <div className="flex gap-3 items-center">
-                                <div>Nhân viên</div>
-                                <div className="w-64">
-                                <Dropdown
-                                data={data}
-                                setSelectedOption={setSelectedNv}
-                                selectedOption={selectedNv}
-                                searchable
-                            />
+                                <div className="w-28 text-left">Nhóm</div>
+                                <div className="w-full">
+                                    <Dropdown
+                                        data={nhomNVS}
+                                        setSelectedOption={setSelectedNhomNv2}
+                                        selectedOption={selectedNhomNv2}
+                                        searchable
+                                    />
                                 </div>
-                            
-
                             </div>
-                           
+                            <div className="flex gap-3 items-center">
+
+                            <div className="w-28 text-left">Nhân viên</div>
+                                <div className="w-full">
+                                    <Dropdown
+                                        data={data}
+                                        setSelectedOption={setSelectedNv}
+                                        selectedOption={selectedNv}
+                                        searchable
+                                    />
+                                </div>
+                            </div>
+
                         </div>
                         {/* FOOTER  */}
                         <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">

@@ -275,11 +275,33 @@ def danhmuc_khoaphong_in(site, khoaphong_string):
     results = cursor.execute(query).fetchall()
     return jsonify([{"id": row[0], "name": row[1]} for row in results]), 200
 
-@dm.route("/danhmuc/nhom-nhanvien/<site>", methods=["GET"])
-def get_nhom_nhanvien(site):
+@dm.route("/danhmuc/nhom-nhanvien", methods=["GET"])
+def get_nhom_nhanvien():
     """
-    Get all nhom nhan vien from database
+    Danh mục Nhóm Nhân viên
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: Site (HCM_DEV, HN_DEV,...)
+        default: HCM_DEV
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
     """
+    site = request.args.get('site', 'HCM_DEV')
     cursor = get_cursor(site)
     query = """
         SELECT id, ten

@@ -19,8 +19,17 @@ function TaiKhoanTable({ site, data }) {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
+    const [selectedUserId, setSelectedUserID] = useState(null);
+
+    const [selectedNhanvien, setSelectedNhanvien] = useState({ id: 0, name: '' });
+    const [selectedNhomNV, setSelectedNhomNV] = useState({ id: 0, name: '' });
+
     const [showKPModal, setShowKPModal] = useState(false);
     const [khoaPhongData, setKhoaPhongData] = useState('');
+
+    
+
+
 
     const [showChangeNhanVienModal, setShowChangeNhanVienModal] = useState(false);
     const [showPhanQuyenModal, setShowPhanQuyenModal] = useState(false);
@@ -62,7 +71,10 @@ function TaiKhoanTable({ site, data }) {
         setShowKPModal(true);
     }
 
-    const handleClickMaNV = (accId, nvId) => {
+    const handleClickMaNV = (accId, nvId, nvName, nhomId, nhomName) => {
+        setSelectedUserID(accId);
+        setSelectedNhanvien({ id: nvId, name: nvName });
+        setSelectedNhomNV({ id: nhomId, name: nhomName });
         setShowChangeNhanVienModal(true);
     }
 
@@ -173,11 +185,15 @@ function TaiKhoanTable({ site, data }) {
 
             {showChangeNhanVienModal &&
                 <ChangeNhanVienModal
-                    setModalShow={setShowChangeNhanVienModal} />}
+                    setModalShow={setShowChangeNhanVienModal}
+                     />}
 
             {showPhanQuyenModal &&
                 <PhanQuyenModal
                     site={site}
+                    selectedUserId={selectedUserId}
+                    selectedNhanvien={selectedNhanvien}
+                    selectedNhomNV={selectedNhomNV}
                     setModalShow={setShowPhanQuyenModal} />}
         </>
     )
