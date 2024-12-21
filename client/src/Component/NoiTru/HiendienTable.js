@@ -7,6 +7,9 @@ import { VscCopy } from "react-icons/vsc";
 import { SuccessAlert } from "../Common/Alert";
 import moment from "moment";
 import IconPersonButton from "./IconPersonButton";
+import { IoQrCode } from "react-icons/io5";
+
+import PidQRModal from "./PidQRModal";
 
 function Hiendien({ data, selected, setSelected }) {
 
@@ -15,6 +18,9 @@ function Hiendien({ data, selected, setSelected }) {
     const [itemsPerPage, setItemsPerPage] = useState(20);
     const [totalPage, setTotalPage] = useState(0);
     const [dataInPage, setDataInPage] = useState([]);
+
+    const [showQRModal, setShowQRModal] = useState(false);
+
 
     const constDataInPage = (iPage, iData) => {
         const indexOfLastItem = iPage * itemsPerPage;
@@ -51,7 +57,7 @@ function Hiendien({ data, selected, setSelected }) {
         return songay > 0 ? songay + 1 : 1;
     }
 
-  
+
 
     return (
         <>
@@ -60,7 +66,7 @@ function Hiendien({ data, selected, setSelected }) {
                     <table className="">
                         <thead>
                             <tr>
-                                <th className=""></th>
+                                <th className="w-20">...</th>
                                 <th><div className="px-2 py-1 text-center">STT</div></th>
                                 <th className=""><div className="">PID</div></th>
                                 <th className="white-space-nowrap min-w-40"><div>Họ tên</div></th>
@@ -98,20 +104,20 @@ function Hiendien({ data, selected, setSelected }) {
                                     data-idkhoa={ele.id}
                                     data-maql={ele.maql}
                                 >
-                                    <td className="">
-                                        {/* <div>
-                                            <IconPersonButton
-                                             pid={ele.mabn}
+                                    <td >
 
-                                             
-                                             />
-                                        </div> */}
+
+
                                     </td>
                                     <td className="text-center"><div className=" py-1 text-center">{currentPage * itemsPerPage - itemsPerPage + index + 1}</div></td>
                                     <td>
-                                        <div className="flex gap-2 items-center flex-row-reverse group">
-                                            <div name="mabn" className="text-right pr-2 hover:underline hover:text-blue-500 cursor-pointer">
+                                        <div className="flex gap-2 items-center flex-row-reverse group pr-2">
+                                            <button className="hover:text-blue-500" onClick={() => setShowQRModal(true)}>
+                                                <IoQrCode />
+                                            </button>
+                                            <div name="mabn" className="text-right hover:underline hover:text-blue-500 cursor-pointer">
                                                 {ele.mabn}
+
                                             </div>
                                             <button
                                                 className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -168,6 +174,13 @@ function Hiendien({ data, selected, setSelected }) {
                     setVisible={setShowAlert}
                     message={'Đã sao chép PID thành công!'}
                 />}
+
+            {showQRModal &&
+                <PidQRModal
+                    pid={selected.pid}
+                    setModalShow={setShowQRModal}
+                />}
+
 
         </>
     );

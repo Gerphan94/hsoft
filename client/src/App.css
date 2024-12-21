@@ -51,6 +51,11 @@
   cursor: not-allowed;
   
 }
+.btn:disabled:hover {
+  background-color: #A6AEBF;
+  border-color: #A6AEBF;
+  color: white;
+}
 
 .btn-save {
   color: #508D69;

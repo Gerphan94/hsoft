@@ -369,8 +369,8 @@ def noitru_hiendien():
         obj = dict(zip(col_names, data))
         result.append(obj)
     return jsonify(result), 200
-@noitru.route('/noitru/hiendien-phongluu/<site>/<mmyy>', methods=['GET'])
-def noitru_hiendienphongluu(site, mmyy):
+@noitru.route('/noitru/hiendien-phongluu', methods=['GET'])
+def noitru_hiendienphongluu():
     """
     Get Danh sách hiện diện Phòng lưu
     ---
@@ -389,7 +389,6 @@ def noitru_hiendienphongluu(site, mmyy):
         required: true
         default: 1024
         description: 
-     
     responses:
       200:
         description: Success
@@ -402,6 +401,9 @@ def noitru_hiendienphongluu(site, mmyy):
                   type: string
                   example: ok
     """
+    site = request.args.get('site')
+    mmyy = request.args.get('mmyy')
+    khu = request.args.get('khu')
     
     cursor = get_cursor(site)
     schema = 'HSOFTTAMANH' + mmyy
@@ -448,9 +450,11 @@ def noitru_hiendienphongluu(site, mmyy):
     LEFT JOIN 
         KETQUA E ON
         A.KETQUA = E.MA
+    WHERE A.KHU = {khu}
     ORDER BY
         A.NGAY DESC
     '''
+    print(stm)
     hiendiens = cursor.execute(stm).fetchall()
     result = []
     for hiendien in hiendiens:

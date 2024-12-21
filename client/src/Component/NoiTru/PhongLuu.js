@@ -18,7 +18,7 @@ import Toggle from "../Common/ToggleSwitch";
 function PhongLuu() {
 
     const apiURL = process.env.REACT_APP_API_URL;
-    const { site, setSelectedSideBar } = useAppContext();
+    const { site, area } = useAppContext();
     const monthNow = new Date().getMonth() + 1;
 
     const [selectedBTN, setSelectedBNT] = useState(1);
@@ -53,11 +53,10 @@ function PhongLuu() {
     const handleClickView = () => {
         const mothYear = convertMothyearToChars(month, year);
         console.log('mothYear', mothYear)
-        const fecthURL = apiURL + "noitru/hiendien-phongluu/" + site + "/" + mothYear;
-        console.log(fecthURL)
+        const fetchURL = `${apiURL}noitru/hiendien-phongluu?site=${site}&mmyy=${mothYear}&khu=${area}`;
         const gethiendien = async () => {
             try {
-                const response = await fetch(fecthURL);
+                const response = await fetch(fetchURL);
                 const data = await response.json();
                 setPatientData(data);
                 if (isAll) {

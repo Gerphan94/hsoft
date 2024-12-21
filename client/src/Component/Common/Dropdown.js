@@ -24,8 +24,6 @@ const Dropdown = memo(({
         return data;
     }, [data, optionALL]);
 
-    console.log('render dropdown', viewData);
-
     // Initialize selected option if chooseIndex > 0
     useEffect(() => {
         if (chooseIndex > 0 && initData.length > 0) {
@@ -55,7 +53,6 @@ const Dropdown = memo(({
     }, []);
 
     const handleChange = useCallback((e) => {
-        console.log('handleChange', handleChange)
 
         setSearchTerm(e.target.value);
         setIsDropdownOpen(true);

@@ -27,13 +27,8 @@ function TaiKhoanTable({ site, data }) {
     const [showKPModal, setShowKPModal] = useState(false);
     const [khoaPhongData, setKhoaPhongData] = useState('');
 
-    
-
-
-
     const [showChangeNhanVienModal, setShowChangeNhanVienModal] = useState(false);
     const [showPhanQuyenModal, setShowPhanQuyenModal] = useState(false);
-
 
     const constDataInPage = (iPage, iData) => {
         const indexOfLastItem = iPage * itemsPerPage;
@@ -72,6 +67,7 @@ function TaiKhoanTable({ site, data }) {
     }
 
     const handleClickMaNV = (accId, nvId, nvName, nhomId, nhomName) => {
+        console.log(accId, nvId, nvName, nhomId, nhomName);
         setSelectedUserID(accId);
         setSelectedNhanvien({ id: nvId, name: nvName });
         setSelectedNhomNV({ id: nhomId, name: nhomName });
@@ -130,7 +126,7 @@ function TaiKhoanTable({ site, data }) {
                                 </td>
                                 <td><button
                                     className="hover:underline hover:text-blue-600"
-                                    onClick={() => handleClickMaNV(item.id, item.manv)}
+                                    onClick={() => handleClickMaNV(item.id, item.mabs, item.hoten, item.manhomnv, item.tennhom)}
                                 >
                                     {item.mabs}
                                 </button></td>
@@ -185,15 +181,18 @@ function TaiKhoanTable({ site, data }) {
 
             {showChangeNhanVienModal &&
                 <ChangeNhanVienModal
+                    selectedUserId={selectedUserId}
+                    nhanVien={selectedNhanvien}
+                    nhomNV={selectedNhomNV}
+                    setShowAlert={setShowAlert}
+                    setAlertMessage={setAlertMessage}
                     setModalShow={setShowChangeNhanVienModal}
-                     />}
+                />}
 
             {showPhanQuyenModal &&
                 <PhanQuyenModal
                     site={site}
-                    selectedUserId={selectedUserId}
-                    selectedNhanvien={selectedNhanvien}
-                    selectedNhomNV={selectedNhomNV}
+
                     setModalShow={setShowPhanQuyenModal} />}
         </>
     )

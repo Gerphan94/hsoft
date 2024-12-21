@@ -344,12 +344,12 @@ def get_nhanvien():
                   type: string
                   example: ok
     """
-
   site = request.args.get('site', 'HCM_DEV')
   khu = request.args.get('area', 1)
+  nhom = request.args.get('nhom')
   cursor = get_cursor(site)
   
-  stm = f"SELECT MA , HOTEN  FROM DMBS WHERE NHOM <> 9"
+  stm = f"SELECT MA , HOTEN  FROM DMBS WHERE NHOM = {nhom} AND KHU LIKE '%{khu}%' "
   
   datas = cursor.execute(stm).fetchall()
   result = []
@@ -411,7 +411,6 @@ def danhmuc_taikhoan():
         WHERE A.HIDE = 0  AND A.KHU LIKE '%{khu}%'
         ORDER BY A.ID 
     '''
-    print(stm)
     taikhoans = cursor.execute(stm).fetchall()
     for taikhoan in taikhoans:
         obj = {}
@@ -421,7 +420,65 @@ def danhmuc_taikhoan():
             obj['makp'] = makp_string
         result.append(obj)
     return jsonify(result), 200
-
+  
+@dm.route('/danhmuc/taikhoan-hsoft-doinhanvien', methods=['POST'])
+def danhmuc_taikhoan_doinhanvien():
+  """
+    Dổi nhân viên tài khoản
+    ---
+    tags:
+      - Danh mục
+    parameters:
+      - name: site
+        in: query
+        type: string
+        required: true
+        description: Site (HCM_DEV, HN_DEV,...)
+        default: HCM_DEV
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            userid:
+              type: integer
+              example: 
+            mabs:
+              type: integer
+              example:
+            idnhom:
+              type: integer
+              example:
+    responses:
+      200:
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ok
+    """
+    
+  site = request.args.get('site', 'HCM_DEV')
+  data = request.get_json()
+  userid = data['userid']
+  mabs = str(data['mabs'])
+  if site != 'HN_DEV' and site != 'HCM_DEV':
+        return jsonify({'error':'Site không có quyền'}), 500
+  cursor = get_cursor(site)
+  stm = f"  UPDATE DLOGIN SET MABS = '{mabs}' WHERE ID = {userid}"
+  try:
+      cursor.execute(stm)
+      cursor.connection.commit()
+      return jsonify({'message': 'Đổi nhân viên thành công'}), 200
+  except Exception as e:
+      return jsonify({'error': str(e)}), 500
+  
+  
 @dm.route('/danhmuc-vienphi/nhomnbhyt/<site>/', methods=['GET'])
 def vienphi_nhomnbhyt(site):
     cursor = get_cursor(site)
